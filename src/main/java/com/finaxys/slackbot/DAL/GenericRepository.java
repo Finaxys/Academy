@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface GenericRepository<T,K extends Serializable> {
 
-    void addEntity(T entity);
+    T addEntity(T entity);
     void updateEntity(T entity);
     void delete(T entity);
     List<T> getAll();

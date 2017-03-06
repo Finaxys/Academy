@@ -46,8 +46,8 @@ public class GenericRepositoryImpl<T,K extends Serializable> implements GenericR
     }
 
 
-    public void addEntity(T entity) {
-        sessionFactory.getCurrentSession().persist(entity);
+    public T addEntity(T entity) {
+        return (T) sessionFactory.getCurrentSession().save(entity);
 
     }
 
