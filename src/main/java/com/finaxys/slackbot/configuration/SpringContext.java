@@ -2,10 +2,10 @@ package com.finaxys.slackbot.configuration;
 
 import com.finaxys.slackbot.DAL.GenericRepository;
 import com.finaxys.slackbot.DAL.GenericRepositoryImpl;
-import com.finaxys.slackbot.domains.Challenge;
-import com.finaxys.slackbot.domains.FinaxysProfile;
-import com.finaxys.slackbot.domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.domains.FinaxysProfile_Challenge_PK;
+import com.finaxys.slackbot.Domains.Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.finaxys.slackbot.domains" })
+@ComponentScan({"com.finaxys.slackbot.Domains"})
 @PropertySource(value = "classpath:dataSourceInformation.properties")
 public class SpringContext {
 

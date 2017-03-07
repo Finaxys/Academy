@@ -2,15 +2,12 @@ package com.finaxys.slackbot;
 
 import com.finaxys.slackbot.DAL.GenericRepository;
 import com.finaxys.slackbot.configuration.SpringContext;
-import com.finaxys.slackbot.domains.Challenge;
-import com.finaxys.slackbot.domains.FinaxysProfile;
-import com.finaxys.slackbot.domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.domains.FinaxysProfile_Challenge_PK;
+import com.finaxys.slackbot.Domains.Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by inesnefoussi on 3/6/17.
