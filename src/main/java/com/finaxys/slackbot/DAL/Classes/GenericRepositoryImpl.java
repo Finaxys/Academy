@@ -1,6 +1,6 @@
-package com.finaxys.slackbot.DAL;
+package com.finaxys.slackbot.DAL.Classes;
 
-import org.hibernate.Criteria;
+import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

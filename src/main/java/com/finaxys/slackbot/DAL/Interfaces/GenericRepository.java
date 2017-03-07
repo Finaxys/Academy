@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.DAL;
+package com.finaxys.slackbot.DAL.Interfaces;
 
 import java.io.Serializable;
 import java.util.List;

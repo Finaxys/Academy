@@ -1,7 +1,7 @@
-package com.finaxys.slackbot.configuration;
+package com.finaxys.slackbot.Configuration.Classes;
 
-import com.finaxys.slackbot.DAL.GenericRepository;
-import com.finaxys.slackbot.DAL.GenericRepositoryImpl;
+import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
+import com.finaxys.slackbot.DAL.Classes.GenericRepositoryImpl;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
