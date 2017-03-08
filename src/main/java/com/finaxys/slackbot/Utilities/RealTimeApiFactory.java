@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Utilities.Classes;
+package com.finaxys.slackbot.Utilities;
 
 import allbegray.slack.SlackClientFactory;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;

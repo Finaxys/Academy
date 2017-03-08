@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Utilities.Classes;
+package com.finaxys.slackbot.Utilities;
 
 import java.io.FileInputStream;
 import java.io.FileReader;

@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.DAL.Classes;
 
-import com.finaxys.slackbot.DAL.Interfaces.RepositoryInterface;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
