@@ -1,11 +1,10 @@
 package com.finaxys.slackbot.Configuration.Classes;
 
-import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
-import com.finaxys.slackbot.DAL.Classes.GenericRepositoryImpl;
-import com.finaxys.slackbot.Domains.Challenge;
+import com.finaxys.slackbot.BUL.Classes.NewTributeJoinedServiceImpl;
+import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
+import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +25,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"com.finaxys.slackbot.Domains"})
+@ComponentScan({"com.finaxys.slackbot.*"})
 @PropertySource(value = "classpath:dataSourceInformation.properties")
 public class SpringContext {
 
@@ -68,21 +67,4 @@ public class SpringContext {
         txManager.setSessionFactory(s);
         return txManager;
     }
-
-    @Bean
-    public GenericRepository<FinaxysProfile,String> myGenericRepo1() {
-        return new GenericRepositoryImpl<FinaxysProfile, String>(FinaxysProfile.class);
-    }
-
-    @Bean
-    public GenericRepository<Challenge,Integer> myGenericRepo2() {
-        return new GenericRepositoryImpl<Challenge, Integer>(Challenge.class);
-    }
-
-    @Bean
-    public GenericRepository<FinaxysProfile_Challenge,FinaxysProfile_Challenge_PK> myGenericRepo3() {
-        return new GenericRepositoryImpl<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK>(FinaxysProfile_Challenge.class);
-    }
-
-
 }

@@ -1,9 +1,8 @@
 package com.finaxys.slackbot.DAL.Classes;
 
-import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
+import com.finaxys.slackbot.DAL.Interfaces.RepositoryInterface;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
@@ -12,24 +11,18 @@ import java.util.List;
 /**
  * Created by inesnefoussi on 3/6/17.
  */
-@Repository
+@org.springframework.stereotype.Repository
 @Transactional
-public class GenericRepositoryImpl<T,K extends Serializable> implements GenericRepository<T,K> {
+public class Repository<T,K extends Serializable>{
 
     @Autowired
     private SessionFactory sessionFactory;
     private Class persistentClass;
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public Repository() {
     }
 
-    public GenericRepositoryImpl() {
-        persistentClass=getClass();
-
-    }
-
-    public GenericRepositoryImpl(Class<T> persistentClass) {
+    public Repository(Class<T> persistentClass) {
         this.persistentClass = persistentClass;
     }
 
@@ -39,6 +32,10 @@ public class GenericRepositoryImpl<T,K extends Serializable> implements GenericR
 
     public void setPersistentClass(Class<T> persistentClass) {
         this.persistentClass = persistentClass;
+    }
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {
