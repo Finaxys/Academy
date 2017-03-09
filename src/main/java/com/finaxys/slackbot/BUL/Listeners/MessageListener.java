@@ -19,14 +19,6 @@ public class MessageListener implements EventListener {
     public MessageListener() {
     }
 
-    public NewTributeJoinedService getNewTributeJoinedService() {
-        return newTributeJoinedService;
-    }
-
-    public void setNewTributeJoinedService(NewTributeJoinedService newTributeJoinedService) {
-        this.newTributeJoinedService = newTributeJoinedService;
-    }
-
     public void handleMessage(JsonNode jsonNode) {
         FinaxysSlackBotLogger.logger.info("Message being handled...");
         newTributeJoinedService.onNewTributeJoined(jsonNode);

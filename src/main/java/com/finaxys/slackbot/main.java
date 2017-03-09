@@ -3,6 +3,7 @@ package com.finaxys.slackbot;
 
 import allbegray.slack.rtm.Event;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.Configuration.Classes.SpringContext;
 import com.finaxys.slackbot.Utilities.RealTimeApiFactory;
@@ -18,11 +19,13 @@ public class main {
 
         AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class);
 
-        MessageListener listener = (MessageListener) context.getBean("listener");
+        MessageListener messageListener = (MessageListener) context.getBean("listener");
+        ChannelCreatedListener channelCreatedListener = (ChannelCreatedListener) context.getBean("listener1");
 
         SlackRealTimeMessagingClient realTimeMessagingClient = RealTimeApiFactory.getSlackRealTimeMessagingClient();
 
-        realTimeMessagingClient.addListener(Event.MESSAGE, listener);
+        realTimeMessagingClient.addListener(Event.MESSAGE, messageListener);
+        realTimeMessagingClient.addListener(Event.CHANNEL_CREATED, channelCreatedListener);
         realTimeMessagingClient.connect();
     }
 }

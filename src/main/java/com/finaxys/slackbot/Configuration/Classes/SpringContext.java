@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.Configuration.Classes;
 
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
@@ -92,4 +93,10 @@ public class SpringContext {
     public MessageListener listener() {
         return new MessageListener();
     }
+
+    @Bean
+    public ChannelCreatedListener listener1() {
+        return new ChannelCreatedListener();
+    }
+
 }
