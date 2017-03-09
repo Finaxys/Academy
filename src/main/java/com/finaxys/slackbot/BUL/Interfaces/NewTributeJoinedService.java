@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.BUL.Interfaces;
 
-import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**

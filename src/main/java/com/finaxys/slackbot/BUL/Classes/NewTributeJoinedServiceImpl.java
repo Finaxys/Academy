@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
     @Autowired
-    private Repository<FinaxysProfile,String> finaxysProfileManager;
+    private Repository<FinaxysProfile, String> finaxysProfileManager;
 
     public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
         return finaxysProfileManager;
