@@ -44,7 +44,7 @@ public class MessageAppreciatedServiceImpl implements MessageAppreciatedService 
 						System.out.println(userId);
 						FinaxysProfile userProfile = myGenericRepo1.findById(userId);
 						if (userProfile != null) {
-							userProfile.setScore(userProfile.getScore() + 10);
+							userProfile.setScore(userProfile.getScore() + SCORE_GRID.APPRECIATED_MESSAGE.value());
 							myGenericRepo1.updateEntity(userProfile);
 						}
 					}
