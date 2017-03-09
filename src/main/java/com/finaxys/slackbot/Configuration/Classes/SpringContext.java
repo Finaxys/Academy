@@ -4,6 +4,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.finaxys.slackbot.BUL.Classes.NewTributeJoinedServiceImpl;
+import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
+import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +31,7 @@ import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.finaxys.slackbot.*" })
+@ComponentScan({"com.finaxys.slackbot.*"})
 @PropertySource(value = "classpath:dataSourceInformation.properties")
 public class SpringContext {
 
