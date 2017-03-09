@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Utilities.Classes;
+package com.finaxys.slackbot.BUL.Listeners;
 
 
 
@@ -11,11 +11,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.MessageAppreciatedService;
 
 @Component
-public class MessageAppreciatedListner implements EventListener {
+public class MessageAppreciatedListener implements EventListener {
    
 @Autowired
  MessageAppreciatedService appreciatedService ;
-    public MessageAppreciatedListner()
+    public MessageAppreciatedListener()
     {
     	
     }

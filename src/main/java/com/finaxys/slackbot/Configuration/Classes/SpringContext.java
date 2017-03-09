@@ -8,6 +8,7 @@ import com.finaxys.slackbot.BUL.Classes.NewTributeJoinedServiceImpl;
 import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.BUL.Listeners.MessageAppreciatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
 
 /**
  * Created by inesnefoussi on 3/6/17.
@@ -85,8 +85,8 @@ public class SpringContext {
 	}
 
 	@Bean
-	public MessageAppreciatedListner messageAppreciatedListner() {
-		return new MessageAppreciatedListner();
+	public MessageAppreciatedListener messageAppreciatedListener() {
+		return new MessageAppreciatedListener();
 	}
 
 }

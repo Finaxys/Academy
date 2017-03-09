@@ -20,7 +20,7 @@ public class PropertyLoader {
         catch (Exception e){
             System.out.print(e.getMessage());
         }finally {
-            return properties;
+            return (properties);
         }
     }
 }

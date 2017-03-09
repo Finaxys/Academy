@@ -32,20 +32,25 @@ public class MessageAppreciatedServiceImpl implements MessageAppreciatedService 
 
 		List<String> listEmojis = new ArrayList<String>();
 		listEmojis.add("+1");
-		listEmojis.add("clap");
+		listEmojis.add("C");
 		listEmojis.add("ok_hand");
 		if (jsonNode != null && jsonNode.get("item_user").asText() != null) {
-			String userId = jsonNode.get("item_user").asText();
+			String itemUserId = jsonNode.get("item_user").asText();
 			String myUserId = jsonNode.get("user").asText();
 			String reaction = jsonNode.get("reaction").asText();
 			if (listEmojis.contains(reaction)) {
-				if (userId != null && userId != myUserId) {
+				if (itemUserId != null && itemUserId != myUserId) {
 					{
-						System.out.println(userId);
-						FinaxysProfile userProfile = myGenericRepo1.findById(userId);
+						System.out.println(itemUserId);
+						FinaxysProfile userProfile = myGenericRepo1.findById(itemUserId);
 						if (userProfile != null) {
 							userProfile.setScore(userProfile.getScore() + SCORE_GRID.APPRECIATED_MESSAGE.value());
 							myGenericRepo1.updateEntity(userProfile);
+						}
+						else
+						{
+							FinaxysProfile user = myGenericRepo1.addEntity(new FinaxysProfile(itemUserId,false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
+
 						}
 					}
 				}

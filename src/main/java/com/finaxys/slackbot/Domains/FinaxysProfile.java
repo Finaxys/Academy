@@ -19,6 +19,12 @@ public class FinaxysProfile extends User implements Serializable{
 
     public FinaxysProfile() {
     }
+    public FinaxysProfile(String userId ,boolean isChallengeManager ,int score)
+    {
+    	this.id = userId ;
+    	this.score =score;
+    	this.challengeManager =isChallengeManager;
+    }
 
     @Override
     @Id
@@ -54,4 +60,6 @@ public class FinaxysProfile extends User implements Serializable{
     public void setFinaxysProfile_challenges(List<FinaxysProfile_Challenge> finaxysProfile_challenges) {
         this.finaxysProfile_challenges = finaxysProfile_challenges;
     }
+    
+    
 }
