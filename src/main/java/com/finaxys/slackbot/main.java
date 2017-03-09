@@ -19,19 +19,19 @@ public class main {
         AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class);
 
         FinaxysProfile profile1 = new FinaxysProfile();
-        profile1.setId("U12345");
+        profile1.setId("U123451555");
         profile1.setScore(10);
 
         FinaxysProfile profile2 = new FinaxysProfile();
-        profile2.setId("U12346");
+        profile2.setId("U12347555");
         profile2.setScore(10);
 
         Challenge challenge1 = new Challenge();
-        challenge1.setId(12345);
+        challenge1.setId(12348555);
         challenge1.setName("Challenge 1");
 
         Challenge challenge2 = new Challenge();
-        challenge2.setId(12346);
+        challenge2.setId(12347555);
         challenge2.setName("Challenge 2");
 
         FinaxysProfile_Challenge finaxysProfile_challenge1 = new FinaxysProfile_Challenge(10,challenge1,profile1);

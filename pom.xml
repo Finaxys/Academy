@@ -32,6 +32,8 @@
             <artifactId>slack-api</artifactId>
             <version>v1.3.0.RELEASE</version>
         </dependency>
+   
+
 
         <!-- Hibernate core -->
         <dependency>
