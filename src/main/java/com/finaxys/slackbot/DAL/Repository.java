@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.DAL.Classes;
+package com.finaxys.slackbot.DAL;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 @org.springframework.stereotype.Repository
 @Transactional
-public class Repository<T,K extends Serializable>{
+public class Repository<T, K extends Serializable> {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -41,7 +41,6 @@ public class Repository<T,K extends Serializable>{
         this.sessionFactory = sessionFactory;
     }
 
-
     public T addEntity(T entity) {
         return (T) sessionFactory.getCurrentSession().save(entity);
 
@@ -53,14 +52,18 @@ public class Repository<T,K extends Serializable>{
     }
 
     public void delete(T entity) {
-         sessionFactory.getCurrentSession().delete(entity);
+        sessionFactory.getCurrentSession().delete(entity);
     }
 
     public List<T> getAll() {
-        return sessionFactory.getCurrentSession().createQuery("from "+persistentClass.getSimpleName()).list();
+        return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
     }
 
     public T findById(K id) {
-        return (T) sessionFactory.getCurrentSession().get(persistentClass,id);
+        return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
+    }
+
+    public void saveOrUpdate (T entity){
+        sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
 }

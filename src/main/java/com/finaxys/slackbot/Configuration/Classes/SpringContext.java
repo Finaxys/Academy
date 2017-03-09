@@ -4,11 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.finaxys.slackbot.BUL.Classes.NewTributeJoinedServiceImpl;
-import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
-import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +18,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
 
 /**
@@ -75,7 +70,7 @@ public class SpringContext {
 	}
 
 	@Bean
-	public Repository<FinaxysProfile, String> myGenericRepo1() {
+	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
 		return new Repository<FinaxysProfile, String>(FinaxysProfile.class);
 	}
 
