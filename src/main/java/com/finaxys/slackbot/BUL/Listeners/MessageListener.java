@@ -21,27 +21,7 @@ public class MessageListener implements EventListener {
     public MessageListener() {
     }
 
-    public MessageListener(SlackWebApiClient webApiClient) {
-        this.webApiClient = webApiClient;
-    }
-
-    public SlackWebApiClient getWebApiClient() {
-        return webApiClient;
-    }
-
-    public void setWebApiClient(SlackWebApiClient webApiClient) {
-        this.webApiClient = webApiClient;
-    }
-
-    public NewTributeJoinedService getNewTributeJoinedService() {
-        return newTributeJoinedService;
-    }
-
-    public void setNewTributeJoinedService(NewTributeJoinedService newTributeJoinedService) {
-        this.newTributeJoinedService = newTributeJoinedService;
-    }
-
     public void handleMessage(JsonNode jsonNode) {
-        newTributeJoinedService.onNewTributeJoined(jsonNode , webApiClient);
+        newTributeJoinedService.onNewTributeJoined(jsonNode);
     }
 }

@@ -4,12 +4,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.finaxys.slackbot.BUL.Classes.NewTributeJoinedServiceImpl;
-import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
-import com.finaxys.slackbot.DAL.Classes.Repository;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.BUL.Listeners.MessageAppreciatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,16 +16,18 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
+import com.finaxys.slackbot.BUL.Listeners.MessageAppreciatedListener;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
+import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"com.finaxys.slackbot.*"})
+@ComponentScan({ "com.finaxys.slackbot.*" })
 @PropertySource(value = "classpath:dataSourceInformation.properties")
 public class SpringContext {
 
@@ -75,13 +71,24 @@ public class SpringContext {
 	}
 
 	@Bean
-	public Repository<FinaxysProfile, String> myGenericRepo1() {
-		return new Repository<FinaxysProfile, String>(FinaxysProfile.class);
+	public Repository<Challenge, Integer> myGenericRepo2() {
+		return new Repository<Challenge, Integer>(Challenge.class);
 	}
 
 	@Bean
-	public Repository<Challenge, Integer> myGenericRepo2() {
-		return new Repository<Challenge, Integer>(Challenge.class);
+	public InnovateServiceImpl innovateService() {
+		return new InnovateServiceImpl();
+	}
+
+	@Bean
+	public PostedFileListener postedFileListener() {
+		return new PostedFileListener();
+	}
+
+	@Bean
+	public ChannelTributeCreatedListener channelTributeCreatedListener() {
+
+		return new ChannelTributeCreatedListener();
 	}
 
 	@Bean
@@ -89,4 +96,13 @@ public class SpringContext {
 		return new MessageAppreciatedListener();
 	}
 
+	@Bean
+	public Repository<FinaxysProfile, String> finaxysProfileManager() {
+		return new Repository<>(FinaxysProfile.class);
+	}
+
+	@Bean
+	public MessageListener listener() {
+		return new MessageListener();
+	}
 }

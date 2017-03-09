@@ -11,13 +11,14 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FINAXYS_PROFILE")
-public class FinaxysProfile extends User implements Serializable{
+public class FinaxysProfile extends User implements Serializable {
     private String id;
     private int score;
     private boolean challengeManager;
     private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
     public FinaxysProfile() {
+        this.score = 0;
     }
     public FinaxysProfile(String userId ,boolean isChallengeManager ,int score)
     {
@@ -52,7 +53,7 @@ public class FinaxysProfile extends User implements Serializable{
         this.challengeManager = challengeManager;
     }
 
-    @OneToMany(mappedBy = "finaxysProfile" , cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "finaxysProfile", cascade = CascadeType.REMOVE)
     public List<FinaxysProfile_Challenge> getFinaxysProfile_challenges() {
         return finaxysProfile_challenges;
     }
@@ -62,4 +63,8 @@ public class FinaxysProfile extends User implements Serializable{
     }
     
     
+
+    public void incrementScore(int score) {
+        this.score += score;
+    }
 }
