@@ -3,18 +3,12 @@ package com.finaxys.slackbot.Utilities.Classes;
 
 
 import allbegray.slack.rtm.EventListener;
-import allbegray.slack.type.Channel;
-import allbegray.slack.webapi.SlackWebApiClient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.BusinessLogic.Classes.MessageAppreciatedServiceImpl;
-import com.finaxys.slackbot.BusinessLogic.Interfaces.MessageAppreciatedService;
+import com.finaxys.slackbot.BUL.Interfaces.MessageAppreciatedService;
 
 @Component
 public class MessageAppreciatedListner implements EventListener {

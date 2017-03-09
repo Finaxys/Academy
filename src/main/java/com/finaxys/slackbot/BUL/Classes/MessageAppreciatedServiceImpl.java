@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.BusinessLogic.Classes;
+package com.finaxys.slackbot.BUL.Classes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.BusinessLogic.Interfaces.MessageAppreciatedService;
+import com.finaxys.slackbot.BUL.Interfaces.MessageAppreciatedService;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 
