@@ -16,8 +16,8 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.finaxys.slackbot.BusinessLogic.Classes.InnovateServiceImpl;
-import com.finaxys.slackbot.BusinessLogic.Listeners.PostedFileListener;
+import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;

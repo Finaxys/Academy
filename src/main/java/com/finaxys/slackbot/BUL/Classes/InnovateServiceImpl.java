@@ -1,6 +1,6 @@
-package com.finaxys.slackbot.BusinessLogic.Classes;
+package com.finaxys.slackbot.BUL.Classes;
 import allbegray.slack.type.User;
-import com.finaxys.slackbot.BusinessLogic.Interfaces.*;
+import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import org.springframework.beans.factory.annotation.Autowired;
