@@ -4,6 +4,7 @@ import allbegray.slack.type.Channel;
 import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
+import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,12 +76,9 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
             System.out.println("************* Channel name is null ************** ");
             return false;
         }
-        if (channelName.length() <= 5) {
-            System.out.println("************* This is not a tribute ************** ");
-            return false;
-        }
-        String channelNameStarting = channelName.substring(0, 5);
-        if (!channelNameStarting.toUpperCase().equals("TRIBU")) {
+
+        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(channelName);
+        if (!tribeChannelMatcher.isTribe()) {
             System.out.println("************* This is not a tribute ************** ");
             return false;
         }
