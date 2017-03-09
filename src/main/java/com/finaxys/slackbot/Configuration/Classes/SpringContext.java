@@ -1,8 +1,9 @@
 package com.finaxys.slackbot.Configuration.Classes;
 
-import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
+import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
@@ -93,10 +94,4 @@ public class SpringContext {
     public MessageListener listener() {
         return new MessageListener();
     }
-
-    @Bean
-    public ChannelCreatedListener listener1() {
-        return new ChannelCreatedListener();
-    }
-
 }
