@@ -12,7 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="finaxys slack bot" target="1.5" />
-      <module name="FinaxysSlackBot_Fev2017" target="1.5" />
+      <module name="FinaxysSlackBot_Fev2017" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
