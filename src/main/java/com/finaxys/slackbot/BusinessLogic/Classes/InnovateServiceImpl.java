@@ -1,16 +1,10 @@
 package com.finaxys.slackbot.BusinessLogic.Classes;
-import allbegray.slack.rtm.SlackRealTimeMessagingClient;
-import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
-import allbegray.slack.webapi.SlackWebApiClient;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BusinessLogic.Interfaces.*;
-import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
+import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 
 
@@ -19,13 +13,13 @@ public class InnovateServiceImpl implements InnovateService {
 
 
 	@Autowired
-	private GenericRepository<FinaxysProfile, String> finaxysProfileRepository;
+	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-	public GenericRepository<FinaxysProfile, String> getFinaxysProfileManager() {
+	public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
 		return finaxysProfileRepository;
 	}
 
-	public void setFinaxysProfileManager(GenericRepository<FinaxysProfile, String> finaxysProfileRepository) {
+	public void setFinaxysProfileManager(Repository<FinaxysProfile, String> finaxysProfileRepository) {
 		this.finaxysProfileRepository = finaxysProfileRepository;
 	}
 

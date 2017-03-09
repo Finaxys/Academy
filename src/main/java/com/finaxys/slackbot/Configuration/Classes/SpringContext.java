@@ -1,16 +1,8 @@
 package com.finaxys.slackbot.Configuration.Classes;
 
-import com.finaxys.slackbot.DAL.Interfaces.GenericRepository;
-import com.finaxys.slackbot.BusinessLogic.Classes.InnovateServiceImpl;
-import com.finaxys.slackbot.BusinessLogic.Interfaces.MessageAppreciatedService;
-import com.finaxys.slackbot.BusinessLogic.Listeners.PostedFileListener;
-import com.finaxys.slackbot.DAL.Classes.GenericRepositoryImpl;
-import com.finaxys.slackbot.Domains.Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
+import java.util.Properties;
 
-import allbegray.slack.SlackClientFactory;
+import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +16,16 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-import java.util.Properties;
+import com.finaxys.slackbot.BusinessLogic.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BusinessLogic.Listeners.PostedFileListener;
+import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.Domains.Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.finaxys.slackbot.Domains" })
+@ComponentScan({ "com.finaxys.slackbot.*" })
 @PropertySource(value = "classpath:dataSourceInformation.properties")
 public class SpringContext {
 
@@ -76,31 +69,27 @@ public class SpringContext {
 	}
 
 	@Bean
-	public GenericRepository<FinaxysProfile, String> myGenericRepo1() {
-		return new GenericRepositoryImpl<FinaxysProfile, String>(FinaxysProfile.class);
+	public Repository<FinaxysProfile, String> myGenericRepo1() {
+		return new Repository<FinaxysProfile, String>(FinaxysProfile.class);
 	}
 
 	@Bean
-	public GenericRepository<Challenge, Integer> myGenericRepo2() {
-		return new GenericRepositoryImpl<Challenge, Integer>(Challenge.class);
+	public Repository<Challenge, Integer> myGenericRepo2() {
+		return new Repository<Challenge, Integer>(Challenge.class);
 	}
 
 	@Bean
-	public GenericRepository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> myGenericRepo3() {
-		return new GenericRepositoryImpl<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK>(
-				FinaxysProfile_Challenge.class);
+	public InnovateServiceImpl innovateService() {
+		return new InnovateServiceImpl();
 	}
-    @Bean 
-   public InnovateServiceImpl innovateService()
-    {
-	 return new InnovateServiceImpl();
-     }
-    @Bean 
-    public PostedFileListener postedFileListener ()
-    {
-    	return new PostedFileListener();
-    }
-    
-	
 
+	@Bean
+	public PostedFileListener postedFileListener() {
+		return new PostedFileListener();
+	}
+
+	@Bean
+	public MessageAppreciatedListner messageAppreciatedListner() {
+		return new MessageAppreciatedListner();
+	}
 }
