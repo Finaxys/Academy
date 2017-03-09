@@ -1,9 +1,5 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
-import allbegray.slack.rtm.EventListener;
-import allbegray.slack.type.Channel;
-import allbegray.slack.type.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +7,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.Utilities.WebApiFactory;
+
+import allbegray.slack.rtm.EventListener;
+import allbegray.slack.type.Channel;
+import allbegray.slack.type.User;
 
 /**
  * Created by Bannou on 08/03/2017.
@@ -27,8 +27,8 @@ public class ChannelTributeCreatedListener implements EventListener {
 			String channelId = jsonNode.get("channel").get("id").asText();
 			Channel channel = WebApiFactory.getSlackWebApiClient().getChannelInfo(channelId);
 			User u = WebApiFactory.getSlackWebApiClient().getUserInfo(jsonNode.get("channel").get("creator").asText());
-			TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(channel.getName());
-			if (tribeChannelMatcher.isTribe()) {
+			TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
+			if (!tribeChannelMatcher.isNotTribe(channel.getName())) {
 				innovateService.addInnovateScore(u);
 			}
 		}

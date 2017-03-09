@@ -1,4 +1,6 @@
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -7,32 +9,36 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class TribeChannelPatternTest {
+    private TribeChannelMatcher tribeChannelMatcher;
+
+    @BeforeClass
+    public void setup(){
+        tribeChannelMatcher = new TribeChannelMatcher();
+    }
+
     @Test
     public void testEmpty() {
         final String message = "";
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(message);
-        assertEquals(false, tribeChannelMatcher.isTribe());
+
+        assertEquals(true, tribeChannelMatcher.isNotTribe(message));
     }
 
     @Test
     public void testCorrectShortName() {
         final String message = "tribu-";
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(message);
-        assertEquals(true, tribeChannelMatcher.isTribe());
+        assertEquals(false, tribeChannelMatcher.isNotTribe(message));
     }
 
     @Test
     public void testCorrectFullName() {
         final String message = "tribu-*Algo1";
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(message);
-        assertEquals(true, tribeChannelMatcher.isTribe());
+        assertEquals(false, tribeChannelMatcher.isNotTribe(message));
     }
 
     @Test
     public void testUpperCaseSameName() {
         final String message = "TRIBU-";
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(message);
-        assertEquals(false, tribeChannelMatcher.isTribe());
+        assertEquals(true, tribeChannelMatcher.isNotTribe(message));
     }
 
 

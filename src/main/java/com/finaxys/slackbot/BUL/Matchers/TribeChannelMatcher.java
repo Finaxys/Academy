@@ -13,11 +13,7 @@ public class TribeChannelMatcher {
     public TribeChannelMatcher() {
     }
 
-    public TribeChannelMatcher(String channelName) {
-        this.matcher = TribeChannelPattern.getTribeChannelPattern().matcher(channelName);
-    }
-
-    public boolean isTribe() {
-        return matcher.matches();
+    public boolean isNotTribe(String channelName) {
+        return !TribeChannelPattern.getTribeChannelPattern().matcher(channelName).matches();
     }
 }

@@ -5,9 +5,8 @@ import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.WebApiFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,9 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
             FinaxysProfile userProfile = finaxysProfileManager.findById(userId);
 
             if (userProfile != null) {
+                System.out.println("************* current score: " + userProfile.getScore() + " ************** ");
                 userProfile.setScore(userProfile.getScore() + SCORE_GRID.JOINED_TRIBUTE.value());
+                System.out.println("************* new score: " + userProfile.getScore() + " ************** ");
                 finaxysProfileManager.updateEntity(userProfile);
             } else {
                 FinaxysProfile finaxysProfile = new FinaxysProfile();
@@ -48,39 +49,39 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
                 finaxysProfileManager.addEntity(finaxysProfile);
 
-                FinaxysSlackBotLogger.logger.info("************* New user added to database; Responsible class: " + this.getClass().getSimpleName() + " ************** ");
+                System.out.println("************* New user added ************** ");
             }
         }
     }
 
     private boolean jsonIsValid(JsonNode jsonNode) {
         if (jsonNode == null) {
-            FinaxysSlackBotLogger.logger.error("************* json is null ************** ");
+            System.out.println("************* json is null ************** ");
             return false;
         }
         if (!jsonNode.has("subtype")) {
-            FinaxysSlackBotLogger.logger.error("************* This type of messages doesn't have a subtype ************** ");
+            System.out.println("************* This type of messages doesn't have a subtype ************** ");
             return false;
         }
         String messageSubtype = jsonNode.get("subtype").asText();
 
         if (!messageSubtype.equals("channel_join")) {
-            FinaxysSlackBotLogger.logger.error("************* This is not a channel join ************** ");
+            System.out.println("************* This is not a channel join ************** ");
             return false;
         }
-        SlackWebApiClient webApiClient = WebApiFactory.getSlackWebApiClient();
         String channelId = jsonNode.get("channel").asText();
+        SlackWebApiClient webApiClient = WebApiFactory.getSlackWebApiClient();
         Channel channel = webApiClient.getChannelInfo(channelId);
         String channelName = channel.getName();
 
         if (channelName == null) {
-            FinaxysSlackBotLogger.logger.error("************* Channel name is null ************** ");
+            System.out.println("************* Channel name is null ************** ");
             return false;
         }
 
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(channelName);
-        if (!tribeChannelMatcher.isTribe()) {
-            FinaxysSlackBotLogger.logger.error("************* This is not a tribute ************** ");
+        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
+        if (tribeChannelMatcher.isNotTribe(channelName)) {
+            System.out.println("************* This is not a tribute ************** ");
             return false;
         }
         if (jsonNode.get("user").asText() == null) {
