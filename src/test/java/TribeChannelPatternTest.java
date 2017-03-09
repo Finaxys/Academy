@@ -1,6 +1,5 @@
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 /**
