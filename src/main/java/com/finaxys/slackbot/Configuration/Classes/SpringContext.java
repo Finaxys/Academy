@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
@@ -91,6 +92,11 @@ public class SpringContext {
 	@Bean
 	public PostedFileListener postedFileListener() {
 		return new PostedFileListener();
+	}
+	@Bean
+	public ChannelTributeCreatedListener channelTributeCreatedListener(){
+		
+		return new ChannelTributeCreatedListener();
 	}
 
 	@Bean

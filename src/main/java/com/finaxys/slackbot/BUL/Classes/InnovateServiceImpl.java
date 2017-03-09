@@ -33,9 +33,8 @@ public class InnovateServiceImpl implements InnovateService {
 		    	  userProfile.setName(u.getName());
 					finaxysProfileRepository.addEntity(userProfile);
 					
-						
-		      }
-		        userProfile.setScore(userProfile.getScore() + 10);
+			 }
+		        userProfile.setScore(userProfile.getScore() + SCORE_GRID.WAS_INNOVATIVE.value());
 				finaxysProfileRepository.updateEntity(userProfile);
 					
 				}
