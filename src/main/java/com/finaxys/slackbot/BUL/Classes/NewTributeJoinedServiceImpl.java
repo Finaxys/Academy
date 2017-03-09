@@ -7,6 +7,8 @@ import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Classes.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+import com.finaxys.slackbot.Utilities.WebApiFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ import javax.transaction.Transactional;
 public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
     @Autowired
-    private Repository<FinaxysProfile,String> finaxysProfileManager;
+    private Repository<FinaxysProfile, String> finaxysProfileManager;
 
     public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
         return finaxysProfileManager;
@@ -30,16 +32,14 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
     }
 
     @Transactional
-    public void onNewTributeJoined(JsonNode jsonNode , SlackWebApiClient webApiClient) {
-        if (jsonIsValid(jsonNode, webApiClient)) {
+    public void onNewTributeJoined(JsonNode jsonNode) {
+        if (jsonIsValid(jsonNode)) {
             String userId = jsonNode.get("user").asText();
 
             FinaxysProfile userProfile = finaxysProfileManager.findById(userId);
 
             if (userProfile != null) {
-                System.out.println("************* current score: " + userProfile.getScore() + " ************** ");
                 userProfile.setScore(userProfile.getScore() + SCORE_GRID.JOINED_TRIBUTE.value());
-                System.out.println("************* new score: " + userProfile.getScore() + " ************** ");
                 finaxysProfileManager.updateEntity(userProfile);
             } else {
                 FinaxysProfile finaxysProfile = new FinaxysProfile();
@@ -48,38 +48,39 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
                 finaxysProfileManager.addEntity(finaxysProfile);
 
-                System.out.println("************* New user added ************** ");
+                FinaxysSlackBotLogger.logger.info("************* New user added to database; Responsible class: " + this.getClass().getSimpleName() + " ************** ");
             }
         }
     }
 
-    private boolean jsonIsValid(JsonNode jsonNode ,SlackWebApiClient webApiClient) {
+    private boolean jsonIsValid(JsonNode jsonNode) {
         if (jsonNode == null) {
-            System.out.println("************* json is null ************** ");
+            FinaxysSlackBotLogger.logger.error("************* json is null ************** ");
             return false;
         }
         if (!jsonNode.has("subtype")) {
-            System.out.println("************* This type of messages doesn't have a subtype ************** ");
+            FinaxysSlackBotLogger.logger.error("************* This type of messages doesn't have a subtype ************** ");
             return false;
         }
         String messageSubtype = jsonNode.get("subtype").asText();
 
         if (!messageSubtype.equals("channel_join")) {
-            System.out.println("************* This is not a channel join ************** ");
+            FinaxysSlackBotLogger.logger.error("************* This is not a channel join ************** ");
             return false;
         }
+        SlackWebApiClient webApiClient = WebApiFactory.getSlackWebApiClient();
         String channelId = jsonNode.get("channel").asText();
         Channel channel = webApiClient.getChannelInfo(channelId);
         String channelName = channel.getName();
 
         if (channelName == null) {
-            System.out.println("************* Channel name is null ************** ");
+            FinaxysSlackBotLogger.logger.error("************* Channel name is null ************** ");
             return false;
         }
 
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher(channelName);
         if (!tribeChannelMatcher.isTribe()) {
-            System.out.println("************* This is not a tribute ************** ");
+            FinaxysSlackBotLogger.logger.error("************* This is not a tribute ************** ");
             return false;
         }
         if (jsonNode.get("user").asText() == null) {

@@ -4,6 +4,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
+import com.finaxys.slackbot.DAL.Classes.Repository;
+import com.finaxys.slackbot.Domains.Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Utilities.Classes.MessageAppreciatedListner;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -68,15 +73,15 @@ public class SpringContext {
 		return txManager;
 	}
 
-	@Bean
-	public Repository<FinaxysProfile, String> myGenericRepo1() {
-		return new Repository<FinaxysProfile, String>(FinaxysProfile.class);
-	}
+    @Bean
+    public Repository<Challenge, Integer> myGenericRepo2() {
+        return new Repository<Challenge, Integer>(Challenge.class);
+    }
 
-	@Bean
-	public Repository<Challenge, Integer> myGenericRepo2() {
-		return new Repository<Challenge, Integer>(Challenge.class);
-	}
+    @Bean
+    public MessageAppreciatedListner messageAppreciatedListener() {
+        return new MessageAppreciatedListner();
+    }
 
 	@Bean
 	public InnovateServiceImpl innovateService() {
@@ -92,4 +97,12 @@ public class SpringContext {
 	public MessageAppreciatedListner messageAppreciatedListner() {
 		return new MessageAppreciatedListner();
 	}
+    @Bean
+    public Repository<FinaxysProfile, String> finaxysProfileManager() {
+        return new Repository<>(FinaxysProfile.class);
+    }
+    @Bean
+    public MessageListener listener() {
+        return new MessageListener();
+    }
 }
