@@ -32,6 +32,18 @@
             <artifactId>slack-api</artifactId>
             <version>v1.3.0.RELEASE</version>
         </dependency>
+        <dependency>
+        
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.4-1200-jdbc41</version>
+</dependency>
+<dependency>
+    <groupId>com.microsoft.sqlserver</groupId>
+    <artifactId>mssql-jdbc</artifactId>
+    <version>6.1.4.jre8-preview</version>
+</dependency>
+
 
         <!-- Hibernate core -->
         <dependency>
@@ -64,7 +76,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
-
+<dependency>
+    <groupId>com.microsoft.sqlserver</groupId>
+    <artifactId>mssql-jdbc</artifactId>
+    <version>6.1.0.jre7</version>
+</dependency>
         <!--&lt;!&ndash; Commons pool &ndash;&gt;-->
         <!--<dependency>-->
             <!--<groupId>commons-pool</groupId>-->
