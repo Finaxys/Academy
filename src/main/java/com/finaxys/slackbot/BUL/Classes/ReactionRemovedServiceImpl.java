@@ -14,15 +14,8 @@ import org.springframework.stereotype.Service;
 public class ReactionRemovedServiceImpl implements ReactionRemovedService{
 
 	@Autowired
-	private Repository<FinaxysProfile, String> myGenericRepo1;
+	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-	public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
-		return myGenericRepo1;
-	}
-
-	public void setFinaxysProfileManager(Repository<FinaxysProfile, String> finaxysProfileRepository) {
-		this.myGenericRepo1 = finaxysProfileRepository;
-	}
 	@Override
 	public void substituteReactionRemovedScore(JsonNode jsonNode) {
 
@@ -38,10 +31,10 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService{
 				if (itemUserId != null && itemUserId != myUserId) {
 					{
 						System.out.println("my item user id " +itemUserId);
-						FinaxysProfile userProfile = myGenericRepo1.findById(itemUserId);
+						FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
 						if (userProfile != null) {
 							userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-							myGenericRepo1.updateEntity(userProfile);
+							finaxysProfileRepository.updateEntity(userProfile);
 						}
 					
 					}

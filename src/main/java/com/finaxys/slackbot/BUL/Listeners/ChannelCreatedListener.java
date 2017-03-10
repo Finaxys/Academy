@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 
+import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,9 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChannelCreatedListener implements EventListener {
 
-
+	@Autowired
+	private InnovateService innovateService;
+	
     @Override
     public void handleMessage(JsonNode jsonNode) {
     	FinaxysSlackBotLogger.logChannelCreated();
+		innovateService.addInnovateScore(jsonNode, this);
     }
 }

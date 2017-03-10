@@ -7,7 +7,7 @@ import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.WebApiFactory;
+import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,34 +20,26 @@ import javax.transaction.Transactional;
 public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
     @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileManager;
-
-    public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
-        return finaxysProfileManager;
-    }
-
-    public void setFinaxysProfileManager(Repository<FinaxysProfile, String> finaxysProfileManager) {
-        this.finaxysProfileManager = finaxysProfileManager;
-    }
+    private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Transactional
     public void onNewTributeJoined(JsonNode jsonNode) {
         if (jsonIsValid(jsonNode)) {
             String userId = jsonNode.get("user").asText();
 
-            FinaxysProfile userProfile = finaxysProfileManager.findById(userId);
+            FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
 
             if (userProfile != null) {
                 System.out.println("************* current score: " + userProfile.getScore() + " ************** ");
                 userProfile.setScore(userProfile.getScore() + SCORE_GRID.JOINED_TRIBUTE.value());
                 System.out.println("************* new score: " + userProfile.getScore() + " ************** ");
-                finaxysProfileManager.updateEntity(userProfile);
+                finaxysProfileRepository.updateEntity(userProfile);
             } else {
                 FinaxysProfile finaxysProfile = new FinaxysProfile();
                 finaxysProfile.setId(userId);
                 finaxysProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
 
-                finaxysProfileManager.addEntity(finaxysProfile);
+                finaxysProfileRepository.addEntity(finaxysProfile);
 
                 System.out.println("************* New user added ************** ");
             }
@@ -70,7 +62,7 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
             return false;
         }
         String channelId = jsonNode.get("channel").asText();
-        SlackWebApiClient webApiClient = WebApiFactory.getSlackWebApiClient();
+        SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
         Channel channel = webApiClient.getChannelInfo(channelId);
         String channelName = channel.getName();
 

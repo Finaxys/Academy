@@ -18,15 +18,9 @@ import com.finaxys.slackbot.Domains.FinaxysProfile;
 public class ReactionAddedServiceImpl implements ReactionAddedService {
 
 	@Autowired
-	private Repository<FinaxysProfile, String> myGenericRepo1;
+	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-	public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
-		return myGenericRepo1;
-	}
-
-	public void setFinaxysProfileManager(Repository<FinaxysProfile, String> finaxysProfileRepository) {
-		this.myGenericRepo1 = finaxysProfileRepository;
-	}
+	
 	@Override
 	public void addReactionAddedScore(JsonNode jsonNode) {
 
@@ -42,14 +36,14 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 				if (itemUserId != null && itemUserId != myUserId) {
 					{
 						System.out.println(itemUserId);
-						FinaxysProfile userProfile = myGenericRepo1.findById(itemUserId);
+						FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
 						if (userProfile != null) {
 							userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-							myGenericRepo1.updateEntity(userProfile);
+							finaxysProfileRepository.updateEntity(userProfile);
 						}
 						else
 						{
-							myGenericRepo1.addEntity(new FinaxysProfile(itemUserId,false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
+							finaxysProfileRepository.addEntity(new FinaxysProfile(itemUserId,false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
 
 						}
 					}

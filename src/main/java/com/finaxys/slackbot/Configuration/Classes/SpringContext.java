@@ -21,11 +21,10 @@ import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
-import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -86,46 +85,38 @@ public class SpringContext {
 	}
 
 	@Bean
-	public PostedFileListener postedFileListener() {
-		return new PostedFileListener();
+	public ChannelCreatedListener channelCreatedListener() {
+		return new ChannelCreatedListener();
 	}
 
 	@Bean
-	public ChannelTributeCreatedListener channelTributeCreatedListener() {
-
-		return new ChannelTributeCreatedListener();
+	public MessageListener messageListener() {
+		return new MessageListener();
 	}
 
-	
-
 	@Bean
-	public Repository<FinaxysProfile, String> finaxysProfileManager() {
+	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
 		return new Repository<>(FinaxysProfile.class);
 	}
 
 	@Bean
-	public MessageListener listener() {
-		return new MessageListener();
-	}
-	
-	
-	@Bean
 	public ReactionRemovedListener reactionRemovedListener() {
 		return new ReactionRemovedListener();
 	}
-	
-	@Bean
-	public ReactionAddedService reactionAddedService() {
-		return new ReactionAddedServiceImpl();
-	}
-    
-	@Bean
-	public ReactionRemovedService reactionRemovedService() {
-		return new ReactionRemovedServiceImpl();
-	}
-	
+
 	@Bean
 	public ReactionAddedListener reactionAddedListener() {
 		return new ReactionAddedListener();
 	}
+
+	@Bean
+	public ReactionAddedService reactionAddedService() {
+		return new ReactionAddedServiceImpl();
+	}
+
+	@Bean
+	public ReactionRemovedService reactionRemovedService() {
+		return new ReactionRemovedServiceImpl();
+	}
+
 }

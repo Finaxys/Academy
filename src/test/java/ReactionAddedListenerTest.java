@@ -14,8 +14,7 @@ import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.Configuration.Classes.SpringContext;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.RealTimeApiFactory;
-import com.finaxys.slackbot.Utilities.WebApiFactory;
+import com.finaxys.slackbot.Utilities.SlackBot;
 import allbegray.slack.rtm.Event;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;
 import allbegray.slack.webapi.SlackWebApiClient;
@@ -32,9 +31,9 @@ public class ReactionAddedListenerTest {
 		try (AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class)) {
 			ReactionAddedListener reactionAddedListener = (ReactionAddedListener) context
 					.getBean("reactionAddedListener");
-			SlackRealTimeMessagingClient slackRealTimeMessagingClient = RealTimeApiFactory
+			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot
 					.getSlackRealTimeMessagingClient();
-			SlackWebApiClient slackWebApiClient = WebApiFactory.getSlackWebApiClient();
+			SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
 			slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED, reactionAddedListener);
 			slackRealTimeMessagingClient.connect();
 			FinaxysProfile finaxysProfile ;
