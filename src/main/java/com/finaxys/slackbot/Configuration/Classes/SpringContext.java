@@ -90,7 +90,7 @@ public class SpringContext {
 	}
 
 	@Bean
-	public Repository<FinaxysProfile, String> finaxysProfileManager() {
+	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
 		return new Repository<>(FinaxysProfile.class);
 	}
 
