@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
 import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageAppreciatedListener;
+
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Repository;
@@ -91,10 +91,7 @@ public class SpringContext {
 		return new ChannelTributeCreatedListener();
 	}
 
-	@Bean
-	public MessageAppreciatedListener messageAppreciatedListener() {
-		return new MessageAppreciatedListener();
-	}
+	
 
 	@Bean
 	public Repository<FinaxysProfile, String> finaxysProfileManager() {
