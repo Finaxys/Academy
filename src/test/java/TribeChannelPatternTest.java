@@ -1,7 +1,7 @@
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -12,14 +12,13 @@ public class TribeChannelPatternTest {
     private TribeChannelMatcher tribeChannelMatcher;
 
     @BeforeClass
-    public void setup(){
+    public void setup() {
         tribeChannelMatcher = new TribeChannelMatcher();
     }
 
     @Test
     public void testEmpty() {
         final String message = "";
-
         assertEquals(true, tribeChannelMatcher.isNotTribe(message));
     }
 
@@ -40,6 +39,4 @@ public class TribeChannelPatternTest {
         final String message = "TRIBU-";
         assertEquals(true, tribeChannelMatcher.isNotTribe(message));
     }
-
-
 }
