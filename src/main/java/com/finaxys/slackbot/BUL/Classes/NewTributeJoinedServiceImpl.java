@@ -20,34 +20,26 @@ import javax.transaction.Transactional;
 public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
 
     @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileManager;
-
-    public Repository<FinaxysProfile, String> getFinaxysProfileManager() {
-        return finaxysProfileManager;
-    }
-
-    public void setFinaxysProfileManager(Repository<FinaxysProfile, String> finaxysProfileManager) {
-        this.finaxysProfileManager = finaxysProfileManager;
-    }
+    private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Transactional
     public void onNewTributeJoined(JsonNode jsonNode) {
         if (jsonIsValid(jsonNode)) {
             String userId = jsonNode.get("user").asText();
 
-            FinaxysProfile userProfile = finaxysProfileManager.findById(userId);
+            FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
 
             if (userProfile != null) {
                 System.out.println("************* current score: " + userProfile.getScore() + " ************** ");
                 userProfile.setScore(userProfile.getScore() + SCORE_GRID.JOINED_TRIBUTE.value());
                 System.out.println("************* new score: " + userProfile.getScore() + " ************** ");
-                finaxysProfileManager.updateEntity(userProfile);
+                finaxysProfileRepository.updateEntity(userProfile);
             } else {
                 FinaxysProfile finaxysProfile = new FinaxysProfile();
                 finaxysProfile.setId(userId);
                 finaxysProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
 
-                finaxysProfileManager.addEntity(finaxysProfile);
+                finaxysProfileRepository.addEntity(finaxysProfile);
 
                 System.out.println("************* New user added ************** ");
             }

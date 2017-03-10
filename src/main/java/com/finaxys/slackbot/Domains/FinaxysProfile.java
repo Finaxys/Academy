@@ -20,6 +20,13 @@ public class FinaxysProfile extends User implements Serializable {
     public FinaxysProfile() {
         this.score = 0;
     }
+
+    public FinaxysProfile(String userId)
+    {
+        new FinaxysProfile();
+        this.id = userId ;
+    }
+
     public FinaxysProfile(String userId ,boolean isChallengeManager ,int score)
     {
     	this.id = userId ;

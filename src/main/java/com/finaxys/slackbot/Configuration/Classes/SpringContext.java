@@ -24,6 +24,8 @@ import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -92,6 +94,10 @@ public class SpringContext {
 	}
 
 	
+    @Bean
+    public MessageListener messageListener() {
+        return new MessageListener();
+    }
 
 	@Bean
 	public Repository<FinaxysProfile, String> finaxysProfileManager() {
