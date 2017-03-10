@@ -1,11 +1,12 @@
 package com.finaxys.slackbot.BUL.Interfaces;
 
-
-
-import allbegray.slack.type.User;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 
 public interface InnovateService {
-	
-	void addInnovateScore(User u);
+
+	void addInnovateScore(JsonNode js,MessageListener MessageListener);
+	void addInnovateScore(JsonNode js,ChannelCreatedListener channelCreatedListener);
 
 }

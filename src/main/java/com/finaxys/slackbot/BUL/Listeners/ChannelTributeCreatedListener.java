@@ -23,14 +23,6 @@ public class ChannelTributeCreatedListener implements EventListener {
 	@Override
 	public void handleMessage(JsonNode jsonNode) {
 
-		if (jsonNode.get("type").asText().equals("channel_created")) {
-			String channelId = jsonNode.get("channel").get("id").asText();
-			Channel channel = WebApiFactory.getSlackWebApiClient().getChannelInfo(channelId);
-			User u = WebApiFactory.getSlackWebApiClient().getUserInfo(jsonNode.get("channel").get("creator").asText());
-			TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
-			if (!tribeChannelMatcher.isNotTribe(channel.getName())) {
-				innovateService.addInnovateScore(u);
-			}
-		}
+		
 	}
 }

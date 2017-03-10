@@ -34,7 +34,7 @@ public class InnovateRewardTest {
 		User u = new User();
 		u.setId("U4B8LQPU3");
 		int preivousScore=finaxysProfileRepository.findById(u.getId()).getScore();
-		innovateService.addInnovateScore(u);
+		//innovateService.addInnovateScore(u);
 		int resultat=finaxysProfileRepository.findById(u.getId()).getScore();
 
 		// Act

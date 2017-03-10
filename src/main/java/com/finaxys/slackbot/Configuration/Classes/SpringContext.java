@@ -17,15 +17,11 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
-import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
-
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -83,29 +79,19 @@ public class SpringContext {
 	}
 
 	@Bean
-	public PostedFileListener postedFileListener() {
-		return new PostedFileListener();
+	public ChannelCreatedListener channelCreatedListener() {
+
+		return new ChannelCreatedListener();
 	}
 
 	@Bean
-	public ChannelTributeCreatedListener channelTributeCreatedListener() {
-
-		return new ChannelTributeCreatedListener();
+	public MessageListener messageListener() {
+		return new MessageListener();
 	}
-
-	
-    @Bean
-    public MessageListener messageListener() {
-        return new MessageListener();
-    }
 
 	@Bean
 	public Repository<FinaxysProfile, String> finaxysProfileManager() {
 		return new Repository<>(FinaxysProfile.class);
 	}
 
-	@Bean
-	public MessageListener listener() {
-		return new MessageListener();
-	}
 }
