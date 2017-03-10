@@ -67,4 +67,8 @@ public class FinaxysProfile extends User implements Serializable {
     public void incrementScore(int score) {
         this.score += score;
     }
+    
+    public void decrementScore(int score) {
+        this.score -= score;
+    }
 }

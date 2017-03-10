@@ -2,14 +2,12 @@ package com.finaxys.slackbot.DAL;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @org.springframework.stereotype.Repository
 @Transactional
 public class Repository<T, K extends Serializable> {

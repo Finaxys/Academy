@@ -2,6 +2,9 @@ package com.finaxys.slackbot.BUL.Listeners;
 
 import allbegray.slack.rtm.EventListener;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,5 +16,6 @@ public class ChannelCreatedListener implements EventListener {
 
     @Override
     public void handleMessage(JsonNode jsonNode) {
+    	FinaxysSlackBotLogger.logChannelCreated();
     }
 }

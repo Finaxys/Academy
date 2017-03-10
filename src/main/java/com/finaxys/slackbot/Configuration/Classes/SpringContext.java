@@ -17,8 +17,13 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Listeners.ChannelTributeCreatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageAppreciatedListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.PostedFileListener;
 import com.finaxys.slackbot.DAL.Repository;
@@ -91,10 +96,7 @@ public class SpringContext {
 		return new ChannelTributeCreatedListener();
 	}
 
-	@Bean
-	public MessageAppreciatedListener messageAppreciatedListener() {
-		return new MessageAppreciatedListener();
-	}
+	
 
 	@Bean
 	public Repository<FinaxysProfile, String> finaxysProfileManager() {
@@ -104,5 +106,26 @@ public class SpringContext {
 	@Bean
 	public MessageListener listener() {
 		return new MessageListener();
+	}
+	
+	
+	@Bean
+	public ReactionRemovedListener reactionRemovedListener() {
+		return new ReactionRemovedListener();
+	}
+	
+	@Bean
+	public ReactionAddedService reactionAddedService() {
+		return new ReactionAddedServiceImpl();
+	}
+    
+	@Bean
+	public ReactionRemovedService reactionRemovedService() {
+		return new ReactionRemovedServiceImpl();
+	}
+	
+	@Bean
+	public ReactionAddedListener reactionAddedListener() {
+		return new ReactionAddedListener();
 	}
 }
