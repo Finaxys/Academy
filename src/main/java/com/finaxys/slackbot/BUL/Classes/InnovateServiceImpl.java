@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.BUL.Classes;
 
+import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,6 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.WebApiFactory;
 
 import allbegray.slack.type.Channel;
 
@@ -32,7 +32,7 @@ public class InnovateServiceImpl implements InnovateService {
 		String userId = json.get("channel").get("creator").asText();
 
 		String channelId = json.get("channel").get("id").asText();
-		Channel channel = WebApiFactory.getSlackWebApiClient().getChannelInfo(channelId);
+		Channel channel = SlackBot.getSlackWebApiClient().getChannelInfo(channelId);
 		TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
 		if (tribeChannelMatcher.isNotTribe(channel.getName()))
 			return;

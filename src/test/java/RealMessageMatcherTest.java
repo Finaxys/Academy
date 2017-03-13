@@ -2,6 +2,7 @@ import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

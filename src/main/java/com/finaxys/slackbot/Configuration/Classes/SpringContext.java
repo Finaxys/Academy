@@ -18,8 +18,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.SlackBotCommandServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -100,5 +106,25 @@ public class SpringContext {
 		return new SlackBotCommandServiceImpl();
 	}
 	
+
+	@Bean
+	public ReactionRemovedListener reactionRemovedListener() {
+		return new ReactionRemovedListener();
+	}
+
+	@Bean
+	public ReactionAddedListener reactionAddedListener() {
+		return new ReactionAddedListener();
+	}
+
+	@Bean
+	public ReactionAddedService reactionAddedService() {
+		return new ReactionAddedServiceImpl();
+	}
+
+	@Bean
+	public ReactionRemovedService reactionRemovedService() {
+		return new ReactionRemovedServiceImpl();
+	}
 
 }

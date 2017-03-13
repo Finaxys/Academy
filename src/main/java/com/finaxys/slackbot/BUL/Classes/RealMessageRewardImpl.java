@@ -7,7 +7,7 @@ import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.WebApiFactory;
+import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +45,6 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     private Channel getChannelById(String channelId) {
-        return WebApiFactory.getSlackWebApiClient().getChannelInfo(channelId);
+        return SlackBot.getSlackWebApiClient().getChannelInfo(channelId);
     }
 }

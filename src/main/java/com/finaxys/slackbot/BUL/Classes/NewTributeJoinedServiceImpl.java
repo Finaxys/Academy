@@ -7,7 +7,7 @@ import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.WebApiFactory;
+import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +62,7 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
             return false;
         }
         String channelId = jsonNode.get("channel").asText();
-        SlackWebApiClient webApiClient = WebApiFactory.getSlackWebApiClient();
+        SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
         Channel channel = webApiClient.getChannelInfo(channelId);
         String channelName = channel.getName();
 
