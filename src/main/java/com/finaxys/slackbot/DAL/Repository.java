@@ -14,56 +14,61 @@ import java.util.List;
 @Transactional
 public class Repository<T, K extends Serializable> {
 
-    @Autowired
-    private SessionFactory sessionFactory;
-    private Class persistentClass;
+	@Autowired
+	private SessionFactory sessionFactory;
+	private Class persistentClass;
 
-    public Repository() {
-    }
+	public Repository() {
+	}
 
-    public Repository(Class<T> persistentClass) {
-        this.persistentClass = persistentClass;
-    }
+	public Repository(Class<T> persistentClass) {
+		this.persistentClass = persistentClass;
+	}
 
-    public Class<T> getPersistentClass() {
-        return persistentClass;
-    }
+	public Class<T> getPersistentClass() {
+		return persistentClass;
+	}
 
-    public void setPersistentClass(Class<T> persistentClass) {
-        this.persistentClass = persistentClass;
-    }
+	public void setPersistentClass(Class<T> persistentClass) {
+		this.persistentClass = persistentClass;
+	}
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
-    public T addEntity(T entity) {
-        return (T) sessionFactory.getCurrentSession().save(entity);
+	public T addEntity(T entity) {
+		return (T) sessionFactory.getCurrentSession().save(entity);
 
-    }
+	}
 
-    public void updateEntity(T entity) {
-        sessionFactory.getCurrentSession().update(entity);
+	public void updateEntity(T entity) {
+		sessionFactory.getCurrentSession().update(entity);
 
-    }
+	}
 
-    public void delete(T entity) {
-        sessionFactory.getCurrentSession().delete(entity);
-    }
+	public void delete(T entity) {
+		sessionFactory.getCurrentSession().delete(entity);
+	}
 
-    public List<T> getAll() {
-        return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
-    }
+	public List<T> getAll() {
+		return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
+	}
 
-    public T findById(K id) {
-        return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
-    }
+	public List<T> getSomeUsers(int n) {
+		return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName())
+				.setMaxResults(n).list();
+	}
 
-    public void saveOrUpdate (T entity){
-        sessionFactory.getCurrentSession().saveOrUpdate(entity);
-    }
+	public T findById(K id) {
+		return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
+	}
+
+	public void saveOrUpdate(T entity) {
+		sessionFactory.getCurrentSession().saveOrUpdate(entity);
+	}
 }

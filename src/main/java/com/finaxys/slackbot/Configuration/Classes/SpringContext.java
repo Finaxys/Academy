@@ -17,6 +17,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.SlackBotCommandServiceImpl;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Repository;
@@ -93,5 +94,11 @@ public class SpringContext {
 	public Repository<FinaxysProfile, String> finaxysProfileManager() {
 		return new Repository<>(FinaxysProfile.class);
 	}
+	@Bean
+	public SlackBotCommandServiceImpl slackBotCommandServiceImpl(){
+		
+		return new SlackBotCommandServiceImpl();
+	}
+	
 
 }
