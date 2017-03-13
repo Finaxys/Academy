@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
+import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,9 @@ public class MessageListener implements EventListener {
 	@Autowired
 	private InnovateService innovateService;
 
+	@Autowired
+	private ChannelLeftService channelLeftService;
+
 	public MessageListener() {
 	}
 
@@ -32,5 +36,6 @@ public class MessageListener implements EventListener {
 		newTributeJoinedService.onNewTributeJoined(jsonNode);
 		realMessageReward.rewardReadlMessage(jsonNode);
 		innovateService.addInnovateScore(jsonNode, this);
+		channelLeftService.onChannelLeaveMessage(jsonNode);
 	}
 }

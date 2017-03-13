@@ -1,12 +1,9 @@
 package com.finaxys.slackbot.Utilities;
 
+import com.finaxys.slackbot.BUL.Listeners.*;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
-import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
-import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.Configuration.Classes.SpringContext;
 
 import allbegray.slack.SlackClientFactory;

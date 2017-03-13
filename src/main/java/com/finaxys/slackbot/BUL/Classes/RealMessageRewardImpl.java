@@ -37,6 +37,7 @@ public class RealMessageRewardImpl implements RealMessageReward {
         }
     }
 
+    @Transactional
     private void increaseSlackUserScore(String userId, SCORE_GRID sentARealMessage) {
         FinaxysProfile profile = finaxysProfileRepository.findById(userId);
         profile = (profile == null) ? new FinaxysProfile(userId) : profile;

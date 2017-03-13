@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.finaxys.slackbot.BUL.Classes.*;
+import com.finaxys.slackbot.BUL.Interfaces.*;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +18,6 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
-import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
-import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
@@ -118,5 +115,14 @@ public class SpringContext {
 	public ReactionRemovedService reactionRemovedService() {
 		return new ReactionRemovedServiceImpl();
 	}
+
+	@Bean
+	public RealMessageReward realMessageReward() { return new RealMessageRewardImpl();}
+
+	@Bean
+	public ChannelLeftService channelLeftService() { return new ChannelLeftServiceImpl();}
+
+	@Bean
+	public NewTributeJoinedService newTributeJoinedService() { return new NewTributeJoinedServiceImpl();}
 
 }

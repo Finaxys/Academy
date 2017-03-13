@@ -44,6 +44,14 @@ public class FinaxysSlackBotLogger {
     	//SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();
     	//slackWebApi.postMessage(debugChannel, message);
     }
+
+    public static void logChannelTributeLeft() {
+
+        String msg ="ChannelTributeLeft";
+        System.out.println(msg);
+        //logger.info(msg);
+        //postDebugMessageToDebugChannel(msg);
+    }
     }
     
 

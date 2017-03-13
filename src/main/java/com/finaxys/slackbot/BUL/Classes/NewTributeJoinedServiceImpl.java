@@ -10,8 +10,7 @@ import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by inesnefoussi on 3/7/17.
@@ -22,64 +21,45 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+    @Override
     @Transactional
     public void onNewTributeJoined(JsonNode jsonNode) {
         if (jsonIsValid(jsonNode)) {
             String userId = jsonNode.get("user").asText();
-
             FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
 
-            if (userProfile != null) {
-                System.out.println("************* current score: " + userProfile.getScore() + " ************** ");
-                userProfile.setScore(userProfile.getScore() + SCORE_GRID.JOINED_TRIBUTE.value());
-                System.out.println("************* new score: " + userProfile.getScore() + " ************** ");
-                finaxysProfileRepository.updateEntity(userProfile);
-            } else {
-                FinaxysProfile finaxysProfile = new FinaxysProfile();
-                finaxysProfile.setId(userId);
-                finaxysProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
-
-                finaxysProfileRepository.addEntity(finaxysProfile);
-
-                System.out.println("************* New user added ************** ");
+            if (userProfile != null)
+                userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
+            else {
+                userProfile = new FinaxysProfile();
+                userProfile.setId(userId);
+                userProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
             }
+
+            finaxysProfileRepository.updateEntity(userProfile);
         }
     }
 
     private boolean jsonIsValid(JsonNode jsonNode) {
-        if (jsonNode == null) {
-            System.out.println("************* json is null ************** ");
-            return false;
-        }
-        if (!jsonNode.has("subtype")) {
-            System.out.println("************* This type of messages doesn't have a subtype ************** ");
-            return false;
-        }
+        if (jsonNode == null) return false;
+        if (!jsonNode.has("subtype")) return false;
+
         String messageSubtype = jsonNode.get("subtype").asText();
 
-        if (!messageSubtype.equals("channel_join")) {
-            System.out.println("************* This is not a channel join ************** ");
-            return false;
-        }
+        if (!messageSubtype.equals("channel_join")) return false;
+
         String channelId = jsonNode.get("channel").asText();
         SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
         Channel channel = webApiClient.getChannelInfo(channelId);
         String channelName = channel.getName();
 
-        if (channelName == null) {
-            System.out.println("************* Channel name is null ************** ");
-            return false;
-        }
+        if (channelName == null) return false;
 
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
-        if (tribeChannelMatcher.isNotTribe(channelName)) {
-            System.out.println("************* This is not a tribute ************** ");
+
+        if (tribeChannelMatcher.isNotTribe(channelName)) return false;
+        if (jsonNode.get("user").asText() == null)
             return false;
-        }
-        if (jsonNode.get("user").asText() == null) {
-            return false;
-        }
         return true;
     }
-
 }

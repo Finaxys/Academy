@@ -2,14 +2,11 @@ package com.finaxys.slackbot.DAL;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
 @org.springframework.stereotype.Repository
-@Transactional
 public class Repository<T, K extends Serializable> {
 
     @Autowired
@@ -21,22 +18,6 @@ public class Repository<T, K extends Serializable> {
 
     public Repository(Class<T> persistentClass) {
         this.persistentClass = persistentClass;
-    }
-
-    public Class<T> getPersistentClass() {
-        return persistentClass;
-    }
-
-    public void setPersistentClass(Class<T> persistentClass) {
-        this.persistentClass = persistentClass;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     public T addEntity(T entity) {
@@ -61,7 +42,7 @@ public class Repository<T, K extends Serializable> {
         return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
     }
 
-    public void saveOrUpdate (T entity){
+    public void saveOrUpdate(T entity) {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
 }

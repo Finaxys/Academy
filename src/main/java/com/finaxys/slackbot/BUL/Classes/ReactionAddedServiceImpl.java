@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by inesnefoussi on 3/7/17.
@@ -22,6 +23,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 
 	
 	@Override
+	@Transactional
 	public void addReactionAddedScore(JsonNode jsonNode) {
 
 		List<String> listEmojis = new ArrayList<String>();
