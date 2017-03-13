@@ -38,9 +38,9 @@ public class SlackBot {
 	public static void main(String[] args) {
 		AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class);
 		SlackRealTimeMessagingClient slackRealTimeMessagingClient = getSlackRealTimeMessagingClient();
-		slackRealTimeMessagingClient.addListener(Event.MESSAGE, (MessageListener) context.getBean("messageListener"));
-		slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
-				(ChannelCreatedListener) context.getBean("channelCreatedListener"));
+		//slackRealTimeMessagingClient.addListener(Event.MESSAGE, (MessageListener) context.getBean("messageListener"));
+		//slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
+				//(ChannelCreatedListener) context.getBean("channelCreatedListener"));
 		slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED,
 				(ReactionAddedListener) context.getBean("reactionAddedListener"));
 		slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
