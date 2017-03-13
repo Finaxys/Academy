@@ -12,37 +12,37 @@ public class FinaxysSlackBotLogger {
     
     public static void logChannelCreated() {
     	String msg = "Channel created";
-    	logger.info(msg);
+    	logger.fatal(msg);
     	postDebugMessageToDebugChannel(msg);
     }
     public static void logChannelTributeCreated() {
     	
     	String msg ="ChannelTributeCreated";
-    	logger.info(msg);
+    	logger.fatal(msg);
     	postDebugMessageToDebugChannel(msg);
     }
     
     public static void logPostedFile() {
     	String msg ="A File is posted";
-    	logger.info(msg);
+    	logger.fatal(msg);
     	postDebugMessageToDebugChannel(msg);
     }
     public static void logReactionAdded() {
     	String msg ="An Emoji is posted";
-    	logger.info(msg);
+    	logger.fatal(msg);
     	postDebugMessageToDebugChannel(msg);
     }
     public static void logReactionRemoved() {
     	String msg = "An Emoji is Removed" ;
-    	logger.info(msg);
+    	logger.fatal(msg);
     	postDebugMessageToDebugChannel(msg);
     }
     
     public static void postDebugMessageToDebugChannel(String message)
     {
-    	//String debugChannel = PropertyLoader.loadSlackBotProperties().getProperty("debugChannel");
-    	//SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();
-    	//slackWebApi.postMessage(debugChannel, message);
+    	String debugChannel = PropertyLoader.loadSlackBotProperties().getProperty("debugChannel");
+    	SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();
+    	slackWebApi.postMessage(debugChannel, message);
     }
 
     public static void logChannelTributeLeft() {
