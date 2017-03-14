@@ -45,4 +45,9 @@ public class Repository<T, K extends Serializable> {
     public void saveOrUpdate(T entity) {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
+
+    public List<T> getSomeUsers(int n) {
+        return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName())
+                .setMaxResults(n).list();
+    }
 }
