@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Configuration.Classes;
+package com.finaxys.slackbot.Configuration;
 
 
 import org.springframework.context.annotation.ComponentScan;

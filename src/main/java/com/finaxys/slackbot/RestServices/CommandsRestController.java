@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.restServices;
+package com.finaxys.slackbot.RestServices;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.finaxys.slackbot.BUL.Classes.SlackBotCommandServiceImpl;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 

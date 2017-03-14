@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Configuration.Classes;
+package com.finaxys.slackbot.Configuration;
 
 import java.util.Properties;
 
@@ -96,6 +96,7 @@ public class SpringContext {
 	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
 		return new Repository<>(FinaxysProfile.class);
 	}
+
 	@Bean
 	public SlackBotCommandService slackBotCommandServiceImpl(){
 

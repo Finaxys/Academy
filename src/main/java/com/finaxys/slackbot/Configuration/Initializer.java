@@ -1,6 +1,7 @@
-package com.finaxys.slackbot.Configuration.Classes;
+package com.finaxys.slackbot.Configuration;
 
 
+import com.finaxys.slackbot.Configuration.WebMvcConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {

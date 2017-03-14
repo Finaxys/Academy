@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Configuration.Classes;
+package com.finaxys.slackbot.Configuration;
 
 
 import java.io.IOException;
