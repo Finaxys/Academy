@@ -93,7 +93,7 @@ public class SpringContext {
 	}
 
 	@Bean
-	public Repository<FinaxysProfile, String> finaxysProfileManager() {
+	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
 		return new Repository<>(FinaxysProfile.class);
 	}
 	@Bean
@@ -131,5 +131,8 @@ public class SpringContext {
 
 	@Bean
 	public NewTributeJoinedService newTributeJoinedService() { return new NewTributeJoinedServiceImpl();}
+
+	@Bean
+	public Repository<Challenge,Integer> challengeRepository() { return new Repository<>(Challenge.class);}
 
 }
