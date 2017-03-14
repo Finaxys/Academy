@@ -3,6 +3,9 @@ package com.finaxys.slackbot.Domains;
 import allbegray.slack.type.User;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class FinaxysProfile extends User implements Serializable {
     private String id;
     private int score;
     private boolean challengeManager;
+    @JsonIgnore
     private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
     public FinaxysProfile() {

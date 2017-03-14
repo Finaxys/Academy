@@ -18,11 +18,6 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
-import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
-import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
@@ -88,6 +83,7 @@ public class SpringContext {
 
 	@Bean
 	public ChannelCreatedListener channelCreatedListener() {
+
 		return new ChannelCreatedListener();
 	}
 
@@ -97,11 +93,11 @@ public class SpringContext {
 	}
 
 	@Bean
-	public Repository<FinaxysProfile, String> finaxysProfileRepository() {
+	public Repository<FinaxysProfile, String> finaxysProfileManager() {
 		return new Repository<>(FinaxysProfile.class);
 	}
 	@Bean
-	public SlackBotCommandServiceImpl slackBotCommandServiceImpl(){
+	public SlackBotCommandService slackBotCommandServiceImpl(){
 
 		return new SlackBotCommandServiceImpl();
 	}

@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReactionRemovedServiceImpl implements ReactionRemovedService{
@@ -18,7 +17,6 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService{
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
 	@Override
-	@Transactional
 	public void substituteReactionRemovedScore(JsonNode jsonNode) {
 
 		List<String> listEmojis = new ArrayList<String>();

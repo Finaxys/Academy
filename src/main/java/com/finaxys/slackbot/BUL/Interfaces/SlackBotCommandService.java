@@ -6,5 +6,5 @@ import com.finaxys.slackbot.Domains.FinaxysProfile;
 
 public interface SlackBotCommandService {
 
-	List<FinaxysProfile> listerUsers(int number);
+	List<FinaxysProfile> listerUsers();
 }
