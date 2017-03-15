@@ -24,7 +24,6 @@ public class SlackBot {
     }
 
     public static SlackWebApiClient getSlackWebApiClient() {
-
         return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(slackBotToken) : slackWebApiClient;
     }
 
