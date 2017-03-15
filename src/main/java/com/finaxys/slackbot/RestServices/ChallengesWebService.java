@@ -77,7 +77,7 @@ public class ChallengesWebService {
         FinaxysProfile profile = finaxysProfileRepository.findById(creatorId);
         challenge.setCreator(profile);
         challenge.setCreationDate(new Date());
-        challenge.setParticipants(new ArrayList<>());
+        //challenge.setParticipants(new ArrayList<>());
 
         challengeRepository.addEntity(challenge);
 
