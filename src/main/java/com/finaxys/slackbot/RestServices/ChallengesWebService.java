@@ -26,23 +26,23 @@ public class ChallengesWebService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    @RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
+    @RequestMapping(value = "/type", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<Challenge>> getChallengesByType(@PathVariable("type") String type) {
+    public ResponseEntity<List<Challenge>> getChallengesByType(@RequestParam("type") String type) {
         List<Challenge> challenges = challengeRepository.getByCriterion("type", type);
         return new ResponseEntity<List<Challenge>>(challenges, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/name", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<Challenge>> getChallengesByName(@PathVariable("name") String name) {
+    public ResponseEntity<List<Challenge>> getChallengesByName(@RequestParam("name") String name) {
         List<Challenge> challenges = challengeRepository.getByCriterion("name", name);
         return new ResponseEntity<List<Challenge>>(challenges, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/date/{date}", method = RequestMethod.GET)
+    @RequestMapping(value = "/date", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<Challenge>> getChallengesByDate(@PathVariable("date") String date) {
+    public ResponseEntity<List<Challenge>> getChallengesByDate(@RequestParam("date") String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<String> dates = new ArrayList<>();
         Date wantedDate = new Date();
@@ -56,7 +56,7 @@ public class ChallengesWebService {
         return new ResponseEntity<List<Challenge>>(challenges, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/listAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/listAll", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<List<Challenge>> getAllChallenges() {
         List<Challenge> challenges = challengeRepository.getAll();
@@ -66,18 +66,12 @@ public class ChallengesWebService {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public void createChallenge(@RequestParam("challengeName") String challengeName,
                                 @RequestParam("description") String description,
-                                @RequestParam("type") String type,
-                                @RequestParam("creatorId") String creatorId) {
+                                @RequestParam("type") String type) {
         Challenge challenge = new Challenge();
-        challenge.setId(null
-        );
         challenge.setName(challengeName);
         challenge.setDescription(description);
         challenge.setType(type);
-        FinaxysProfile profile = finaxysProfileRepository.findById(creatorId);
-        challenge.setCreator(profile);
         challenge.setCreationDate(new Date());
-        challenge.setParticipants(new ArrayList<>());
 
         challengeRepository.addEntity(challenge);
 

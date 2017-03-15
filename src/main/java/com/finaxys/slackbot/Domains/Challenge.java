@@ -16,10 +16,12 @@ public class Challenge implements Serializable {
     private Integer id;
     private String name;
     private String description;
-    private FinaxysProfile creator;
     private Date creationDate;
     private String type;
     private List<FinaxysProfile_Challenge> participants;
+
+    public Challenge() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,14 +47,6 @@ public class Challenge implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public FinaxysProfile getCreator() {
-        return creator;
-    }
-
-    public void setCreator(FinaxysProfile creator) {
-        this.creator = creator;
     }
 
     @Temporal(TemporalType.DATE)
