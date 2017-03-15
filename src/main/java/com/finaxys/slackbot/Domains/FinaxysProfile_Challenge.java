@@ -42,7 +42,7 @@ public class FinaxysProfile_Challenge implements Serializable {
         this.score = score;
     }
 
-    @JoinColumn(name = "CHALLENGE_FK" , insertable = false , updatable = false)
+    @JoinColumn(name = "CHALLENGE_FK", insertable = false, updatable = false)
     @ManyToOne
     public Challenge getChallenge() {
         return challenge;
@@ -52,7 +52,7 @@ public class FinaxysProfile_Challenge implements Serializable {
         this.challenge = challenge;
     }
 
-    @JoinColumn(name = "FINAXYSPROFILE_FK" , insertable = false , updatable = false)
+    @JoinColumn(name = "FINAXYSPROFILE_FK", insertable = false, updatable = false)
     @ManyToOne
     public FinaxysProfile getFinaxysProfile() {
         return finaxysProfile;

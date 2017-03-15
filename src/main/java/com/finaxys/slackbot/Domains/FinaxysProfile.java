@@ -1,11 +1,9 @@
 package com.finaxys.slackbot.Domains;
 
 import allbegray.slack.type.User;
-
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,17 +23,15 @@ public class FinaxysProfile extends User implements Serializable {
         this.score = 0;
     }
 
-    public FinaxysProfile(String userId)
-    {
+    public FinaxysProfile(String userId) {
         new FinaxysProfile();
-        this.id = userId ;
+        this.id = userId;
     }
 
-    public FinaxysProfile(String userId ,boolean isChallengeManager ,int score)
-    {
-    	this.id = userId ;
-    	this.score =score;
-    	this.challengeManager =isChallengeManager;
+    public FinaxysProfile(String userId, boolean isChallengeManager, int score) {
+        this.id = userId;
+        this.score = score;
+        this.challengeManager = isChallengeManager;
     }
 
     @Override
@@ -72,13 +68,12 @@ public class FinaxysProfile extends User implements Serializable {
     public void setFinaxysProfile_challenges(List<FinaxysProfile_Challenge> finaxysProfile_challenges) {
         this.finaxysProfile_challenges = finaxysProfile_challenges;
     }
-    
-    
+
 
     public void incrementScore(int score) {
         this.score += score;
     }
-    
+
     public void decrementScore(int score) {
         this.score -= score;
     }

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages={"com.finaxys.slackbot.*"})
-public class WebMvcConfig  extends WebMvcConfigurerAdapter{
+@ComponentScan(basePackages = {"com.finaxys.slackbot.*"})
+public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 }

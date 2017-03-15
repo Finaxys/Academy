@@ -6,7 +6,8 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 
 public interface InnovateService {
 
-	void addInnovateScore(JsonNode js,MessageListener MessageListener);
-	void addInnovateScore(JsonNode js,ChannelCreatedListener channelCreatedListener);
+    void addInnovateScore(JsonNode js, MessageListener MessageListener);
+
+    void addInnovateScore(JsonNode js, ChannelCreatedListener channelCreatedListener);
 
 }

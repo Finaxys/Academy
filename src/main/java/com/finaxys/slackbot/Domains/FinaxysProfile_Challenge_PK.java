@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by inesnefoussi on 3/6/17.
  */
 @Embeddable
-public class FinaxysProfile_Challenge_PK implements Serializable{
+public class FinaxysProfile_Challenge_PK implements Serializable {
 
     private Integer challenge;
     private String finaxysProfile;

@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.BUL.Matchers;
 
-import com.finaxys.slackbot.BUL.Patterns.NonAlphabeticMessagePattern;
 import com.finaxys.slackbot.BUL.Patterns.RegularMessagePattern;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class RealMessageMatcher {
     }
 
     public boolean isRealMessage(String message) {
-        for(Pattern pattern: unrealMessagePatterns)
+        for (Pattern pattern : unrealMessagePatterns)
             if (pattern.matcher(message).matches()) return false;
         return true;
     }

@@ -7,6 +7,7 @@ import com.finaxys.slackbot.Configuration.SpringContext;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class ReactionAddedListenerTest {
     @Autowired
     Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+    @Ignore
     @Test
     public void messageAppreciatedListenerTest() {
         try (AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class)) {

@@ -1,7 +1,6 @@
 package com.finaxys.slackbot.Domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +11,7 @@ import java.util.List;
  * Created by inesnefoussi on 3/6/17.
  */
 @Entity
-public class Challenge implements Serializable{
+public class Challenge implements Serializable {
 
     private Integer id;
     private String name;
@@ -74,7 +73,7 @@ public class Challenge implements Serializable{
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "challenge" , cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE)
     public List<FinaxysProfile_Challenge> getParticipants() {
         return participants;
     }
