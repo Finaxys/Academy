@@ -7,4 +7,5 @@ import java.util.List;
 public interface SlackBotCommandService {
 
     List<FinaxysProfile> listerUsers();
+    List<FinaxysProfile> listeScores(int n);
 }
