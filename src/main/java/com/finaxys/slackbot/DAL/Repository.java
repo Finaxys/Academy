@@ -1,6 +1,8 @@
 package com.finaxys.slackbot.DAL;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 
@@ -68,5 +70,11 @@ public class Repository<T, K extends Serializable> {
 
 	public void saveOrUpdate(T entity) {
 		sessionFactory.getCurrentSession().saveOrUpdate(entity);
+	}
+
+	public List<T> getByCriterion(String criterion , Object criterionValue) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(persistentClass);
+		criteria.add(Restrictions.eq(criterion,criterionValue));
+		return criteria.list();
 	}
 }

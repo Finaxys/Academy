@@ -133,4 +133,7 @@ public class SpringContext {
 	@Bean
 	public NewTributeJoinedService newTributeJoinedService() { return new NewTributeJoinedServiceImpl();}
 
+	@Bean
+	public Repository<Challenge,Integer> challengeRepository() { return new Repository<>(Challenge.class);}
+
 }
