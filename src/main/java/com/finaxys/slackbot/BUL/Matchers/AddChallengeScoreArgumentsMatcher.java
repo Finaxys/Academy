@@ -2,7 +2,6 @@ package com.finaxys.slackbot.BUL.Matchers;
 
 import com.finaxys.slackbot.BUL.Patterns.AddChallengeScoreArgumentsPattern;
 import com.finaxys.slackbot.BUL.Patterns.ChallengeNameArgumentPattern;
-import com.finaxys.slackbot.BUL.Patterns.RegularMessagePattern;
 import com.finaxys.slackbot.BUL.Patterns.ScoreArgumentPattern;
 
 import java.util.ArrayList;
@@ -34,11 +33,11 @@ public class AddChallengeScoreArgumentsMatcher {
 
     public String getChallengeName(String message) {
         matcher = challengeNameArgument.matcher(message);
-        return matcher.find() ? matcher.group().substring(0,matcher.group().indexOf(" ")) : "";
+        return matcher.find() ? matcher.group().substring(0, matcher.group().indexOf(" ")) : "";
     }
 
     public String getScore(String message) {
         matcher = scoreArgument.matcher(message);
-        return matcher.find() ? matcher.group().substring(0,matcher.group().indexOf(" ")) : "";
+        return matcher.find() ? matcher.group().substring(0, matcher.group().indexOf(" ")) : "";
     }
 }
