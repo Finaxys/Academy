@@ -19,15 +19,20 @@ public class RealMessageMatcherTest {
     }
 
     @Test
-    public void regularMessageTest() {
+    public void regularThreeTimesOrMoreMessageTest() {
         final String message = "aaa";
         assertEquals(false, realMessageMatcher.isRealMessage(message));
     }
 
-    @Ignore
     @Test
     public void nonAlphabeticMessageTest() {
         final String message = "*./+";
         assertEquals(false, realMessageMatcher.isRealMessage(message));
+    }
+
+    @Test
+    public void realMessageTest() {
+        final String message = "Bonjour Finxays!:D";
+        assertEquals(true, realMessageMatcher.isRealMessage(message));
     }
 }
