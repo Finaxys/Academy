@@ -10,11 +10,11 @@ public class NonAlphabeticMessagePattern {
     final String nonAlphabeticMessagePattern;
 
     private NonAlphabeticMessagePattern() {
-        nonAlphabeticMessagePattern = "[^a-zA-Z]";
+        nonAlphabeticMessagePattern = "\\W*";
         pattern = Pattern.compile(nonAlphabeticMessagePattern);
     }
 
-    public static Pattern getNonAlphabeticMessagePattern() {
+    public static Pattern getPattern() {
         if (pattern == null) new NonAlphabeticMessagePattern();
         return pattern;
     }
