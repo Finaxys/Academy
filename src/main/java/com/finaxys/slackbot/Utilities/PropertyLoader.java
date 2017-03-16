@@ -10,12 +10,12 @@ import java.util.Properties;
  */
 public class PropertyLoader {
     public static Properties loadSlackBotProperties() {
-        Path credentialFilePath = Paths.get("src/main/resources/credentials.properties");
+        Path credentialFilePath = Paths.get("/Users/inesnefoussi/Desktop/finaxys slack bot/Academy/src/main/resources/credentials.properties");
         Properties properties = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream(credentialFilePath.toString())) {
             properties.load(fileInputStream);
         } catch (Exception e) {
-            System.out.print(e.getMessage());
+            System.out.print("Exception caught: "+e.getMessage());
         } finally {
             return (properties);
         }
