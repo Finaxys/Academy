@@ -2,6 +2,7 @@ package com.finaxys.slackbot.RestServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.finaxys.slackbot.BUL.Matchers.AddChallengeScoreArgumentsMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.*;
@@ -24,10 +25,13 @@ public class ScoreWebService {
     Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Autowired
-    Repository<Challenge, String> challengeRepository;
+    Repository<Challenge, Integer> challengeRepository;
 
     @Autowired
     Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository;
+
+    @Autowired
+    PropertyLoader propertyLoader;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -60,7 +64,6 @@ public class ScoreWebService {
         };
 
         String extractFinaxysProfileId = extractFinaxysProfileId(arguments);
-
         String challengeName = addChallengeScoreArgumentsMatcher.getChallengeName(arguments);
         Challenge challenge = challengeRepository.getByCriterion("name",challengeName).get(0);
 
@@ -77,7 +80,7 @@ public class ScoreWebService {
     }
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue){
-        return !propertyValue.equals(PropertyLoader.loadSlackBotProperties().getProperty(propertyName));
+        return !propertyValue.equals(propertyLoader.loadSlackBotProperties().getProperty(propertyName));
     }
 
     public boolean userIsNotChallengeManager(String finaxysProfileId){

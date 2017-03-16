@@ -24,6 +24,8 @@ public class AdministratorWebService {
 
     @Autowired
     Repository<FinaxysProfile, String> finaxysProfileRepository;
+    @Autowired
+    PropertyLoader propertyLoader;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -34,7 +36,7 @@ public class AdministratorWebService {
                                                                         @RequestParam("user_id") String adminFinaxysProfileId,
                                                                         @RequestParam("text") String arguments) {
         if (propertiesAreNotEqual("verification_token", token)) {
-            Message message = new Message("Wrong verification token !");
+            Message message = new Message("Wrong verification token !"+propertyLoader.loadSlackBotProperties().getProperty("verification_token"));
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
@@ -58,7 +60,7 @@ public class AdministratorWebService {
     }
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue){
-        return !propertyValue.equals(PropertyLoader.loadSlackBotProperties().getProperty(propertyName));
+        return !propertyValue.equals(propertyLoader.loadSlackBotProperties().getProperty(propertyName));
     }
 
     public boolean userIsNotAdministrator(String adminFinaxysProfileId){

@@ -19,6 +19,8 @@ public class FinaxysProfileWebService {
 
     @Autowired
     SlackBotCommandService slackBotCommandServiceImpl;
+    @Autowired
+    PropertyLoader propertyLoader;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/listAll", method = RequestMethod.POST)
@@ -31,37 +33,33 @@ public class FinaxysProfileWebService {
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listScores(JsonNode jsonNode) {
+    public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("token") String token,
+                                                           @RequestParam("text") String text,
+                                                           @RequestParam("team_domain") String teamDomain) {
 
 
-        String token = jsonNode.get("token").asText();
 
-        if (propertiesAreNotEqual("verification_token", token)) {
+       if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String teamId = jsonNode.get("team_domain").asText();
-        if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
+
+        if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
-        System.out.print("1");
-        String arguments = jsonNode.get("text").asText();
-        System.out.print("2");
-        if(arguments.isEmpty()) arguments = PropertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
-        System.out.print("3");
-        List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(arguments));
+
+        if(text.equals(null)) text = "5";
+        List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
+
 
         return new ResponseEntity<List<FinaxysProfile>>(users, HttpStatus.OK);
-
-
-
     }
 
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue){
-        return !propertyValue.equals(PropertyLoader.loadSlackBotProperties().getProperty(propertyName));
+        return !propertyValue.equals(propertyLoader.loadSlackBotProperties().getProperty(propertyName));
     }
 
 
