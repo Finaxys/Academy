@@ -38,7 +38,7 @@ public class FinaxysProfileWebService {
 
 
 
-       /* if (propertiesAreNotEqual("verification_token", token)) {
+        if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
@@ -47,11 +47,11 @@ public class FinaxysProfileWebService {
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        };*/
+        };
 
-        if(text.isEmpty()) text = PropertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
-        System.out.print("3");
+        if(text.equals(null)) text = "5";
         List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
+
 
         return new ResponseEntity<List<FinaxysProfile>>(users, HttpStatus.OK);
 
