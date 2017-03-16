@@ -47,6 +47,7 @@ public class Repository<T, K extends Serializable> {
                 .setMaxResults(n).list();
     }
 
+
     public T findById(K id) {
         return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
     }
