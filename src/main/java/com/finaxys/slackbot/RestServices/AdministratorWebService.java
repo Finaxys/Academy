@@ -29,7 +29,7 @@ public class AdministratorWebService {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @RequestMapping(value = "/challengeManager", method = RequestMethod.POST)
+    @RequestMapping(value = "/challenge_manager", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> setFinaxysProfileAsChallengeManager(JsonNode jsonNode) {
         String token = jsonNode.get("token").asText();
@@ -44,8 +44,15 @@ public class AdministratorWebService {
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String text = jsonNode.get("text").asText();
-        String finaxysProfileId = splitTextToArguments(text).get(0);
+        String adminFinaxysProfileId = jsonNode.get("user_id").asText();
+        FinaxysProfile adminFinaxysProfile = finaxysProfileRepository.findById(adminFinaxysProfileId);
+        if (!adminFinaxysProfile.isAdministrator()) {
+            Message message = new Message("You don't have administration authorization !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        };
+
+        String arguments = jsonNode.get("text").asText();
+        String finaxysProfileId = splitTextToArguments(arguments).get(0);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
         finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
