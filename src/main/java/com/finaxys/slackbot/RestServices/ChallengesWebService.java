@@ -1,8 +1,12 @@
 package com.finaxys.slackbot.RestServices;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by inesnefoussi on 3/14/17.
@@ -25,6 +30,20 @@ public class ChallengesWebService {
 
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
+
+    private ObjectMapper objectMapper;
+
+    public ChallengesWebService() {
+        objectMapper = new ObjectMapper();
+    }
+
+    private boolean tokenIsValid(String token) {
+        return token.equals(PropertyLoader.loadSlackBotProperties().getProperty("verification_token"));
+    }
+
+    private boolean teamIdIsValid(String teamDomain) {
+        return teamDomain.equals(PropertyLoader.loadSlackBotProperties().getProperty("finaxys_team_name"));
+    }
 
     @RequestMapping(value = "/type", method = RequestMethod.POST)
     @ResponseBody
@@ -58,22 +77,52 @@ public class ChallengesWebService {
 
     @RequestMapping(value = "/listAll", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<Challenge>> getAllChallenges() {
-        List<Challenge> challenges = challengeRepository.getAll();
-        return new ResponseEntity<List<Challenge>>(challenges, HttpStatus.OK);
+    public ResponseEntity<JsonNode> getAllChallenges(@RequestParam("token") String token,
+                                                            @RequestParam("team_domain") String teamDomain
+                                                            ) {
+
+        if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
+            List<Challenge> challenges = challengeRepository.getAll();
+            if (challenges.isEmpty()) {
+                Message message = new Message("There no previous challenges! Come on create one!");
+                return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+            }
+            return new ResponseEntity(objectMapper.convertValue(challenges, JsonNode.class), HttpStatus.OK);
+        }
+        else if (!tokenIsValid(token)) {
+            Message message = new Message("Wrong verification token !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+        else {
+            Message message = new Message("Only for FinaxysTM members !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public void createChallenge(@RequestParam("challengeName") String challengeName,
-                                @RequestParam("description") String description,
-                                @RequestParam("type") String type) {
-        Challenge challenge = new Challenge();
-        challenge.setName(challengeName);
-        challenge.setDescription(description);
-        challenge.setType(type);
-        challenge.setCreationDate(new Date());
+    public void createChallenge(@RequestParam("token") String token,
+                                @RequestParam("team_domain") String teamDomain,
+                                @RequestParam("text") String text,
+                                @RequestParam("user_id") String user_id) {
+        if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
+            Challenge challenge = new Challenge();
+            String[] words = text.trim().split(" ");
 
-        challengeRepository.addEntity(challenge);
+            //challenge.setName(challengeName);
+            //challenge.setDescription(description);
+            //challenge.setType(type);
+            //challenge.setCreationDate(new Date());
+//
+            //challengeRepository.addEntity(challenge);
+        }
+        else if (!tokenIsValid(token)) {
+
+        }
+        else {
+
+        }
+
 
     }
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Bannou on 15/03/2017.
  */
-public class Message implements Serializable {
+public class Message implements Serializable{
     private String text;
     private String response_type;
 
@@ -16,9 +16,6 @@ public class Message implements Serializable {
     public Message(String text, String response_type) {
         this.text = text;
         this.response_type = response_type;
-    }
-
-    public Message() {
     }
 
     public String getText() {
