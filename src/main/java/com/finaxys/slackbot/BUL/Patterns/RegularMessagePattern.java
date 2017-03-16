@@ -10,11 +10,11 @@ public class RegularMessagePattern {
     final String regularMessagePattern;
 
     private RegularMessagePattern() {
-        regularMessagePattern = ".{3}";
+        regularMessagePattern = "([a-zA-Z0-9])\\1{2,}";
         pattern = Pattern.compile(regularMessagePattern);
     }
 
-    public static Pattern getRegularMessagePattern() {
+    public static Pattern getPattern() {
         if (pattern == null) new RegularMessagePattern();
         return pattern;
     }

@@ -31,8 +31,6 @@ public class MessageListener implements EventListener {
     }
 
     public void handleMessage(JsonNode jsonNode) {
-        System.out.print(jsonNode.toString());
-
         newTributeJoinedService.onNewTributeJoined(jsonNode);
         realMessageReward.rewardReadlMessage(jsonNode);
         innovateService.addInnovateScore(jsonNode, this);

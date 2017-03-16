@@ -10,10 +10,7 @@ import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,33 +29,32 @@ public class AdministratorWebService {
 
     @RequestMapping(value = "/challenge_manager/new", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonNode> setFinaxysProfileAsChallengeManager(JsonNode jsonNode) {
-        String token = jsonNode.get("token").asText();
+    public ResponseEntity<JsonNode> setFinaxysProfileAsChallengeManager(@RequestParam("token") String token,
+                                                                        @RequestParam("team_domain") String teamId,
+                                                                        @RequestParam("user_id") String adminFinaxysProfileId,
+                                                                        @RequestParam("text") String arguments) {
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String teamId = jsonNode.get("team_domain").asText();
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
-
-        String adminFinaxysProfileId = jsonNode.get("user_id").asText();
 
         if (userIsNotAdministrator(adminFinaxysProfileId)) {
             Message message = new Message("You don't have administration authorization !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String arguments = jsonNode.get("text").asText();
         String finaxysProfileId = splitTextToArguments(arguments).get(0);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
         finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
-        return new ResponseEntity(HttpStatus.OK);
+        Message message = new Message(finaxysProfile.getName() + "has just became a challenge manager!");
+        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue){
