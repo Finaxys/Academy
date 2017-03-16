@@ -58,7 +58,15 @@ public class ChallengesWebService {
 
     @RequestMapping(value = "/listAll", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<Challenge>> getAllChallenges() {
+    public ResponseEntity<List<Challenge>> getAllChallenges(@RequestParam("token") String token,
+                                                            @RequestParam("team_id") String teamId,
+                                                            @RequestParam("channel_id") String channelId,
+                                                            @RequestParam("channel_name") String channelName,
+                                                            @RequestParam("user_id") String userId,
+                                                            @RequestParam("user_name") String userName,
+                                                            @RequestParam("response_url") String responseUrl,
+                                                            ) {
+
         List<Challenge> challenges = challengeRepository.getAll();
         return new ResponseEntity<List<Challenge>>(challenges, HttpStatus.OK);
     }
