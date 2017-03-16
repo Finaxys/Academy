@@ -9,6 +9,8 @@ import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
+import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -134,6 +136,11 @@ public class SpringContext {
     @Bean
     public Repository<Challenge, Integer> challengeRepository() {
         return new Repository<>(Challenge.class);
+    }
+
+    @Bean
+    public Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository() {
+        return new Repository<>(FinaxysProfile_Challenge.class);
     }
 
 }

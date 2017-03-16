@@ -18,11 +18,11 @@ public class FinaxysProfile_Challenge implements Serializable {
     public FinaxysProfile_Challenge() {
     }
 
-    public FinaxysProfile_Challenge(int score, Challenge challenge, FinaxysProfile finaxysProfile) {
+    public FinaxysProfile_Challenge(int score, Integer challengeId, String finaxysProfileId) {
         this.score = score;
         this.key = new FinaxysProfile_Challenge_PK();
-        key.setChallenge(challenge.getId());
-        key.setFinaxysProfile(finaxysProfile.getId());
+        key.setChallenge(challengeId);
+        key.setFinaxysProfile(finaxysProfileId);
     }
 
     @EmbeddedId
