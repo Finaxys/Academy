@@ -3,6 +3,7 @@ package com.finaxys.slackbot.RestServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.Message;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
@@ -29,7 +30,7 @@ public class AdministratorWebService {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @RequestMapping(value = "/challengeManager", method = RequestMethod.POST)
+    @RequestMapping(value = "/challenge_manager/new", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> setFinaxysProfileAsChallengeManager(JsonNode jsonNode) {
         String token = jsonNode.get("token").asText();
@@ -39,13 +40,20 @@ public class AdministratorWebService {
         };
 
         String teamId = jsonNode.get("team_domain").asText();
-        if (teamId.equals(PropertyLoader.loadSlackBotProperties().getProperty("finaxys_team_name"))) {
+        if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String text = jsonNode.get("text").asText();
-        String finaxysProfileId = splitTextToArguments(text).get(0);
+        String adminFinaxysProfileId = jsonNode.get("user_id").asText();
+
+        if (userIsNotAdministrator(adminFinaxysProfileId)) {
+            Message message = new Message("You don't have administration authorization !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        };
+
+        String arguments = jsonNode.get("text").asText();
+        String finaxysProfileId = splitTextToArguments(arguments).get(0);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
         finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
@@ -55,6 +63,11 @@ public class AdministratorWebService {
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue){
         return !propertyValue.equals(PropertyLoader.loadSlackBotProperties().getProperty(propertyName));
+    }
+
+    public boolean userIsNotAdministrator(String adminFinaxysProfileId){
+        FinaxysProfile adminFinaxysProfile = finaxysProfileRepository.findById(adminFinaxysProfileId);
+        return !adminFinaxysProfile.isAdministrator();
     }
 
     public List<String> splitTextToArguments(String text){

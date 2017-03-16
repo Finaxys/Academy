@@ -70,11 +70,6 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<Challenge, Integer> myGenericRepo2() {
-        return new Repository<Challenge, Integer>(Challenge.class);
-    }
-
-    @Bean
     public InnovateServiceImpl innovateService() {
         return new InnovateServiceImpl();
     }
@@ -100,7 +95,6 @@ public class SpringContext {
 
         return new SlackBotCommandServiceImpl();
     }
-
 
     @Bean
     public ReactionRemovedListener reactionRemovedListener() {

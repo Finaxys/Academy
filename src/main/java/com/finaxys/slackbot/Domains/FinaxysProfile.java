@@ -16,6 +16,7 @@ public class FinaxysProfile extends User implements Serializable, Comparable<Fin
 	private String id;
 	private int score;
 	private boolean challengeManager;
+	private boolean administrator;
 	@JsonIgnore
 	private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
@@ -58,6 +59,14 @@ public class FinaxysProfile extends User implements Serializable, Comparable<Fin
 
 	public void setChallengeManager(boolean challengeManager) {
 		this.challengeManager = challengeManager;
+	}
+
+	public boolean isAdministrator() {
+		return administrator;
+	}
+
+	public void setAdministrator(boolean administrator) {
+		this.administrator = administrator;
 	}
 
 	@OneToMany(mappedBy = "finaxysProfile", cascade = CascadeType.REMOVE)
