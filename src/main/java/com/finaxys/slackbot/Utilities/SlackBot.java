@@ -9,39 +9,32 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.Configuration.SpringContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  * Created by Bannou on 09/03/2017.
  */
 public class SlackBot {
+    @Autowired
+    static PropertyLoader propertyLoader;
     private static SlackWebApiClient slackWebApiClient;
     private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
-    private static String slackBotToken = PropertyLoader.loadSlackBotProperties().getProperty("token");
+
 
     private SlackBot() {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     public static SlackWebApiClient getSlackWebApiClient() {
-        return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(slackBotToken) : slackWebApiClient;
+        return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(propertyLoader.loadSlackBotProperties().getProperty("token")) : slackWebApiClient;
     }
 
     public static SlackRealTimeMessagingClient getSlackRealTimeMessagingClient() {
         return slackRealTimeMessagingClient == null
-                ? SlackClientFactory.createSlackRealTimeMessagingClient(slackBotToken) : slackRealTimeMessagingClient;
+                ? SlackClientFactory.createSlackRealTimeMessagingClient(propertyLoader.loadSlackBotProperties().getProperty("token")) : slackRealTimeMessagingClient;
     }
 
-    public static void main(String[] args) {
-        AbstractApplicationContext context = new AnnotationConfigApplicationContext(SpringContext.class);
-        SlackRealTimeMessagingClient slackRealTimeMessagingClient = getSlackRealTimeMessagingClient();
-        slackRealTimeMessagingClient.addListener(Event.MESSAGE, (MessageListener) context.getBean("messageListener"));
-        slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
-                (ChannelCreatedListener) context.getBean("channelCreatedListener"));
-        slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED,
-                (ReactionAddedListener) context.getBean("reactionAddedListener"));
-        slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
-                (ReactionRemovedListener) context.getBean("reactionRemovedListener"));
-        slackRealTimeMessagingClient.connect();
-    }
 }

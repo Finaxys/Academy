@@ -11,6 +11,7 @@ import java.util.List;
  * Created by inesnefoussi on 3/6/17.
  */
 @Entity
+@Table(name = "CHALLENGE")
 public class Challenge implements Serializable {
 
     private Integer id;

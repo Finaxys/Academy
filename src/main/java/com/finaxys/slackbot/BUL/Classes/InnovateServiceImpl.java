@@ -18,6 +18,8 @@ public class InnovateServiceImpl implements InnovateService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+
+
     public void addInnovateScore(JsonNode json, ChannelCreatedListener channelCreatedListener) {
         String userId = json.get("channel").get("creator").asText();
 

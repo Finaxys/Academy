@@ -1,23 +1,27 @@
 package com.finaxys.slackbot.Utilities;
 
-import java.io.FileInputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+
 import java.util.Properties;
 
 /**
  * Created by Bannou on 07/03/2017.
  */
+@PropertySource(value = "classpath:credentials.properties")
+@Component
 public class PropertyLoader {
-    public static Properties loadSlackBotProperties() {
-        Path credentialFilePath = Paths.get("/Users/inesnefoussi/Desktop/finaxys slack bot/Academy/src/main/resources/credentials.properties");
+    @Autowired
+    private Environment environment;
+    public  Properties loadSlackBotProperties() {
         Properties properties = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream(credentialFilePath.toString())) {
-            properties.load(fileInputStream);
-        } catch (Exception e) {
-            System.out.print("Exception caught: "+e.getMessage());
-        } finally {
-            return (properties);
-        }
+        properties.put("token", environment.getRequiredProperty("token"));
+        properties.put("verification_token", environment.getRequiredProperty("verification_token"));
+        properties.put("finaxys_team_name", environment.getRequiredProperty("finaxys_team_name"));
+        return properties;
     }
 }
