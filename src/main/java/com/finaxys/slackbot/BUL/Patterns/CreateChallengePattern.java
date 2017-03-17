@@ -10,7 +10,7 @@ public class CreateChallengePattern {
     private String regex;
 
     private CreateChallengePattern() {
-        regex = "\".+\"\\s(group|individual)\\s.+";
+        regex = "\".+\"\\s\"(group|individual)\"\\s\".+\"";
         pattern = Pattern.compile(regex);
     }
 
