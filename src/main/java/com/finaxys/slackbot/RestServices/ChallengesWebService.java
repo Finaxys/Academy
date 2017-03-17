@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by inesnefoussi on 3/14/17.
@@ -97,32 +96,6 @@ public class ChallengesWebService {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-
-    }
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public void createChallenge(@RequestParam("token") String token,
-                                @RequestParam("team_domain") String teamDomain,
-                                @RequestParam("text") String text,
-                                @RequestParam("user_id") String user_id) {
-        if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
-            Challenge challenge = new Challenge();
-            String[] words = text.trim().split(" ");
-
-            //challenge.setName(challengeName);
-            //challenge.setDescription(description);
-            //challenge.setType(type);
-            //challenge.setCreationDate(new Date());
-//
-            //challengeRepository.addEntity(challenge);
-        }
-        else if (!tokenIsValid(token)) {
-
-        }
-        else {
-
-        }
-
 
     }
 }

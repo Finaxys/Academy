@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by inesnefoussi on 3/16/17.
@@ -29,7 +30,7 @@ public class CreateChallengeMatcherTest {
 
     @Test
     public void orderNonRespected() {
-        final String command = "Hey fx, please create a challenge with name ch1 and type individual having this description: blabla";
-        assertEquals(true, createChallengeMatcher.match(command));
+        final String command = "Hey fx, please create a challenge with type individual and name ch1 and  having this description: blabla";
+        assertNotEquals(true, createChallengeMatcher.match(command));
     }
 }
