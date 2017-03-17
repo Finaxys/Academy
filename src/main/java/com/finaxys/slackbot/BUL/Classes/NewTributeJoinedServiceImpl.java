@@ -36,7 +36,7 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
                 userProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
             }
 
-            finaxysProfileRepository.updateEntity(userProfile);
+            finaxysProfileRepository.saveOrUpdate(userProfile);
         }
     }
 

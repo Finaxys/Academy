@@ -24,6 +24,7 @@ public class RealMessageRewardImpl implements RealMessageReward {
     @Override
     @Transactional
     public void rewardReadlMessage(JsonNode jsonNode) {
+        if (jsonNode.get("subtype") != null) return;
         String channelId = jsonNode.get("channel").asText();
         Channel channel = getChannelById(channelId);
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
