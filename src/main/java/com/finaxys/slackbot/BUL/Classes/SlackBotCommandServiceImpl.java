@@ -1,5 +1,7 @@
 package com.finaxys.slackbot.BUL.Classes;
 
+import allbegray.slack.SlackClientFactory;
+import allbegray.slack.webapi.SlackWebApiClient;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -16,7 +18,9 @@ import java.util.List;
 public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
-    SlackBot slackBot;
+    @Autowired
+    private  PropertyLoader propertyLoader;
+
 
     @Override
     @Transactional
@@ -32,8 +36,8 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
         Collections.sort(finaxysProfiles, Collections.reverseOrder());
 
         for (FinaxysProfile finaxysProfile:finaxysProfiles) {
-
-            String finaxysProfileName = slackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName();
+           SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
+            String finaxysProfileName = slackWebApiClient.getUserInfo(finaxysProfile.getId()).getName();
             finaxysProfile.setName(finaxysProfileName);
         }
         return finaxysProfiles;

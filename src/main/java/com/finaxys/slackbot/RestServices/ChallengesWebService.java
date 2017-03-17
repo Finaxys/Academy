@@ -29,6 +29,9 @@ public class ChallengesWebService {
 
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
+    @Autowired
+    private PropertyLoader propertyLoader;
+
 
     private ObjectMapper objectMapper;
 
@@ -37,11 +40,11 @@ public class ChallengesWebService {
     }
 
     private boolean tokenIsValid(String token) {
-        return token.equals(PropertyLoader.loadSlackBotProperties().getProperty("verification_token"));
+        return token.equals(propertyLoader.loadSlackBotProperties().getProperty("verification_token"));
     }
 
     private boolean teamIdIsValid(String teamDomain) {
-        return teamDomain.equals(PropertyLoader.loadSlackBotProperties().getProperty("finaxys_team_name"));
+        return teamDomain.equals(propertyLoader.loadSlackBotProperties().getProperty("finaxys_team_name"));
     }
 
     @RequestMapping(value = "/type", method = RequestMethod.POST)
