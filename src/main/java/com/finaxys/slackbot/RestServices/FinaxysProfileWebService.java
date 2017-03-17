@@ -44,17 +44,18 @@ public class FinaxysProfileWebService {
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        if(text.equals(null)) text = "5";
+        if (text.equals(null)) text = propertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
+        if (!text.trim().matches("^[1-9][0-9]*")) {
+            Message message = new Message("command not valid");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
         List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
-
-
-        return new ResponseEntity<List<FinaxysProfile>>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 
