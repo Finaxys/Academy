@@ -3,6 +3,7 @@ package com.finaxys.slackbot.BUL.Matchers;
 import com.finaxys.slackbot.BUL.Patterns.AddChallengeScoreArgumentsPattern;
 import com.finaxys.slackbot.BUL.Patterns.ChallengeNameArgumentPattern;
 import com.finaxys.slackbot.BUL.Patterns.ScoreArgumentPattern;
+import com.finaxys.slackbot.BUL.Patterns.UserIdArgumentPattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,14 @@ public class AddChallengeScoreArgumentsMatcher {
     private List<Pattern> addChallengeScoreArgumentsPatterns;
     private Pattern challengeNameArgument;
     private Pattern scoreArgument;
+    private Pattern finaxysProfileIdArgument;
 
     public AddChallengeScoreArgumentsMatcher() {
         addChallengeScoreArgumentsPatterns = new ArrayList<>();
         addChallengeScoreArgumentsPatterns.add(AddChallengeScoreArgumentsPattern.getPattern());
         challengeNameArgument = ChallengeNameArgumentPattern.getPattern();
         scoreArgument = ScoreArgumentPattern.getPattern();
+        finaxysProfileIdArgument = UserIdArgumentPattern.getPattern();
     }
 
     public boolean isCorrectAddChallengeScoreArguments(String message) {
@@ -39,5 +42,10 @@ public class AddChallengeScoreArgumentsMatcher {
     public String getScore(String message) {
         matcher = scoreArgument.matcher(message);
         return matcher.find() ? matcher.group().substring(0, matcher.group().indexOf(" ")) : "";
+    }
+
+    public String getFinaxysProfileId(String message) {
+        matcher = finaxysProfileIdArgument.matcher(message);
+        return matcher.find() ? matcher.group().substring(1) : "";
     }
 }

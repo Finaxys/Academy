@@ -63,7 +63,7 @@ public class ScoreWebService {
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
-        String extractFinaxysProfileId = extractFinaxysProfileId(arguments);
+        String extractFinaxysProfileId = addChallengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
         String challengeName = addChallengeScoreArgumentsMatcher.getChallengeName(arguments);
         Challenge challenge = challengeRepository.getByCriterion("name",challengeName).get(0);
 
@@ -86,9 +86,5 @@ public class ScoreWebService {
     public boolean userIsNotChallengeManager(String finaxysProfileId){
         FinaxysProfile adminFinaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
         return !adminFinaxysProfile.isAdministrator();
-    }
-
-    public String extractFinaxysProfileId(String arguments){
-        return arguments.substring(arguments.indexOf("@")+1, arguments.indexOf("|"));
     }
 }
