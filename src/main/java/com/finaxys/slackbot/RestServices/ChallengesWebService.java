@@ -65,6 +65,14 @@ public class ChallengesWebService {
         return true;
     }
 
+    private String getStringFromList(List<Challenge> challenges) {
+        String result = "";
+        for (Challenge challenge : challenges) {
+            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"\n";
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/type", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> getChallengesByType(@RequestParam("text") String text,
@@ -80,8 +88,11 @@ public class ChallengesWebService {
                     List<Challenge> challenges = challengeRepository.getByCriterion("type", text);
                     if (challenges.isEmpty())
                         message.setText("There are no challenges having the type " + text);
-                    else
-                        return new ResponseEntity(objectMapper.convertValue(challenges, JsonNode.class), HttpStatus.OK);
+                    else {
+                        String result = getStringFromList(challenges);
+                        return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                    }
+
                 }
             }
         } else
@@ -101,8 +112,10 @@ public class ChallengesWebService {
                 List<Challenge> challenges = challengeRepository.getByCriterion("name", text);
                 if (challenges.isEmpty())
                     message.setText("There are no challenges with such a name.");
-                else
-                    return new ResponseEntity(objectMapper.convertValue(challenges, JsonNode.class), HttpStatus.OK);
+                else {
+                    String result = getStringFromList(challenges);
+                    return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                }
             }
 
         } else
@@ -131,10 +144,10 @@ public class ChallengesWebService {
                     List<Challenge> challenges = challengeRepository.getByCriterion("creationDate", wantedDate);
                     if (challenges.isEmpty())
                         message.setText("There are no challenges on this date: " + text);
-                    else
-                        return new ResponseEntity(objectMapper.convertValue(challenges, JsonNode.class), HttpStatus.OK);
-
-
+                    else {
+                        String result = getStringFromList(challenges);
+                        return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                    }
                 }
             }
         } else
@@ -153,7 +166,10 @@ public class ChallengesWebService {
                 List<Challenge> challenges = challengeRepository.getAll();
                 if (challenges.isEmpty())
                     message.setText("There no previous challenges! Come on create one!");
-                else return new ResponseEntity(objectMapper.convertValue(challenges, JsonNode.class), HttpStatus.OK);
+                else {
+                    String result = getStringFromList(challenges);
+                    return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                }
             }
         } else
             message.setText("There was a problem treating your request. Please try again.");
