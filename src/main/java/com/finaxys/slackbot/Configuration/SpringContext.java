@@ -143,6 +143,7 @@ public class SpringContext {
     public Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository() {
         return new Repository<>(FinaxysProfile_Challenge.class);
     }
+
     @Bean
     public PropertyLoader propertyLoader()
     {
