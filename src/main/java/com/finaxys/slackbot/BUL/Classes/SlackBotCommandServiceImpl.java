@@ -18,8 +18,6 @@ import java.util.List;
 public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
-    @Autowired
-    private  PropertyLoader propertyLoader;
 
 
     @Override
@@ -35,11 +33,6 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getSomeUsers(n);
         Collections.sort(finaxysProfiles, Collections.reverseOrder());
 
-        for (FinaxysProfile finaxysProfile:finaxysProfiles) {
-           SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String finaxysProfileName = slackWebApiClient.getUserInfo(finaxysProfile.getId()).getName();
-            finaxysProfile.setName(finaxysProfileName);
-        }
         return finaxysProfiles;
     }
 }

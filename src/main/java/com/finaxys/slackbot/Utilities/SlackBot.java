@@ -39,6 +39,7 @@ public class SlackBot {
                 ? SlackClientFactory.createSlackRealTimeMessagingClient(propertyLoader.loadSlackBotProperties().getProperty("token")) : slackRealTimeMessagingClient;
     }
 
+
 }
 
 

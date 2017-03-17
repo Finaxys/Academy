@@ -11,6 +11,7 @@ public class Message implements Serializable{
 
     public Message(String text) {
         this.text = text;
+        this.response_type ="ephemeral";
     }
 
     public Message(String text, String response_type) {

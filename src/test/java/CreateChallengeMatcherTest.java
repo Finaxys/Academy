@@ -18,7 +18,7 @@ public class CreateChallengeMatcherTest {
 
     @Test
     public void validString() {
-        final String command = "\"JavaEE\" \"group\" \"desc1\"";
+        final String command = "Java EE,group,desc1";
         assertEquals(true, createChallengeMatcher.match(command));
     }
 

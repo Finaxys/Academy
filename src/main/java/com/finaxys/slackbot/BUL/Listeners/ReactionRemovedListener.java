@@ -20,7 +20,7 @@ public class ReactionRemovedListener implements EventListener {
     public void handleMessage(JsonNode jsonNode) {
         System.out.println(jsonNode.toString());
         reactionRemovedService.substituteReactionRemovedScore(jsonNode);
-        FinaxysSlackBotLogger.logReactionRemoved();
+
     }
 
 }

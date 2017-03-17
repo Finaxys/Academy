@@ -68,7 +68,7 @@ public class ChallengesWebService {
     private String getStringFromList(List<Challenge> challenges) {
         String result = "";
         for (Challenge challenge : challenges) {
-            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"\n";
+            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"  \n";
         }
         return result;
     }
@@ -79,7 +79,7 @@ public class ChallengesWebService {
                                                         @RequestParam("token") String token,
                                                         @RequestParam("team_domain") String teamDomain) {
         Message message = new Message("");
-        if (!requestParametersAreValid(new String[]{text, token, teamDomain})) {
+        if (requestParametersAreValid(new String[]{text, token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 ChallengeTypeMatcher challengeTypeMatcher = new ChallengeTypeMatcher();
                 if (!challengeTypeMatcher.match(text))
@@ -180,25 +180,19 @@ public class ChallengesWebService {
     @ResponseBody
     public ResponseEntity<JsonNode> createChallenge(@RequestParam("token") String token,
                                                     @RequestParam("team_domain") String teamDomain,
-                                                    @RequestParam("text") String text,
-                                                    @RequestParam("user_id") String user_id) {
+                                                    @RequestParam("text") String text) {
         Message message = new Message("");
-        if (requestParametersAreValid(new String[]{token, teamDomain, text, user_id})) {
+        if (requestParametersAreValid(new String[]{token, teamDomain, text})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 CreateChallengeMatcher createChallengeMatcher = new CreateChallengeMatcher();
                 if (!createChallengeMatcher.match(text.trim()))
-                    message.setText("Sorry! Wrong request format! Your request should have the following format: \"challengeName\" \"group|individual\" \"descriptionText\"");
+                    message.setText("Sorry! Wrong request format! Your request should have the following format: challengeName,group|individual,descriptionText");
                 else {
-                    text = text.trim().substring(1);
-                    String challengeName = text.substring(0,text.indexOf('"'));
-                    text = text.substring(text.indexOf('"'+3));
-                    String challengeType = text.substring(0,text.indexOf('"'));
-                    text = text.substring(text.indexOf('"'+3));
-                    String challengeDescription = text.substring(0,text.indexOf('"'));
+                    String[] challengeInfo = text.trim().split(",");
                     Challenge challenge = new Challenge();
-                    challenge.setName(challengeName);
-                    challenge.setType(challengeType);
-                    challenge.setDescription(challengeDescription);
+                    challenge.setName(challengeInfo[0]);
+                    challenge.setType(challengeInfo[1]);
+                    challenge.setDescription(challengeInfo[2]);
                     challengeRepository.addEntity(challenge);
                     message.setText("Challenge successfully added.");
                 }

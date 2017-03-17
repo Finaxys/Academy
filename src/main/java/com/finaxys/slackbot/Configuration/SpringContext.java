@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+
 @EnableTransactionManagement
 @ComponentScan({"com.finaxys.slackbot.*"})
 @PropertySource(value = "classpath:dataSourceInformation.properties")
@@ -142,6 +143,7 @@ public class SpringContext {
     public Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository() {
         return new Repository<>(FinaxysProfile_Challenge.class);
     }
+
     @Bean
     public PropertyLoader propertyLoader()
     {
