@@ -10,7 +10,7 @@ public class OneUsernameArgumentPattern {
     final String oneUsernameArgumentPattern;
 
     private OneUsernameArgumentPattern() {
-        oneUsernameArgumentPattern = ".*(<@\\w{10}|.*>){1}.*";
+        oneUsernameArgumentPattern = ".*(<@\\w{9}|.*>){1}.*";
         pattern = Pattern.compile(oneUsernameArgumentPattern);
     }
 

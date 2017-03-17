@@ -60,10 +60,10 @@ public class AdministratorWebService {
 
         String finaxysProfileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
-        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
+        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId) : finaxysProfile;
         finaxysProfile.setAdministrator(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
-        Message message = new Message("<@" + finaxysProfileId + "|" + finaxysProfile.getName() + "> has just became an administrator!");
+        Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName() + "> has just became an administrator!");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -125,10 +125,10 @@ public class AdministratorWebService {
 
         String finaxysProfileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
-        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
+        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId) : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
-        Message message = new Message("<@" + finaxysProfileId + "|" + finaxysProfile.getName() + "> has just became a challenge manager!");
+        Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> has just became a challenge manager!");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -155,7 +155,7 @@ public class AdministratorWebService {
         }
         ;
 
-        List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getByCriterion("challenge_manager", true);
+        List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getByCriterion("challengeManager", true);
         String messageText = "Challenge managers' list:\n";
         for (FinaxysProfile finaxysProfile : finaxysProfiles)
             messageText += "- @<" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";

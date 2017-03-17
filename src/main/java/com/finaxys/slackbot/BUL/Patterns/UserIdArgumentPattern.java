@@ -10,7 +10,7 @@ public class UserIdArgumentPattern {
     final String userIdArgumentPattern;
 
     private UserIdArgumentPattern() {
-        userIdArgumentPattern = "@\\w{10}";
+        userIdArgumentPattern = "@\\w{9}";
         pattern = Pattern.compile(userIdArgumentPattern);
     }
 

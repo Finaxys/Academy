@@ -37,7 +37,7 @@ public class OneUsernameArgumentMatcherTest {
 
     @Test
     public void extractUserIdTest() {
-        final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals("U012ABCDEF", oneUsernameArgumentMatcher.getUserIdArgument(message));
+        final String message = "Yo Bot ! <@U012ABCDF|ernie> got 130 points in JavaEE challenge ! Looool";
+        assertEquals("U012ABCDF", oneUsernameArgumentMatcher.getUserIdArgument(message));
     }
 }
