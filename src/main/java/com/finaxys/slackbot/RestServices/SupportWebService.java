@@ -58,6 +58,7 @@ public class SupportWebService {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            message = new Message("There was an error accessing some help files. Please try again later");
         }
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
