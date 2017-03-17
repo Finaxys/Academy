@@ -71,7 +71,7 @@ public class Challenge implements Serializable {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
     public List<FinaxysProfile_Challenge> getParticipants() {
         return participants;
     }
