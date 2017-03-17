@@ -18,6 +18,7 @@ public class PropertyLoader {
         properties.put("finaxys_team_name", environment.getRequiredProperty("finaxys_team_name"));
         properties.put("verification_token", environment.getRequiredProperty("verification_token"));
         properties.put("defaultnumber", environment.getRequiredProperty("defaultnumber"));
+        properties.put("debugChannel", environment.getRequiredProperty("debugChannel"));
 
         return properties;
     }

@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+
 @EnableTransactionManagement
 @ComponentScan({"com.finaxys.slackbot.*"})
 @PropertySource(value = "classpath:dataSourceInformation.properties")

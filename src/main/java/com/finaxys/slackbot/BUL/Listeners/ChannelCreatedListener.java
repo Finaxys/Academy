@@ -18,7 +18,6 @@ public class ChannelCreatedListener implements EventListener {
 
     @Override
     public void handleMessage(JsonNode jsonNode) {
-        FinaxysSlackBotLogger.logChannelCreated();
         innovateService.addInnovateScore(jsonNode, this);
     }
 }

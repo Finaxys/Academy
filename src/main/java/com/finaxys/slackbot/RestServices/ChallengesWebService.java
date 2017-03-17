@@ -68,7 +68,7 @@ public class ChallengesWebService {
     private String getStringFromList(List<Challenge> challenges) {
         String result = "";
         for (Challenge challenge : challenges) {
-            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"\n";
+            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"  \n";
         }
         return result;
     }
@@ -79,7 +79,7 @@ public class ChallengesWebService {
                                                         @RequestParam("token") String token,
                                                         @RequestParam("team_domain") String teamDomain) {
         Message message = new Message("");
-        if (!requestParametersAreValid(new String[]{text, token, teamDomain})) {
+        if (requestParametersAreValid(new String[]{text, token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 ChallengeTypeMatcher challengeTypeMatcher = new ChallengeTypeMatcher();
                 if (!challengeTypeMatcher.match(text))

@@ -88,9 +88,10 @@ public class AdministratorWebService {
         };
 
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getByCriterion("administrator", true);
-        String messageText = "Administrators' list:\n";
+        String messageText = "Administrators' list: \n";
         for (FinaxysProfile finaxysProfile : finaxysProfiles)
-            messageText += "- @<" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
+            messageText += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
+        messageText = (finaxysProfiles.size()>0)?messageText :"";
         Message message = new Message(messageText);
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
@@ -158,7 +159,8 @@ public class AdministratorWebService {
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getByCriterion("challengeManager", true);
         String messageText = "Challenge managers' list:\n";
         for (FinaxysProfile finaxysProfile : finaxysProfiles)
-            messageText += "- @<" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
+            messageText += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
+        messageText = (finaxysProfiles.size()>0)?messageText :"";
         Message message = new Message(messageText);
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }

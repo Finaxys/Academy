@@ -25,6 +25,5 @@ public class PostedFileListener implements EventListener {
     public void handleMessage(JsonNode jsonNode) {
 
 
-        FinaxysSlackBotLogger.logPostedFile();
     }
 }
