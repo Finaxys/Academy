@@ -68,7 +68,7 @@ public class ChallengesWebService {
     private String getStringFromList(List<Challenge> challenges) {
         String result = "";
         for (Challenge challenge : challenges) {
-            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"  \n";
+            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"  \n ";
         }
         return result;
     }
