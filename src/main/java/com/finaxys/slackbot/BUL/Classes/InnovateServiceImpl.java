@@ -33,6 +33,7 @@ public class InnovateServiceImpl implements InnovateService {
         finaxysProfileRepository.saveOrUpdate(userProfile);
         FinaxysSlackBotLogger.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
+
     }
 
     public void addInnovateScore(JsonNode json, MessageListener messageListener) {

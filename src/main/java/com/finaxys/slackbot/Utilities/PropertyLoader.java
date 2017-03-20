@@ -19,6 +19,7 @@ public class PropertyLoader {
         properties.put("verification_token", environment.getRequiredProperty("verification_token"));
         properties.put("defaultnumber", environment.getRequiredProperty("defaultnumber"));
         properties.put("debugChannel", environment.getRequiredProperty("debugChannel"));
+        properties.put("team_id", environment.getRequiredProperty("team_id"));
 
         return properties;
     }

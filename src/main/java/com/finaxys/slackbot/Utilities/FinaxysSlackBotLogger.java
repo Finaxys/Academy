@@ -3,10 +3,9 @@ package com.finaxys.slackbot.Utilities;
 import allbegray.slack.webapi.SlackWebApiClient;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-/**
- * Created by inesnefoussi on 3/9/17.
- */
+@Component
 public class FinaxysSlackBotLogger {
 
     public static Logger logger = Logger.getLogger(FinaxysSlackBotLogger.class);

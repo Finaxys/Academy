@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by Bannou on 14/03/2017.
  */
 @RestController
-public class EventApiInitializer {
+public class EventApi {
 
     @Autowired
     private RealMessageReward realMessageReward;
@@ -26,27 +27,24 @@ public class EventApiInitializer {
 
     @RequestMapping(value = "/eventApi", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> initializeEventApi(@RequestParam("challenge") String challenge,
-                                                     @RequestParam("token") String token,
-                                                     @RequestParam("team_id") String teamId,
-                                                     @RequestParam("team_id") JsonNode event) {
-        if (!challenge.isEmpty())
-            return new ResponseEntity(challenge, HttpStatus.OK);
+    public ResponseEntity<String> initializeEventApi(@RequestBody JsonNode jsonNode) {
+        if (jsonNode.has("challenge"))
+            return new ResponseEntity(jsonNode.get("challenge").asText(), HttpStatus.OK);
 
-        if (propertiesAreNotEqual("verification_token", token)) {
+        if (propertiesAreNotEqual("verification_token", jsonNode.get("token").asText())) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
 
-        if (propertiesAreNotEqual("finaxys_team_id", teamId)) {
+       if (propertiesAreNotEqual("team_id", jsonNode.get("team_id").asText())) {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
+        String eventType = jsonNode.get("type").asText();
 
-        String eventType = event.get("type").asText();
 
         if (eventType.equals("message.channels"))
-            realMessageReward.rewardReadlMessage(event.get("event"));
+            realMessageReward.rewardReadlMessage(jsonNode.get("event"));
 
         return new ResponseEntity(HttpStatus.OK);
     }
