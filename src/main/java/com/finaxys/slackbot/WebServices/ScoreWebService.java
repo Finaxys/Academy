@@ -73,7 +73,9 @@ public class ScoreWebService {
         int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
 
         FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score, challenge.getId(), extractFinaxysProfileId);
-        if (finaxysProfileChallengeRepository.addEntity(finaxysProfile_challenge) == null) {
+        try {
+            finaxysProfileChallengeRepository.addEntity(finaxysProfile_challenge);
+        }catch (Exception e){
             Message message = new Message("A problem has occured! The user may have a score for this challengs already !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }

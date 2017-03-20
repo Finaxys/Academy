@@ -23,19 +23,19 @@ public class AddChallengeScoreArgumentsMatcherTest {
 
     @Test
     public void missingChallengeArgumentTest() {
-        final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenges ! :D";
+        final String message = "Yo Bot ! <@U012ABCEF|ernie> got 20 points in JavaEE challenges ! :D";
         assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsFirstTest() {
-        final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenge ! :D";
+        final String message = "Yo Bot ! <@U012ABCDF|ernie> got 20 points in JavaEE challenge ! :D";
         assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsSecondTest() {
-        final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
+        final String message = "Yo Bot ! <@U012ABCDF|ernie> got 130 points in JavaEE challenge ! Looool";
         assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
@@ -55,5 +55,11 @@ public class AddChallengeScoreArgumentsMatcherTest {
     public void extractScoreTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
         assertEquals("130", addChallengeScoreArgumentsMatcher.getScore(message));
+    }
+
+    @Test
+    public void extractFinaxysProfileId() {
+        final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
+        assertEquals("U012ABCDE", addChallengeScoreArgumentsMatcher.getFinaxysProfileId(message));
     }
 }

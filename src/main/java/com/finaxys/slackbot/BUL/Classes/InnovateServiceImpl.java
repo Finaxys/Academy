@@ -37,7 +37,7 @@ public class InnovateServiceImpl implements InnovateService {
 
     public void rewardFileSharing(JsonNode json) {
 
-        String userId = json.get("user").asText();
+        String userId = json.get("user_id").asText();
         String channelId = json.get("channel").get("id").asText();
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
         userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
