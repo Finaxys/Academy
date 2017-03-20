@@ -58,7 +58,7 @@ public class AdministratorWebService {
         finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile() : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
-        Message message = new Message(finaxysProfile.getName() + "has just became a challenge manager!");
+        Message message = new Message(/*finaxysProfile.getName()*/"" + "has just became a challenge manager!");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 

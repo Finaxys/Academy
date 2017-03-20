@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FINAXYS_PROFILE")
-public class FinaxysProfile extends User implements Serializable, Comparable<FinaxysProfile> {
+public class FinaxysProfile  implements Serializable, Comparable<FinaxysProfile> {
 	private String id;
 	private int score;
 	private boolean challengeManager;
@@ -35,7 +35,7 @@ public class FinaxysProfile extends User implements Serializable, Comparable<Fin
 		this.challengeManager = isChallengeManager;
 	}
 
-	@Override
+
 	@Id
 	public String getId() {
 		return id;

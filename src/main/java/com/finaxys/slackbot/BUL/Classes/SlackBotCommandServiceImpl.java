@@ -31,11 +31,7 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getSomeUsers(n);
         Collections.sort(finaxysProfiles, Collections.reverseOrder());
 
-        for (FinaxysProfile finaxysProfile:finaxysProfiles) {
 
-            String finaxysProfileName = slackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName();
-            finaxysProfile.setName(finaxysProfileName);
-        }
         return finaxysProfiles;
     }
 }

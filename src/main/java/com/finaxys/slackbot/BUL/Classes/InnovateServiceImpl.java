@@ -33,6 +33,7 @@ public class InnovateServiceImpl implements InnovateService {
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
 
+
     }
 
     public void addInnovateScore(JsonNode json, MessageListener messageListener) {
