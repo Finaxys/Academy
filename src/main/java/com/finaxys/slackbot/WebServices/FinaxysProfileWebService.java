@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.RestServices;
+package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
