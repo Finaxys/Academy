@@ -2,6 +2,7 @@ package com.finaxys.slackbot.RestServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -24,6 +25,9 @@ public class AdministratorWebService {
 
     @Autowired
     Repository<FinaxysProfile, String> finaxysProfileRepository;
+
+    @Autowired
+    ReactionAddedService reactionAddedService;
 
     @Autowired
     PropertyLoader propertyLoader;
