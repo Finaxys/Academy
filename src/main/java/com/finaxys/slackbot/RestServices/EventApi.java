@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by Bannou on 14/03/2017.
  */
 @RestController
-public class EventApiInitializer {
+public class EventApi {
 
     @Autowired
     private RealMessageReward realMessageReward;
@@ -39,10 +40,9 @@ public class EventApiInitializer {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-
         String eventType = jsonNode.get("type").asText();
-        System.out.println("event Type = " +eventType);
-        System.out.println("event = " +jsonNode.toString());
+
+
         if (eventType.equals("message.channels"))
             realMessageReward.rewardReadlMessage(jsonNode.get("event"));
 
