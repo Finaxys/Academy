@@ -1,7 +1,5 @@
-import com.finaxys.slackbot.BUL.Matchers.AddChallengeScoreArgumentsMatcher;
-import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
+import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,41 +8,41 @@ import static org.junit.Assert.assertEquals;
  * Created by Bannou on 16/03/2017.
  */
 public class AddChallengeScoreArgumentsMatcherTest {
-    private AddChallengeScoreArgumentsMatcher addChallengeScoreArgumentsMatcher;
+    private ChallengeScoreArgumentsMatcher addChallengeScoreArgumentsMatcher;
 
     @Before
     public void setup() {
-        addChallengeScoreArgumentsMatcher = new AddChallengeScoreArgumentsMatcher();
+        addChallengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
     }
 
     @Test
     public void nonArgumentsTest() {
         final String message = "Lorem Ipsum";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void missingChallengeArgumentTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenges ! :D";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsFirstTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenge ! :D";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsSecondTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void moreThanThreeArgumentsTest() {
         final String message = "*./+";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
