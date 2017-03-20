@@ -18,31 +18,31 @@ public class AddChallengeScoreArgumentsMatcherTest {
     @Test
     public void nonArgumentsTest() {
         final String message = "Lorem Ipsum";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void missingChallengeArgumentTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenges ! :D";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsFirstTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 20 points in JavaEE challenge ! :D";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsSecondTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void moreThanThreeArgumentsTest() {
         final String message = "*./+";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrectAddChallengeScoreArguments(message));
+        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
