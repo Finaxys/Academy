@@ -2,10 +2,7 @@ package com.finaxys.slackbot.Configuration;
 
 import com.finaxys.slackbot.BUL.Classes.*;
 import com.finaxys.slackbot.BUL.Interfaces.*;
-import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
-import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -14,7 +11,10 @@ import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
@@ -71,14 +71,8 @@ public class SpringContext {
     }
 
     @Bean
-    public InnovateServiceImpl innovateService() {
+    public InnovateService innovateService() {
         return new InnovateServiceImpl();
-    }
-
-    @Bean
-    public ChannelCreatedListener channelCreatedListener() {
-
-        return new ChannelCreatedListener();
     }
 
     @Bean
@@ -95,16 +89,6 @@ public class SpringContext {
     public SlackBotCommandService slackBotCommandServiceImpl() {
 
         return new SlackBotCommandServiceImpl();
-    }
-
-    @Bean
-    public ReactionRemovedListener reactionRemovedListener() {
-        return new ReactionRemovedListener();
-    }
-
-    @Bean
-    public ReactionAddedListener reactionAddedListener() {
-        return new ReactionAddedListener();
     }
 
     @Bean
@@ -128,8 +112,8 @@ public class SpringContext {
     }
 
     @Bean
-    public NewTribeJoinedService newTributeJoinedService() {
-        return new NewTribeJoinedService();
+    public NewTribeJoinedService newTribeJoinedService() {
+        return new NewTribeJoinedServiceImpl();
     }
 
     @Bean
@@ -143,8 +127,7 @@ public class SpringContext {
     }
 
     @Bean
-    public PropertyLoader propertyLoader()
-    {
+    public PropertyLoader propertyLoader() {
         return new PropertyLoader();
     }
 

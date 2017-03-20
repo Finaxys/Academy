@@ -31,9 +31,6 @@ public class MessageListener implements EventListener {
     }
 
     public void handleMessage(JsonNode jsonNode) {
-        newTribeJoinedService.onNewTributeJoined(jsonNode);
-        realMessageReward.rewardReadlMessage(jsonNode);
-        innovateService.addInnovateScore(jsonNode, this);
-        channelLeftService.onChannelLeaveMessage(jsonNode);
+        newTribeJoinedService.onNewTribeJoined(jsonNode);
     }
 }

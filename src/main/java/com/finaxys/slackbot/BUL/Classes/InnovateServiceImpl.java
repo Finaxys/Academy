@@ -3,8 +3,6 @@ package com.finaxys.slackbot.BUL.Classes;
 import allbegray.slack.type.Channel;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
-import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -19,14 +17,15 @@ public class InnovateServiceImpl implements InnovateService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    public void addInnovateScore(JsonNode json, ChannelCreatedListener channelCreatedListener) {
+    public void rewardTribeCreator(JsonNode json) {
         String userId = json.get("channel").get("creator").asText();
-
         String channelId = json.get("channel").get("id").asText();
+
         Channel channel = SlackBot.getSlackWebApiClient().getChannelInfo(channelId);
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
         if (tribeChannelMatcher.isNotTribe(channel.getName()))
             return;
+
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
         userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
@@ -36,12 +35,8 @@ public class InnovateServiceImpl implements InnovateService {
 
     }
 
-    public void addInnovateScore(JsonNode json, MessageListener messageListener) {
+    public void rewardFileSharing(JsonNode json) {
 
-        if (!json.has("subtype"))
-            return;
-        if (!json.get("subtype").asText().equals("file_share"))
-            return;
         String userId = json.get("user").asText();
         String channelId = json.get("channel").get("id").asText();
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
