@@ -3,7 +3,7 @@ package com.finaxys.slackbot.BUL.Classes;
 import allbegray.slack.type.Channel;
 import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.BUL.Interfaces.NewTributeJoinedService;
+import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by inesnefoussi on 3/7/17.
  */
 @Service
-public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
+public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Override
     @Transactional
-    public void onNewTributeJoined(JsonNode jsonNode) {
+    public void onNewTribeJoined(JsonNode jsonNode) {
 
         if (jsonIsValid(jsonNode)) {
             String userId = jsonNode.get("user").asText();
@@ -40,7 +40,7 @@ public class NewTributeJoinedServiceImpl implements NewTributeJoinedService {
             }
 
             finaxysProfileRepository.saveOrUpdate(userProfile);
-            FinaxysSlackBotLogger.logChannelTributeJoined(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(),SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+            FinaxysSlackBotLogger.logChannelTributeJoined(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
         }
     }

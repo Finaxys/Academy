@@ -42,7 +42,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
                 }
             }
-            FinaxysSlackBotLogger.logReactionRemoved(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(),SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+            FinaxysSlackBotLogger.logReactionRemoved(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(), SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
         }
     }
 

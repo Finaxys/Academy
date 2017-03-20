@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChannelLeftServiceImpl implements ChannelLeftService {
 
     @Autowired
-    private Repository<FinaxysProfile,String> finaxysProfileRepository;
+    private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Transactional
     @Override
@@ -38,7 +38,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 
             profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
             finaxysProfileRepository.updateEntity(profile);
-            FinaxysSlackBotLogger.logMemberLeftChannel(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(),SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+            FinaxysSlackBotLogger.logMemberLeftChannel(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
         }
     }
 

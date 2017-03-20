@@ -1,12 +1,8 @@
 package com.finaxys.slackbot.BUL.Classes;
 
-import allbegray.slack.SlackClientFactory;
-import allbegray.slack.webapi.SlackWebApiClient;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Utilities.PropertyLoader;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

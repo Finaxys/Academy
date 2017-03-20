@@ -6,5 +6,5 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Created by Bannou on 08/03/2017.
  */
 public interface RealMessageReward {
-    void rewardReadlMessage(JsonNode jsonNode);
+    void rewardReadMessage(JsonNode jsonNode);
 }

@@ -3,6 +3,9 @@ package com.finaxys.slackbot.RestServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.PropertyLoader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,44 +26,62 @@ import java.util.List;
 @RestController
 @RequestMapping("/help")
 public class SupportWebService {
-    private List<String> commandsNames;
-    private List<String> commandsArgumets;
-    private List<String> commandsDescription;
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private PropertyLoader propertyLoader;
+
     public SupportWebService() {
-        commandsNames = new ArrayList<>();
-        commandsArgumets = new ArrayList<>();
-        commandsDescription = new ArrayList<>();
         objectMapper = new ObjectMapper();
+    }
+
+    private boolean tokenIsValid(String token) {
+        return token.equals(propertyLoader.loadSlackBotProperties().getProperty("verification_token"));
+    }
+
+    private boolean teamIdIsValid(String teamDomain) {
+        return teamDomain.equals(propertyLoader.loadSlackBotProperties().getProperty("finaxys_team_name"));
+    }
+
+    private ResponseEntity<JsonNode> showMessage(String token, String teamDomain, Message message) {
+        if (!tokenIsValid(token)) {
+            message = new Message("Wrong verification token !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+        if (!teamIdIsValid(teamDomain)) {
+            message = new Message("Only for FinaxysTM members !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<JsonNode> getHelp(@RequestParam("token") String token,
                                             @RequestParam("team_domain") String teamDomain) {
         Message message = new Message("");
-        try {
-            FileReader namesFileReader = new FileReader("src/main/resources/listOfCommandsNames.txt");
-            FileReader argumentsFileReader = new FileReader("src/main/resources/listOfCommandsArguments.txt");
-            FileReader descriptionsFileReader = new FileReader("src/main/resources/listOfCommandsDescriptions.txt");
 
-            BufferedReader namesBufferedReader = new BufferedReader(namesFileReader);
-            BufferedReader argumentsBufferedReader = new BufferedReader(argumentsFileReader);
-            BufferedReader descriptionsBufferedReader = new BufferedReader(descriptionsFileReader);
-
-            String currentCommand , currentCommandArguments, currentCommandDescription;
+        if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
+            BufferedReader namesBufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/listOfCommandsNames.txt")));
+            BufferedReader argumentsBufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/listOfCommandsArguments.txt")));
+            BufferedReader descriptionsBufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/listOfCommandsDescriptions.txt")));
             String messageText = "";
-            while ((currentCommand = namesBufferedReader.readLine()) != null &&
-                    (currentCommandArguments = argumentsBufferedReader.readLine()) != null &&
-                    (currentCommandDescription = descriptionsBufferedReader.readLine()) != null) {
-                messageText += currentCommand+" \n"+currentCommandArguments+" \n"+currentCommandDescription+" \n";
-                message = new Message(messageText);
+            int i = 1;
 
+            try {
+                while ((namesBufferedReader.read()) != -1) {
+                    String commandName = namesBufferedReader.readLine();
+                    String commandArguments = argumentsBufferedReader.readLine();
+                    String commandDescription = descriptionsBufferedReader.readLine();
+                    messageText += (i + ". Command name: " + commandName + " \n " + "Command arguments: " + commandArguments + " \n " + commandDescription + " \n ");
+                    i++;
+                }
+                message.setText(messageText);
+            } catch (IOException e) {
+                e.printStackTrace();
+                message = new Message("There was an error accessing some help files. Please try again later \n " + e.toString());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            message = new Message("There was an error accessing some help files. Please try again later");
-        }
-        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        } else
+            return showMessage(token, teamDomain, message);
     }
 }

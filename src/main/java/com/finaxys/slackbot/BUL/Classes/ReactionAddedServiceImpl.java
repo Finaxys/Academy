@@ -26,14 +26,14 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
         listEmojis.add("+1");
         listEmojis.add("clap");
         listEmojis.add("ok_hand");
-        if (jsonNode == null ) return ;
-        if(jsonNode.get("item_user").asText() == null)return ;
+        if (jsonNode == null) return;
+        if (jsonNode.get("item_user").asText() == null) return;
         String itemUserId = jsonNode.get("item_user").asText();
         String myUserId = jsonNode.get("user").asText();
         String reaction = jsonNode.get("reaction").asText();
         FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
         if (listEmojis.contains(reaction)) {
-            if (itemUserId != null && itemUserId != myUserId && userProfile!=null) {
+            if (itemUserId != null && itemUserId != myUserId && userProfile != null) {
                 {
                     System.out.println(itemUserId);
 
@@ -47,7 +47,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
                 }
             }
         }
-        FinaxysSlackBotLogger.logReactionAdded(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(),SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+        FinaxysSlackBotLogger.logReactionAdded(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(), SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
     }
 
 }

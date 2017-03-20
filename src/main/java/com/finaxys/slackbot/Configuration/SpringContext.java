@@ -12,10 +12,8 @@ import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
 import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -130,8 +128,8 @@ public class SpringContext {
     }
 
     @Bean
-    public NewTributeJoinedService newTributeJoinedService() {
-        return new NewTributeJoinedServiceImpl();
+    public NewTribeJoinedService newTributeJoinedService() {
+        return new NewTribeJoinedService();
     }
 
     @Bean

@@ -69,7 +69,6 @@
           <element id="library" level="project" name="Maven: com.microsoft.azure:adal4j:1.0.0" />
           <element id="library" level="project" name="Maven: com.nimbusds:oauth2-oidc-sdk:4.5" />
           <element id="library" level="project" name="Maven: net.jcip:jcip-annotations:1.0" />
-          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.3.1" />
           <element id="library" level="project" name="Maven: net.minidev:json-smart:1.1.1" />
           <element id="library" level="project" name="Maven: com.nimbusds:lang-tag:1.4" />
           <element id="library" level="project" name="Maven: com.nimbusds:nimbus-jose-jwt:3.1.2" />
@@ -82,6 +81,7 @@
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.38" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">
