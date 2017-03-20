@@ -26,24 +26,15 @@ public class FinaxysProfileWebService {
 
     @RequestMapping(value = "/listAll", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listAllUsers(@RequestParam("token") String token,
-
-                                                             @RequestParam("team_domain") String teamDomain) {
-        if (propertiesAreNotEqual("verification_token", token)) {
-            Message message = new Message("Wrong verification token !");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        ;
-
-
-        if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
-            Message message = new Message("Only for FinaxysTM members !");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        ;
-
+    public ResponseEntity<List<FinaxysProfile>> listAllUsers() {
+        String messageText = "";
         List<FinaxysProfile> users = slackBotCommandServiceImpl.listerUsers();
-        return new ResponseEntity<List<FinaxysProfile>>(users, HttpStatus.OK);
+        for (int i = 0; i < users.size(); i++) {
+            messageText += "- " + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
+        }
+        Message message = new Message(messageText);
+        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+
     }
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
@@ -74,14 +65,11 @@ public class FinaxysProfileWebService {
         }
         List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
         for (int i = 0; i < users.size(); i++) {
-
-
-            messageText += "-" + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
+            messageText += "- " + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
         }
         Message message = new Message(messageText);
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
-
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue) {
         return !propertyValue.equals(propertyLoader.loadSlackBotProperties().getProperty(propertyName));

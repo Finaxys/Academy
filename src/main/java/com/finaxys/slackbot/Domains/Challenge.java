@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class Challenge implements Serializable {
     private List<FinaxysProfile_Challenge> participants;
 
     public Challenge() {
+        creationDate = new Date();
+        participants = new ArrayList<>();
     }
 
     @Id
@@ -68,7 +71,7 @@ public class Challenge implements Serializable {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
     public List<FinaxysProfile_Challenge> getParticipants() {
         return participants;
     }

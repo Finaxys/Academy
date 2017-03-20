@@ -18,19 +18,13 @@ public class CreateChallengeMatcherTest {
 
     @Test
     public void validString() {
-        final String command = "Hey fx, tu peux me creer un challenge dont le nom est ch1, de type group et tu mets comme description desc1?";
+        final String command = "Java EE,group,desc1";
         assertEquals(true, createChallengeMatcher.match(command));
     }
 
     @Test
     public void validStringWithInEnglish() {
-        final String command = "Hey fx, please create a challenge with name ch1 and type individual having this description: blabla";
-        assertEquals(true, createChallengeMatcher.match(command));
-    }
-
-    @Test
-    public void orderNonRespected() {
-        final String command = "Hey fx, please create a challenge with type individual and name ch1 and  having this description: blabla";
+        final String command = "ch1 individual blabla";
         assertNotEquals(true, createChallengeMatcher.match(command));
     }
 }

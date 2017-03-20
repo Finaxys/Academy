@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by Bannou on 08/03/2017.
- */
 @Service
 public class RealMessageRewardImpl implements RealMessageReward {
 
@@ -24,11 +21,11 @@ public class RealMessageRewardImpl implements RealMessageReward {
     @Override
     @Transactional
     public void rewardReadlMessage(JsonNode jsonNode) {
+        if (jsonNode.has("subtype")) return;
         String channelId = jsonNode.get("channel").asText();
         Channel channel = getChannelById(channelId);
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
         if (tribeChannelMatcher.isNotTribe(channel.getName())) return;
-
         RealMessageMatcher realMessageMatcher = new RealMessageMatcher();
         String message = jsonNode.get("text").asText();
         if (realMessageMatcher.isRealMessage(message)) {

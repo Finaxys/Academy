@@ -8,6 +8,7 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,6 @@ public class InnovateServiceImpl implements InnovateService {
 
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
-
-
 
     public void addInnovateScore(JsonNode json, ChannelCreatedListener channelCreatedListener) {
         String userId = json.get("channel").get("creator").asText();
@@ -32,6 +31,7 @@ public class InnovateServiceImpl implements InnovateService {
         userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
+        FinaxysSlackBotLogger.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
 
     }
@@ -43,11 +43,12 @@ public class InnovateServiceImpl implements InnovateService {
         if (!json.get("subtype").asText().equals("file_share"))
             return;
         String userId = json.get("user").asText();
+        String channelId = json.get("channel").get("id").asText();
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
         userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
-
+        FinaxysSlackBotLogger.logPostedFile(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
     }
-
 }
+

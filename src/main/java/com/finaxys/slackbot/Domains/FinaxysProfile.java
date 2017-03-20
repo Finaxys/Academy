@@ -25,7 +25,7 @@ public class FinaxysProfile  implements Serializable, Comparable<FinaxysProfile>
 	}
 
 	public FinaxysProfile(String userId) {
-		new FinaxysProfile();
+		this.score = 0;
 		this.id = userId;
 	}
 
