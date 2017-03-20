@@ -1,7 +1,5 @@
-import com.finaxys.slackbot.BUL.Matchers.AddChallengeScoreArgumentsMatcher;
-import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
+import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,11 +8,11 @@ import static org.junit.Assert.assertEquals;
  * Created by Bannou on 16/03/2017.
  */
 public class AddChallengeScoreArgumentsMatcherTest {
-    private AddChallengeScoreArgumentsMatcher addChallengeScoreArgumentsMatcher;
+    private ChallengeScoreArgumentsMatcher addChallengeScoreArgumentsMatcher;
 
     @Before
     public void setup() {
-        addChallengeScoreArgumentsMatcher = new AddChallengeScoreArgumentsMatcher();
+        addChallengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
     }
 
     @Test
