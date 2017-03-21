@@ -27,7 +27,10 @@ public class InnovateServiceImpl implements InnovateService {
             return;
 
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
-        userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
+        if (userProfile == null) {
+            String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+            userProfile = new FinaxysProfile(userId, name);
+        }
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
         FinaxysSlackBotLogger.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
@@ -40,7 +43,10 @@ public class InnovateServiceImpl implements InnovateService {
         String userId = json.get("user_id").asText();
         String channelId = json.get("channel").get("id").asText();
         FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
-        userProfile = (userProfile == null) ? new FinaxysProfile(userId) : userProfile;
+        if (userProfile == null) {
+            String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+            userProfile = new FinaxysProfile(userId, name);
+        }
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
         FinaxysSlackBotLogger.logPostedFile(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());

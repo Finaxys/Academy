@@ -33,7 +33,6 @@ public class AdministratorWebService {
     @Autowired
     PropertyLoader propertyLoader;
 
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/admins/new", method = RequestMethod.POST)
@@ -42,8 +41,7 @@ public class AdministratorWebService {
                                                                      @RequestParam("team_domain") String teamId,
                                                                      @RequestParam("user_id") String adminFinaxysProfileId,
                                                                      @RequestParam("text") String arguments) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_add_adminitstrator");
-        if (propertiesAreNotEqual("verification_token", token)) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_add_adminitstrator");        if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
@@ -67,8 +65,9 @@ public class AdministratorWebService {
         };
 
         String finaxysProfileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
+        String finaxysProfileName = oneUsernameArgumentsMatcher.getUserNameArgument(arguments);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
-        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId) : finaxysProfile;
+        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId, finaxysProfileName) : finaxysProfile;
         finaxysProfile.setAdministrator(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
         Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName() + "> has just became an administrator!");
@@ -145,8 +144,9 @@ public class AdministratorWebService {
         };
 
         String finaxysProfileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
+        String finaxysProfileName = oneUsernameArgumentsMatcher.getUserNameArgument(arguments);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
-        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId) : finaxysProfile;
+        finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(finaxysProfileId, finaxysProfileName) : finaxysProfile;
         finaxysProfile.setChallengeManager(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
         Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> has just became a challenge manager!");
