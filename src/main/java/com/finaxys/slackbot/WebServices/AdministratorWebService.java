@@ -80,13 +80,13 @@ public class AdministratorWebService {
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/admins/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/admins/remove", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> unsetFinaxysProfileAsAdministrator(@RequestParam("token") String token,
                                                                        @RequestParam("team_domain") String teamId,
                                                                        @RequestParam("user_id") String adminFinaxysProfileId,
                                                                        @RequestParam("text") String arguments) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_delete_adminitstrator");
+        FinaxysSlackBotLogger.logCommandRequest("/fx_remove_adminitstrator");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -208,13 +208,13 @@ public class AdministratorWebService {
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/challenge_manager/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/challenge_manager/remove", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> unsetFinaxysProfileAsChallengeManager(@RequestParam("token") String token,
                                                                           @RequestParam("team_domain") String teamId,
                                                                           @RequestParam("user_id") String adminFinaxysProfileId,
                                                                           @RequestParam("text") String arguments) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_delete_challenge_managers");
+        FinaxysSlackBotLogger.logCommandRequest("/fx_remove_challenge_manager");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);

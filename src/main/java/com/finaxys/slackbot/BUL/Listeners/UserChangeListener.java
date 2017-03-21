@@ -26,7 +26,6 @@ public class UserChangeListener {
     }
 
     public void handleMessage(JsonNode jsonNode) {
-        finaxysProfileService.onChannelLeaveMessage(jsonNode);
         String finaxysProfileId = jsonNode.get("user").get("user_id").asText();
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
         if (finaxysProfile == null){

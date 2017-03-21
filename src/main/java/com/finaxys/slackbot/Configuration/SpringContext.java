@@ -105,12 +105,7 @@ public class SpringContext {
     public RealMessageReward realMessageReward() {
         return new RealMessageRewardImpl();
     }
-
-    @Bean
-    public FinaxysProfileService finaxysProfileService() {
-        return new FinaxysProfileServiceImpl();
-    }
-
+s
     @Bean
     public ChannelLeftService channelLeftService() {
         return new ChannelLeftServiceImpl();
