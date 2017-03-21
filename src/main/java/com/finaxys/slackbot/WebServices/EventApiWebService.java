@@ -52,26 +52,6 @@ public class EventApiWebService {
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
 
-        String eventType = jsonNode.get("type").asText();
-        JsonNode event = jsonNode.get("event");
-
-        if (eventType.equals("message.channels")) {
-            realMessageReward.rewardReadMessage(event);
-
-        } else if (eventType.equals("reaction_added")) {
-            reactionAddedService.addReactionAddedScore(event);
-
-        } else if (eventType.equals("reaction_removed")) {
-            reactionRemovedService.substituteReactionRemovedScore(event);
-
-        } else if (eventType.equals("file_shared")) {
-            innovateService.rewardFileSharing(event);
-
-        } else if (eventType.equals("channel_created")) {
-            innovateService.rewardTribeCreator(event);
-
-        }
-
         return new ResponseEntity(HttpStatus.OK);
     }
 
