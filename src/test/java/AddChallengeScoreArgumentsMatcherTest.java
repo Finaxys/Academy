@@ -23,7 +23,7 @@ public class AddChallengeScoreArgumentsMatcherTest {
 
     @Test
     public void missingChallengeArgumentTest() {
-        final String message = "Yo Bot ! <@U012ABCEF|ernie> got 20 points in JavaEE challenges ! :D";
+        final String message = "Yo Bot ! <@U012ABCEF|ernie> got 20 points in JavaEE ! :D";
         assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 

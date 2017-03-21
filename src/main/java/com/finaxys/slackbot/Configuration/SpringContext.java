@@ -105,7 +105,7 @@ public class SpringContext {
     public RealMessageReward realMessageReward() {
         return new RealMessageRewardImpl();
     }
-s
+
     @Bean
     public ChannelLeftService channelLeftService() {
         return new ChannelLeftServiceImpl();

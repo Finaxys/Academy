@@ -19,9 +19,6 @@ public class UserChangeListener {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    @Autowired
-    private FinaxysProfileService finaxysProfileService;
-
     public UserChangeListener() {
     }
 
