@@ -8,6 +8,7 @@ import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.Challenge;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,10 +49,12 @@ public class ChallengesWebService {
     private ResponseEntity<JsonNode> showMessage(String token, String teamDomain, Message message) {
         if (!tokenIsValid(token)) {
             message = new Message("Wrong verification token !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         if (!teamIdIsValid(teamDomain)) {
             message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -68,7 +71,7 @@ public class ChallengesWebService {
     private String getStringFromList(List<Challenge> challenges) {
         String result = "";
         for (Challenge challenge : challenges) {
-            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"  \n ";
+            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"\n";
         }
         return result;
     }
@@ -78,6 +81,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByType(@RequestParam("text") String text,
                                                         @RequestParam("token") String token,
                                                         @RequestParam("team_domain") String teamDomain) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_challenges_by_type");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -90,6 +94,7 @@ public class ChallengesWebService {
                         message.setText("There are no challenges having the type " + text);
                     else {
                         String result = getStringFromList(challenges);
+                        FinaxysSlackBotLogger.logCommandResponse(message.getText());
                         return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
                     }
 
@@ -97,6 +102,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText("There was a problem treating your request. Please try again.");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
 
     }
@@ -106,6 +112,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByName(@RequestParam("text") String text,
                                                         @RequestParam("token") String token,
                                                         @RequestParam("team_domain") String teamDomain) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_challenge_named");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -114,12 +121,14 @@ public class ChallengesWebService {
                     message.setText("There are no challenges with such a name.");
                 else {
                     String result = getStringFromList(challenges);
+                    FinaxysSlackBotLogger.logCommandResponse(message.getText());
                     return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
                 }
             }
 
         } else
             message.setText("There was a problem treating your request. Please try again.");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }
 
@@ -128,6 +137,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByDate(@RequestParam("text") String text,
                                                         @RequestParam("token") String token,
                                                         @RequestParam("team_domain") String teamDomain) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_challenges_by_date");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -152,6 +162,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText("There was a problem treating your request. Please try again.");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }
 
@@ -160,6 +171,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getAllChallenges(@RequestParam("token") String token,
                                                      @RequestParam("team_domain") String teamDomain
     ) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_list_challenges");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{token, teamDomain})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -181,6 +193,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> createChallenge(@RequestParam("token") String token,
                                                     @RequestParam("team_domain") String teamDomain,
                                                     @RequestParam("text") String text) {
+        FinaxysSlackBotLogger.logCommandResponse("/fx_create_challenge");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{token, teamDomain, text})) {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -199,6 +212,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText("There was a problem treating your request. Please try again.");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }
 }

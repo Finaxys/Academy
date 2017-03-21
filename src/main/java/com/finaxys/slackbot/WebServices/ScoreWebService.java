@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.*;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,20 +41,24 @@ public class ScoreWebService {
                                                          @RequestParam("team_domain") String teamId,
                                                          @RequestParam("user_id") String challengeManagerFinaxysProfileId,
                                                          @RequestParam("text") String arguments) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_add_score");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
 
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
 
         if (userIsNotChallengeManager(challengeManagerFinaxysProfileId)) {
             Message message = new Message("You don't have challenge manager authorization !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -62,6 +67,7 @@ public class ScoreWebService {
 
         if (!challengeScoreArgumentsMatcher.isCorrect(arguments)) {
             Message message = new Message("Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -77,10 +83,12 @@ public class ScoreWebService {
             finaxysProfileChallengeRepository.addEntity(finaxysProfile_challenge);
         }catch (Exception e){
             Message message = new Message("A problem has occured! The user may have a score for this challengs already !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
 
         Message message = new Message("Score has been added !");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -89,14 +97,18 @@ public class ScoreWebService {
     public ResponseEntity<JsonNode> listScoreForChallenge(@RequestParam("token") String token,
                                                           @RequestParam("team_domain") String teamId,
                                                           @RequestParam("text") String arguments) {
+        FinaxysSlackBotLogger.logCommandRequest("fx_display_challenge_scores");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
 
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -105,6 +117,7 @@ public class ScoreWebService {
 
         if (!challengeScoreArgumentsMatcher.isCorrectListRequest(arguments)) {
             Message message = new Message("Arguments should suit ' ..... <challengeName> challenge ....' Pattern !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -113,6 +126,7 @@ public class ScoreWebService {
         List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
         if (challenges.size() == 0) {
             Message message = new Message("No such challenge ! Check the challenge name");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         Challenge challenge = challenges.get(0);
@@ -120,6 +134,7 @@ public class ScoreWebService {
 
         if (finaxysProfileChallenges.size() == 0) {
             Message message = new Message("No score has been saved till the moment !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         String textMessage = "List of scores of " + challenge.getName() + " : \n";
@@ -127,6 +142,7 @@ public class ScoreWebService {
             FinaxysProfile finaxysProfile = finaxysProfileChallenge.getFinaxysProfile();
             textMessage += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
         }
+        FinaxysSlackBotLogger.logCommandResponse(textMessage);
         return new ResponseEntity(objectMapper.convertValue(textMessage, JsonNode.class), HttpStatus.OK);
     }
 

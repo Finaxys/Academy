@@ -3,6 +3,7 @@ package com.finaxys.slackbot.WebServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,7 @@ public class SupportWebService {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<JsonNode> getHelp(@RequestParam("token") String token,
                                             @RequestParam("team_domain") String teamDomain) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_help");
         Message message = new Message("");
 
         if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
@@ -74,6 +76,7 @@ public class SupportWebService {
                 e.printStackTrace();
                 message = new Message("There was an error accessing some help files. Please try again later \n " + e.toString());
             }
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         } else
             return showMessage(token, teamDomain, message);

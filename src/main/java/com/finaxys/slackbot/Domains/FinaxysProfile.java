@@ -91,4 +91,5 @@ public class FinaxysProfile  implements Serializable, Comparable<FinaxysProfile>
 		int compareFinaxysProfile = ((FinaxysProfile) finaxysProfile).getScore();
 		return this.score - compareFinaxysProfile;
 	}
+
 }

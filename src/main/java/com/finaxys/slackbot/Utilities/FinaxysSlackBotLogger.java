@@ -54,6 +54,17 @@ public class FinaxysSlackBotLogger {
         logger.fatal(msg);
         postDebugMessageToDebugChannel(msg);
     }
+    public static void logCommandRequest(String Command) {
+        String msg = "A command was invoked" + Command;
+        logger.fatal(msg);
+        postDebugMessageToDebugChannel(msg);
+    }
+    public static void logCommandResponse(String command) {
+        String msg = "the command response was" + command;
+        logger.fatal(msg);
+        postDebugMessageToDebugChannel(msg);
+    }
+
     public static void postDebugMessageToDebugChannel(String message) {
         String debugChannel = propertyLoader.loadSlackBotProperties().getProperty("debugChannel");
         SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();

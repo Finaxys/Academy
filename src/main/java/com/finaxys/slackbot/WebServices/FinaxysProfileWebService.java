@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,7 @@ public class FinaxysProfileWebService {
     PropertyLoader propertyLoader;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @RequestMapping(value = "/listAll", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listAllUsers() {
-        String messageText = "";
-        List<FinaxysProfile> users = slackBotCommandServiceImpl.listerUsers();
-        for (int i = 0; i < users.size(); i++) {
-            messageText += "- " + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
-        }
-        Message message = new Message(messageText);
-        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
 
-    }
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
@@ -44,9 +34,10 @@ public class FinaxysProfileWebService {
                                                            @RequestParam("team_domain") String teamDomain) {
         String messageText = "";
 
-
+        FinaxysSlackBotLogger.logCommandRequest("/fx_display_scores ");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -54,6 +45,7 @@ public class FinaxysProfileWebService {
 
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -68,6 +60,7 @@ public class FinaxysProfileWebService {
             messageText += "- " + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
         }
         Message message = new Message(messageText);
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 

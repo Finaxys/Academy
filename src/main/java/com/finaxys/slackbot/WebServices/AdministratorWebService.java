@@ -7,6 +7,7 @@ import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.Message;
+import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class AdministratorWebService {
     @Autowired
     PropertyLoader propertyLoader;
 
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/admins/new", method = RequestMethod.POST)
@@ -40,6 +42,7 @@ public class AdministratorWebService {
                                                                      @RequestParam("team_domain") String teamId,
                                                                      @RequestParam("user_id") String adminFinaxysProfileId,
                                                                      @RequestParam("text") String arguments) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_add_adminitstrator");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -59,6 +62,7 @@ public class AdministratorWebService {
 
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments)) {
             Message message = new Message("Arguments should suit ' .... @Username ...' Pattern !");
+
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
@@ -68,6 +72,7 @@ public class AdministratorWebService {
         finaxysProfile.setAdministrator(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
         Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName() + "> has just became an administrator!");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -76,18 +81,22 @@ public class AdministratorWebService {
     public ResponseEntity<JsonNode> getAdministrators(@RequestParam("token") String token,
                                                       @RequestParam("team_domain") String teamId,
                                                       @RequestParam("user_id") String adminFinaxysProfileId) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_list_administrators");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
         if (userIsNotAdministrator(adminFinaxysProfileId)) {
             Message message = new Message("You don't have administration authorization !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
@@ -97,6 +106,7 @@ public class AdministratorWebService {
             messageText += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
         messageText = (finaxysProfiles.size()>0)?messageText :"";
         Message message = new Message(messageText);
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -106,18 +116,23 @@ public class AdministratorWebService {
                                                                         @RequestParam("team_domain") String teamId,
                                                                         @RequestParam("user_id") String adminFinaxysProfileId,
                                                                         @RequestParam("text") String arguments) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_add_challenge_manager ");
         if (propertiesAreNotEqual("verification_token", token)) {
+
             Message message = new Message("Wrong verification token !" + propertyLoader.loadSlackBotProperties().getProperty("verification_token"));
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
         if (userIsNotAdministrator(adminFinaxysProfileId)) {
             Message message = new Message("You don't have administration authorization !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
@@ -125,6 +140,7 @@ public class AdministratorWebService {
 
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments)) {
             Message message = new Message("Arguments should suit ' .... @Username ...' Pattern !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };
 
@@ -134,6 +150,7 @@ public class AdministratorWebService {
         finaxysProfile.setChallengeManager(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
         Message message = new Message("<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> has just became a challenge manager!");
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
@@ -142,6 +159,7 @@ public class AdministratorWebService {
     public ResponseEntity<JsonNode> getChallengeManagers(@RequestParam("token") String token,
                                                          @RequestParam("team_domain") String teamId,
                                                          @RequestParam("user_id") String adminFinaxysProfileId) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_list_challenge_managers");
         if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !" + propertyLoader.loadSlackBotProperties().getProperty("verification_token"));
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -150,12 +168,14 @@ public class AdministratorWebService {
 
         if (propertiesAreNotEqual("finaxys_team_name", teamId)) {
             Message message = new Message("Only for FinaxysTM members !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
 
         if (userIsNotAdministrator(adminFinaxysProfileId)) {
             Message message = new Message("You don't have administration authorization !");
+            FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -166,6 +186,7 @@ public class AdministratorWebService {
             messageText += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
         messageText = (finaxysProfiles.size()>0)?messageText :"";
         Message message = new Message(messageText);
+        FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
