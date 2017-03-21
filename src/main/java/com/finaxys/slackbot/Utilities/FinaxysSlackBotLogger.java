@@ -66,9 +66,13 @@ public class FinaxysSlackBotLogger {
     }
 
     public static void postDebugMessageToDebugChannel(String message) {
+        Timer.elapsed("postDebug1 ");
         String debugChannel = propertyLoader.loadSlackBotProperties().getProperty("debugChannel");
-        SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();
-        slackWebApi.postMessage(debugChannel, message);
+        Timer.elapsed("postDebug2 ");
+        SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient(); // 100ms first time
+        Timer.elapsed("postDebug3 ");
+        slackWebApi.postMessage(debugChannel, message); // 200/400ms each time
+        Timer.elapsed("postDebug4 ");
     }
 }
 

@@ -2,11 +2,13 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.Message;
 import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ public class FinaxysProfileWebService {
 
     @Autowired
     SlackBotCommandService slackBotCommandServiceImpl;
+    @Autowired
+    private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     @Autowired
     PropertyLoader propertyLoader;
@@ -57,12 +61,19 @@ public class FinaxysProfileWebService {
             Message message = new Message("command not valid");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-        List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
+        Timer.start();
+
+        Timer.elapsed("Service1 ");
+        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, 6);
+        Timer.elapsed("Service2 ");
         for (int i = 0; i < users.size(); i++) {
             messageText += "- " + users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
+        Timer.elapsed("Service3 ");
         Message message = new Message(messageText);
+        Timer.elapsed("Service4 ");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Timer.elapsed("Service5 ");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
