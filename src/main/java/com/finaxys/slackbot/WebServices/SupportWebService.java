@@ -68,13 +68,13 @@ public class SupportWebService {
                     String commandName = namesBufferedReader.readLine();
                     String commandArguments = argumentsBufferedReader.readLine();
                     String commandDescription = descriptionsBufferedReader.readLine();
-                    messageText += (i + ". Command name: " + commandName + " \n " + "Command arguments: " + commandArguments + " \n " + commandDescription + " \n ");
+                    messageText += (i + ". *Command name:* " + commandName + " \n " + "*Command arguments:* " + commandArguments + " \n " + commandDescription + " \n ");
                     i++;
                 }
                 message.setText(messageText);
             } catch (IOException e) {
                 e.printStackTrace();
-                message = new Message("There was an error accessing some help files. Please try again later \n " + e.toString());
+                message = new Message("*There was an error accessing some help files. Please try again later \n *" + e.toString());
             }
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
