@@ -125,7 +125,7 @@ public class ScoreWebService {
         String textMessage = "List of scores of " + challenge.getName() + " : \n";
         for (FinaxysProfile_Challenge finaxysProfileChallenge : finaxysProfileChallenges) {
             FinaxysProfile finaxysProfile = finaxysProfileChallenge.getFinaxysProfile();
-            textMessage += "<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> \n";
+            textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> \n";
         }
         return new ResponseEntity(objectMapper.convertValue(textMessage, JsonNode.class), HttpStatus.OK);
     }

@@ -10,7 +10,7 @@ public class ListScoresByChallengsArgumentsPattern {
     final String challengeScoreArgumentsPattern;
 
     private ListScoresByChallengsArgumentsPattern() {
-        challengeScoreArgumentsPattern = ".*<@\\w{9}|.*>.*\\d{1,3}.*\\s\\w*\\schallenge\\s.*";
+        challengeScoreArgumentsPattern = ".*\\w*\\schallenge.*";
         pattern = Pattern.compile(challengeScoreArgumentsPattern);
     }
 
