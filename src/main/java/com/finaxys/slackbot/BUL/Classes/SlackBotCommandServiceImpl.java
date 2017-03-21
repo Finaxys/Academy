@@ -27,7 +27,7 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Transactional
     public List<FinaxysProfile> listeScores(int n) {
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getSomeUsers(n);
-        Collections.sort(finaxysProfiles, Collections.reverseOrder());
+
 
         return finaxysProfiles;
     }

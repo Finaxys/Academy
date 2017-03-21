@@ -14,6 +14,7 @@ public class ListScoresMatcher {
         assertEquals(true, numberArg.trim().matches("^[1-9][0-9]*"));
     }
 
+
     @Test
     public void doNotBeginByZeroTest() {
         final String numberArg = "050";
