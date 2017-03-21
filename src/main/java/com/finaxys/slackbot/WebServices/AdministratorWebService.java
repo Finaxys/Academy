@@ -41,7 +41,8 @@ public class AdministratorWebService {
                                                                      @RequestParam("team_domain") String teamId,
                                                                      @RequestParam("user_id") String adminFinaxysProfileId,
                                                                      @RequestParam("text") String arguments) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_add_adminitstrator");        if (propertiesAreNotEqual("verification_token", token)) {
+        FinaxysSlackBotLogger.logCommandRequest("/fx_add_adminitstrator");
+        if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         };

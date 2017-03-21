@@ -107,6 +107,11 @@ public class SpringContext {
     }
 
     @Bean
+    public FinaxysProfileService finaxysProfileService() {
+        return new FinaxysProfileServiceImpl();
+    }
+
+    @Bean
     public ChannelLeftService channelLeftService() {
         return new ChannelLeftServiceImpl();
     }

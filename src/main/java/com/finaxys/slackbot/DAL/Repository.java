@@ -26,12 +26,10 @@ public class Repository<T, K extends Serializable> {
 
     public T addEntity(T entity) {
         return (T) sessionFactory.getCurrentSession().save(entity);
-
     }
 
     public void updateEntity(T entity) {
         sessionFactory.getCurrentSession().update(entity);
-
     }
 
     public void delete(T entity) {
@@ -43,9 +41,7 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getTopNFinaxysUsersByScore(int n) {
-       // return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
         return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()+ " f ORDER BY f.score DESC").setMaxResults(n).list();
-
     }
 
 
