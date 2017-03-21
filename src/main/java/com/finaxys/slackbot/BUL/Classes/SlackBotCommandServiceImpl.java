@@ -26,7 +26,7 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Override
     @Transactional
     public List<FinaxysProfile> listeScores(int n) {
-        List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getSomeUsers(n);
+        List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getTopNFinaxysUsersByScore(n);
 
 
         return finaxysProfiles;

@@ -42,7 +42,7 @@ public class Repository<T, K extends Serializable> {
         return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
     }
 
-    public List<T> getSomeUsers(int n) {
+    public List<T> getTopNFinaxysUsersByScore(int n) {
        // return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
         return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()+ " f ORDER BY f.score DESC").setMaxResults(n).list();
 

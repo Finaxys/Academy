@@ -41,7 +41,8 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
                         userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
                         finaxysProfileRepository.updateEntity(userProfile);
                     } else {
-                        finaxysProfileRepository.addEntity(new FinaxysProfile(itemUserId, false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
+                        String name = SlackBot.getSlackWebApiClient().getBotInfo(itemUserId).getName();
+                        finaxysProfileRepository.addEntity(new FinaxysProfile(itemUserId, name, false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
 
                     }
                 }

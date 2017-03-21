@@ -35,7 +35,7 @@ public class AddChallengeScoreArgumentsMatcherTest {
 
     @Test
     public void threeCorrectArgumentsSecondTest() {
-        final String message = "Yo Bot ! <@U012ABCDF|ernie> got 130 points in JavaEE challenge ! Looool";
+        final String message = "<@U012ABCDF|ernie> 130 points JavaEE challenge";
         assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
     }
 

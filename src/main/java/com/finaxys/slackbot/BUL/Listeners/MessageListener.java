@@ -32,5 +32,8 @@ public class MessageListener implements EventListener {
 
     public void handleMessage(JsonNode jsonNode) {
         newTribeJoinedService.onNewTribeJoined(jsonNode);
+        realMessageReward.rewardReadMessage(jsonNode);
+        innovateService.rewardFileSharing(jsonNode);
+        channelLeftService.onChannelLeaveMessage(jsonNode);
     }
 }
