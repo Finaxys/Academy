@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.DAL;
 
+import com.finaxys.slackbot.Utilities.Timer;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -44,21 +45,20 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getAllOrderedByAsList(String orderedByField, boolean ascending, int rowsCount) throws IllegalArgumentException {
-
-        long debut = System.currentTimeMillis();
-
+        Timer.elapsed("hibernate1 ");
         // args check
         if (orderedByField == null || orderedByField.isEmpty())
             throw new IllegalArgumentException("orderedByField must not be null or empty.");
         if (rowsCount < 1)
             throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0.");
         // work
+        Timer.elapsed("hibernate2 ");
         List<T> x = sessionFactory.getCurrentSession()
                 .createQuery("from " + persistentClass.getSimpleName()
                         + " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
                 .setMaxResults(rowsCount)
                 .list();
-        System.out.println("hibernate " + (System.currentTimeMillis() - debut) + "ms");
+        Timer.elapsed("hibernate3 ");
         return x;
     }
 

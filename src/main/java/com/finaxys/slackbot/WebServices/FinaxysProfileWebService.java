@@ -32,16 +32,16 @@ public class FinaxysProfileWebService {
     ObjectMapper objectMapper = new ObjectMapper();
 
 
-
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("token") String token,
                                                            @RequestParam("text") String text,
                                                            @RequestParam("team_domain") String teamDomain) {
-        String messageText = "";
+        String messageText = "The command /Fx_display_scores was invoked with args score = " + text;
+
 
         FinaxysSlackBotLogger.logCommandRequest("/fx_display_scores ");
-        if (propertiesAreNotEqual("verification_token", token)) {
+        if (propertiesAreNotEqual(messageText+" \n+"+"verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -50,24 +50,26 @@ public class FinaxysProfileWebService {
 
 
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
-            Message message = new Message("Only for FinaxysTM members !");
+            Message message = new Message(messageText+" \n"+"Only for FinaxysTM members !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
 
-       if (text.isEmpty()) text = propertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
+        if (text.isEmpty()) text = propertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
         if (!text.trim().matches("^[1-9][0-9]*")) {
-            Message message = new Message("command not valid");
+            Message message = new Message(messageText+" \n"+"command not valid");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         Timer.start();
 
         Timer.elapsed("Service1 ");
-        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, 6);
+
+        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
         Timer.elapsed("Service2 ");
+        messageText += "*name score* \n";
         for (int i = 0; i < users.size(); i++) {
-            messageText += "- " + users.get(i).getName() + " " + users.get(i).getScore() + "\n";
+            messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
         Timer.elapsed("Service3 ");
         Message message = new Message(messageText);

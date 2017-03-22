@@ -71,8 +71,10 @@ public class FinaxysSlackBotLogger {
         Timer.elapsed("postDebug2 ");
         SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient(); // 100ms first time
         Timer.elapsed("postDebug3 ");
-        slackWebApi.postMessage(debugChannel, message); // 200/400ms each time
-        Timer.elapsed("postDebug4 ");
+        new Thread(() -> {
+            slackWebApi.postMessage(debugChannel, message);
+        }).start();
+       Timer.elapsed("postDebug4 ");
     }
 }
 

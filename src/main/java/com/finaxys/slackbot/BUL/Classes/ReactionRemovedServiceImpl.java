@@ -33,7 +33,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
         if (listEmojis.contains(reaction)) {
             if (itemUserId != null && itemUserId != myUserId) {
                 {
-                    System.out.println("my item user id " + itemUserId);
+
                     FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
                     if (userProfile != null) {
                         userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
