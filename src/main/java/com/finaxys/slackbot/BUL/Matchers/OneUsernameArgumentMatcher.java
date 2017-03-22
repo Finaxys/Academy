@@ -38,6 +38,6 @@ public class OneUsernameArgumentMatcher {
 
     public String getUserNameArgument(String message) {
         matcher = userNameArgumentPattern.matcher(message);
-        return matcher.find() ? matcher.group().substring(1) : "";
+        return matcher.find() ? matcher.group().substring(0) : "";
     }
 }

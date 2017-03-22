@@ -68,10 +68,10 @@ public class SupportWebService {
                     String commandName = namesBufferedReader.readLine();
                     String commandArguments = argumentsBufferedReader.readLine();
                     String commandDescription = descriptionsBufferedReader.readLine();
-                    messageText += (i + ". *Command name:* " + commandName + " \n " + "*Command arguments:* " + commandArguments + " \n " + commandDescription + " \n ");
+                    messageText += ("\n "+"\\" +commandName +" "+ commandArguments + " \n " + commandDescription + " \n ");
                     i++;
                 }
-                message.setText(messageText);
+                message.setText("/fx_help was invoked "+ " \n" +messageText);
             } catch (IOException e) {
                 e.printStackTrace();
                 message = new Message("*There was an error accessing some help files. Please try again later \n *" + e.toString());

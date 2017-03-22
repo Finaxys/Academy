@@ -2,16 +2,20 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Domains.FinaxysProfile;
 import com.finaxys.slackbot.Domains.Message;
 import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 
 import java.util.List;
 
@@ -22,9 +26,12 @@ public class FinaxysProfileWebService {
     @Autowired
     SlackBotCommandService slackBotCommandServiceImpl;
     @Autowired
-    PropertyLoader propertyLoader;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+    @Autowired
+    PropertyLoader propertyLoader;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
@@ -32,7 +39,8 @@ public class FinaxysProfileWebService {
     public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("token") String token,
                                                            @RequestParam("text") String text,
                                                            @RequestParam("team_domain") String teamDomain) {
-        String messageText = "";
+        String messageText = "The command /Fx_display_scores was invoked with args score = " + text;
+
 
         FinaxysSlackBotLogger.logCommandRequest("/fx_display_scores ");
         if (propertiesAreNotEqual("verification_token", token)) {
@@ -42,9 +50,8 @@ public class FinaxysProfileWebService {
         }
         ;
 
-
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
-            Message message = new Message("Only for FinaxysTM members !");
+            Message message = new Message(messageText+" \n"+"Only for FinaxysTM members !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
@@ -52,15 +59,24 @@ public class FinaxysProfileWebService {
 
         if (text.isEmpty()) text = propertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
         if (!text.trim().matches("^[1-9][0-9]*")) {
-            Message message = new Message("command not valid");
+            Message message = new Message(messageText+" \n"+"command not valid");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-        List<FinaxysProfile> users = slackBotCommandServiceImpl.listeScores(Integer.parseInt(text));
+        Timer.start();
+
+        Timer.elapsed("Service1 ");
+
+        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
+        Timer.elapsed("Service2 ");
+        messageText += "*name score*  \n";
         for (int i = 0; i < users.size(); i++) {
-            messageText += "- " + SlackBot.getSlackWebApiClient().getUserInfo(users.get(i).getId()).getName() + " " + users.get(i).getScore() + "\n";
+            messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
+        Timer.elapsed("Service3 ");
         Message message = new Message(messageText);
+        Timer.elapsed("Service4 ");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Timer.elapsed("Service5 ");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 

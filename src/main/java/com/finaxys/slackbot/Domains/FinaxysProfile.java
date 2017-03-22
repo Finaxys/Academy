@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FINAXYS_PROFILE")
-public class FinaxysProfile implements Serializable, Comparable<FinaxysProfile> {
+public class FinaxysProfile implements Serializable {
     private String id;
     private String name;
     private int score;
@@ -95,9 +95,5 @@ public class FinaxysProfile implements Serializable, Comparable<FinaxysProfile> 
         this.score -= score;
     }
 
-    public int compareTo(FinaxysProfile finaxysProfile) {
 
-        int compareFinaxysProfile = ((FinaxysProfile) finaxysProfile).getScore();
-        return this.score - compareFinaxysProfile;
-    }
 }

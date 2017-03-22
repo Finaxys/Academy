@@ -71,10 +71,11 @@ public class ChallengesWebService {
     private String getStringFromList(List<Challenge> challenges) {
         String result = "";
         for (Challenge challenge : challenges) {
-            result += "Challenge name: "+challenge.getName()+" , number of participants: "+challenge.getParticipants().size()+"\n";
+            result += "Challenge name: "+ challenge.getName()+", number of participants: "+ challenge.getParticipants().size() +" \n ";
         }
         return result;
     }
+
 
     @RequestMapping(value = "/type", method = RequestMethod.POST)
     @ResponseBody
@@ -87,21 +88,23 @@ public class ChallengesWebService {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 ChallengeTypeMatcher challengeTypeMatcher = new ChallengeTypeMatcher();
                 if (!challengeTypeMatcher.match(text))
-                    message.setText("Sorry! Wrong type format! Available types are: group , individual");
+                    message.setText(" /fx_challenges_by_type was invoked with args "+text+" \n "+"Sorry! Wrong type format! Available types are: group , individual");
                 else {
                     List<Challenge> challenges = challengeRepository.getByCriterion("type", text);
                     if (challenges.isEmpty())
-                        message.setText("There are no challenges having the type " + text);
+                        message.setText(" /fx_challenges_by_type was invoked with args "+text+" \n "+"There are no challenges having the type " + text);
                     else {
-                        String result = getStringFromList(challenges);
-                        FinaxysSlackBotLogger.logCommandResponse(message.getText());
-                        return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                        String result = " /fx_challenges_by_type was invoked with args "+text+" \n "+getStringFromList(challenges);
+                        message.setText(result);
+
+                        FinaxysSlackBotLogger.logCommandResponse(message.toString());
+                        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                     }
 
                 }
             }
         } else
-            message.setText("There was a problem treating your request. Please try again.");
+            message.setText(" /fx_challenges_by_type was invoked "+text+" \n "+"There was a problem treating your request. Please try again.");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
 
@@ -120,14 +123,15 @@ public class ChallengesWebService {
                 if (challenges.isEmpty())
                     message.setText("There are no challenges with such a name.");
                 else {
-                    String result = getStringFromList(challenges);
-                    FinaxysSlackBotLogger.logCommandResponse(message.getText());
-                    return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                    String result = "/fx_challenges_named was invoked "+text+"\n "+getStringFromList(challenges);
+                    message.setText(result);
+                    FinaxysSlackBotLogger.logCommandResponse(message.toString());
+                    return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                 }
             }
 
         } else
-            message.setText("There was a problem treating your request. Please try again.");
+            message.setText(" /fx_challenges_named was invoked "+text+" \n "+"There was a problem treating your request. Please try again.");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }
@@ -143,7 +147,7 @@ public class ChallengesWebService {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 DateMatcher dateMatcher = new DateMatcher();
                 if (!dateMatcher.match(text.trim()))
-                    message.setText("Sorry! Wrong date format! Please make sure to enter a date in this format: yyyy-MM-dd");
+                    message.setText(" /fx_challenges_by_date was invoked "+text+" \n "+"Sorry! Wrong date format! Please make sure to enter a date in this format: yyyy-MM-dd");
                 else {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     Date wantedDate = new Date();
@@ -153,15 +157,16 @@ public class ChallengesWebService {
                     }
                     List<Challenge> challenges = challengeRepository.getByCriterion("creationDate", wantedDate);
                     if (challenges.isEmpty())
-                        message.setText("There are no challenges on this date: " + text);
+                        message.setText(" /fx_challenges_by_date was invoked "+text+" \n "+"There are no challenges on this date: " + text);
                     else {
                         String result = getStringFromList(challenges);
-                        return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                        message.setText(result);
+                        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                     }
                 }
             }
         } else
-            message.setText("There was a problem treating your request. Please try again.");
+            message.setText(" /fx_challenges_by_date was invoked "+text+" \n "+"There was a problem treating your request. Please try again.");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }
@@ -177,14 +182,16 @@ public class ChallengesWebService {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 List<Challenge> challenges = challengeRepository.getAll();
                 if (challenges.isEmpty())
-                    message.setText("There no previous challenges! Come on create one!");
+                    message.setText(" /fx_list_challenges" +" \n "+"There no previous challenges! Come on create one!");
                 else {
                     String result = getStringFromList(challenges);
-                    return new ResponseEntity(objectMapper.convertValue(result, JsonNode.class), HttpStatus.OK);
+                    message.setText(result);
+
+                    return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                 }
             }
         } else
-            message.setText("There was a problem treating your request. Please try again.");
+            message.setText((" /fx_list_challenges" +" \n "+"There was a problem treating your request. Please try again."));
         return this.showMessage(token, teamDomain, message);
     }
 
@@ -199,7 +206,7 @@ public class ChallengesWebService {
             if (tokenIsValid(token) && teamIdIsValid(teamDomain)) {
                 CreateChallengeMatcher createChallengeMatcher = new CreateChallengeMatcher();
                 if (!createChallengeMatcher.match(text.trim()))
-                    message.setText("Sorry! Wrong request format! Your request should have the following format: challengeName,group|individual,descriptionText");
+                    message.setText(" /fx_create_challenge was invoked "+text+" \n "+"Sorry! Wrong request format! Your request should have the following format: challengeName,group|individual,descriptionText");
                 else {
                     String[] challengeInfo = text.trim().split(",");
                     Challenge challenge = new Challenge();
@@ -207,11 +214,11 @@ public class ChallengesWebService {
                     challenge.setType(challengeInfo[1]);
                     challenge.setDescription(challengeInfo[2]);
                     challengeRepository.addEntity(challenge);
-                    message.setText("Challenge successfully added.");
+                    message.setText("/fx_create_challenge was invoked "+text+" \n "+"Challenge successfully added.");
                 }
             }
         } else
-            message.setText("There was a problem treating your request. Please try again.");
+            message.setText("/fx_create_challenge was invoked "+text+" \n "+"There was a problem treating your request. Please try again.");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return this.showMessage(token, teamDomain, message);
     }

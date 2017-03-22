@@ -26,7 +26,6 @@ public class Repository<T, K extends Serializable> {
 
     public T addEntity(T entity) {
         return (T) sessionFactory.getCurrentSession().save(entity);
-
     }
 
     public void updateEntity(T entity) {
@@ -39,14 +38,29 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getAll() {
-        return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName()).list();
+        return sessionFactory.getCurrentSession()
+                .createQuery("from " + persistentClass.getSimpleName())
+                .list();
     }
 
-    public List<T> getSomeUsers(int n) {
-        return sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName())
-                .setMaxResults(n).list();
-    }
+    public List<T> getAllOrderedByAsList(String orderedByField, boolean ascending, int rowsCount) throws IllegalArgumentException {
 
+        long debut = System.currentTimeMillis();
+
+        // args check
+        if (orderedByField == null || orderedByField.isEmpty())
+            throw new IllegalArgumentException("orderedByField must not be null or empty.");
+        if (rowsCount < 1)
+            throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0.");
+        // work
+        List<T> x = sessionFactory.getCurrentSession()
+                .createQuery("from " + persistentClass.getSimpleName()
+                        + " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
+                .setMaxResults(rowsCount)
+                .list();
+        System.out.println("hibernate " + (System.currentTimeMillis() - debut) + "ms");
+        return x;
+    }
 
     public T findById(K id) {
         return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
