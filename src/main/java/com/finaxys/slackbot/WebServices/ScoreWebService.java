@@ -57,8 +57,7 @@ public class ScoreWebService {
         ;
 
         if (userIsNotChallengeManager(challengeManagerFinaxysProfileId)) {
-            Message message = new Message("You don't have challenge manager authorization !");
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Message message = new Message("/fx_add_score was invoked "+arguments+"You don't have challenge manager authorization !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
@@ -66,7 +65,7 @@ public class ScoreWebService {
         ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
 
         if (!challengeScoreArgumentsMatcher.isCorrect(arguments)) {
-            Message message = new Message("Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !");
+            Message message = new Message("/fx_add_score was invoked "+arguments+" \n "+"Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
@@ -75,19 +74,20 @@ public class ScoreWebService {
         String extractFinaxysProfileId = challengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
         String challengeName = challengeScoreArgumentsMatcher.getChallengeName(arguments);
         Challenge challenge = challengeRepository.getByCriterion("name", challengeName).get(0);
-
         int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
-
         FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score, challenge.getId(), extractFinaxysProfileId);
+        finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(extractFinaxysProfileId));
+        finaxysProfile_challenge.setChallenge(challenge);
         try {
-            finaxysProfileChallengeRepository.addEntity(finaxysProfile_challenge);
+            finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+
         }catch (Exception e){
-            Message message = new Message("A problem has occured! The user may have a score for this challengs already !");
+            Message message = new Message("/fx_add_score was invoked "+arguments+" \n"+"A problem has occured! The user may have a score for this challengs already !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
 
-        Message message = new Message("Score has been added !");
+        Message message = new Message("/fx_add_score was invoked "+arguments+" \n"+"Score has been added !");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
@@ -116,7 +116,7 @@ public class ScoreWebService {
         ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
 
         if (!challengeScoreArgumentsMatcher.isCorrectListRequest(arguments)) {
-            Message message = new Message("Arguments should suit ' ..... <challengeName> challenge ....' Pattern !");
+            Message message = new Message("fx_display_challenge_scores was invoked with args "+arguments+" \n"+"Arguments should suit ' ..... <challengeName> challenge ....' Pattern !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
@@ -125,25 +125,26 @@ public class ScoreWebService {
         String challengeName = challengeScoreArgumentsMatcher.getChallengeName(arguments);
         List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
         if (challenges.size() == 0) {
-            Message message = new Message("No such challenge ! Check the challenge name");
+            Message message = new Message("/fx_display_challenge_scores was invoked with args "+arguments+" \n"+"No such challenge ! Check the challenge name");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         Challenge challenge = challenges.get(0);
-        List<FinaxysProfile_Challenge> finaxysProfileChallenges = finaxysProfileChallengeRepository.getByCriterion("Challenge", challenge);
+        List<FinaxysProfile_Challenge> finaxysProfileChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge", challenge);
 
         if (finaxysProfileChallenges.size() == 0) {
-            Message message = new Message("No score has been saved till the moment !");
+            Message message = new Message("/fx_display_challenge_scores was invoked with args "+arguments+" \n"+"No score has been saved till the moment !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-        String textMessage = "List of scores of " + challenge.getName() + " : \n";
+        String textMessage = "List of scores of " + challenge.getName() + " :"+" \n ";
         for (FinaxysProfile_Challenge finaxysProfileChallenge : finaxysProfileChallenges) {
             FinaxysProfile finaxysProfile = finaxysProfileChallenge.getFinaxysProfile();
-            textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> \n";
+            textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "+finaxysProfileChallenge.getScore()+" \n";
         }
+
         FinaxysSlackBotLogger.logCommandResponse(textMessage);
-        return new ResponseEntity(objectMapper.convertValue(textMessage, JsonNode.class), HttpStatus.OK);
+        return new ResponseEntity(objectMapper.convertValue("fx_display_challenge_scores was invoked with args "+arguments+" \n"+textMessage, JsonNode.class), HttpStatus.OK);
     }
 
     public boolean propertiesAreNotEqual(String propertyName, String propertyValue) {

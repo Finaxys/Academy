@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/finaxysProfiles")
 public class FinaxysProfileWebService {
@@ -41,13 +43,12 @@ public class FinaxysProfileWebService {
 
 
         FinaxysSlackBotLogger.logCommandRequest("/fx_display_scores ");
-        if (propertiesAreNotEqual(messageText+" \n+"+"verification_token", token)) {
+        if (propertiesAreNotEqual("verification_token", token)) {
             Message message = new Message("Wrong verification token !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;
-
 
         if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
             Message message = new Message(messageText+" \n"+"Only for FinaxysTM members !");
@@ -67,7 +68,7 @@ public class FinaxysProfileWebService {
 
         List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
         Timer.elapsed("Service2 ");
-        messageText += "*name score* \n";
+        messageText += "*name score*  \n";
         for (int i = 0; i < users.size(); i++) {
             messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
