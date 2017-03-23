@@ -1,6 +1,8 @@
 package com.finaxys.slackbot.BUL.Interfaces;
 
-import com.finaxys.slackbot.Domains.FinaxysProfile;
+
+
+import com.finaxys.slackbot.DAL.FinaxysProfile;
 
 import java.util.List;
 

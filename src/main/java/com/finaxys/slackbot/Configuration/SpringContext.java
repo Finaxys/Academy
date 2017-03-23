@@ -3,11 +3,7 @@ package com.finaxys.slackbot.Configuration;
 import com.finaxys.slackbot.BUL.Classes.*;
 import com.finaxys.slackbot.BUL.Interfaces.*;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Domains.Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
+import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +121,11 @@ public class SpringContext {
     public Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository() {
         return new Repository<>(FinaxysProfile_Challenge.class);
     }
+    @Bean
+    public Repository<ActionScore, String> actionScoreRepository() {
+        return new Repository<>(ActionScore.class);
+    }
+
 
     @Bean
     public PropertyLoader propertyLoader() {
