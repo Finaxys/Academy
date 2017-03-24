@@ -4,10 +4,7 @@ import com.finaxys.slackbot.BUL.Classes.*;
 import com.finaxys.slackbot.BUL.Interfaces.*;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Domains.Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge;
-import com.finaxys.slackbot.Domains.FinaxysProfile_Challenge_PK;
+import com.finaxys.slackbot.Domains.*;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +80,10 @@ public class SpringContext {
     @Bean
     public Repository<FinaxysProfile, String> finaxysProfileRepository() {
         return new Repository<>(FinaxysProfile.class);
+    }
+    @Bean
+    public Repository<Role, Integer> roleRepository() {
+        return new Repository<>(Role.class);
     }
 
     @Bean

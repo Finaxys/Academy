@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 /**
  * Created by Bannou on 21/03/2017.
  */
-public class UserNameArgumentPattern { private static Pattern pattern;
+public class UserNameArgumentPattern {
+    private static Pattern pattern;
     final String userNameArgumentPattern;
 
     private UserNameArgumentPattern() {

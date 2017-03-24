@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public class FinaxysProfile implements Serializable {
     private int score;
     private boolean challengeManager;
     private boolean administrator;
+
+    private List<Role> roles = new ArrayList<>();
     @JsonIgnore
     private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
@@ -85,6 +88,14 @@ public class FinaxysProfile implements Serializable {
 
     public void setFinaxysProfile_challenges(List<FinaxysProfile_Challenge> finaxysProfile_challenges) {
         this.finaxysProfile_challenges = finaxysProfile_challenges;
+    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "finaxysProfile")
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public void incrementScore(int score) {
