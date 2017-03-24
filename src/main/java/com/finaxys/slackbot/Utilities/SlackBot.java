@@ -19,7 +19,15 @@ public class SlackBot {
                 ? SlackClientFactory.createSlackRealTimeMessagingClient(Settings.botUserOauthAccessToken) : slackRealTimeMessagingClient;
     }
 
+    public static void postMessageAsync(String channelId, String message) {
+        new Thread(() -> {
+            getSlackWebApiClient().postMessage(channelId, message);
+        }).start();
+    }
 
+    public static void postMessageToDebugChannelAsync(String message) {
+        postMessageAsync(Settings.debugChannelId, message);
+    }
 }
 
 

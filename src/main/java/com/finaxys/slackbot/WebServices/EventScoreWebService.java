@@ -7,7 +7,7 @@ import com.finaxys.slackbot.DAL.EventScore;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,16 +37,16 @@ public class EventScoreWebService {
         String messageText = "/fx_event_add " + text;
 
 
-        FinaxysSlackBotLogger.logCommandRequest("/fx_event_add "+text);
+        Log.info("/fx_event_add "+text);
         if (!Settings.appVerificationToken.equals(appVerificationToken)) {
 
             Message message = new Message("Wrong verification token !" + Settings.appVerificationToken);
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         if (!Settings.slackTeam.equals(slackTeam)) {
             Message message = new Message("Only for FinaxysTM members !");
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         ;

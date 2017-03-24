@@ -2,9 +2,6 @@ package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
 
-/**
- * Created by Bannou on 15/03/2017.
- */
 public class Message implements Serializable{
     private String text;
     private String response_type;

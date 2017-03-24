@@ -6,7 +6,7 @@ import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class InnovateServiceImpl implements InnovateService {
         }
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
-        FinaxysSlackBotLogger.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+        Log.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
 
     }
@@ -49,7 +49,7 @@ public class InnovateServiceImpl implements InnovateService {
         }
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
-        FinaxysSlackBotLogger.logPostedFile(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+        Log.logPostedFile(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
     }
 }
 

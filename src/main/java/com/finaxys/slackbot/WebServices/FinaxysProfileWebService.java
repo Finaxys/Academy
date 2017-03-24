@@ -5,17 +5,13 @@ import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.Utilities.SlackBot;
-import com.finaxys.slackbot.Utilities.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.List;
 
 import java.util.List;
 
@@ -38,16 +34,16 @@ public class FinaxysProfileWebService {
                                                            @RequestParam("text") String text,
                                                            @RequestParam("slackTeam") String slackTeam) {
         String messageText = "/fx_LeaderBoard " + text;
-        FinaxysSlackBotLogger.logCommandRequest("/fx_LeaderBoard ");
+        Log.info("/fx_LeaderBoard ");
         if (!Settings.appVerificationToken.equals(appVerificationToken)) {
 
             Message message = new Message("Wrong verification token !" + Settings.appVerificationToken);
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         if (!Settings.slackTeam.equals(slackTeam)) {
             Message message = new Message("Only for FinaxysTM members !");
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         } ;
           if(text.equals(" "))
@@ -57,7 +53,7 @@ public class FinaxysProfileWebService {
                   messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
               }
               Message message = new Message(messageText);
-              FinaxysSlackBotLogger.logCommandResponse(message.getText());
+              Log.info(message.getText());
               return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
 
           }
@@ -71,7 +67,7 @@ public class FinaxysProfileWebService {
             messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
         Message message = new Message(messageText);
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 }

@@ -6,7 +6,7 @@ import com.finaxys.slackbot.BUL.Matchers.ChallengeTypeMatcher;
 import com.finaxys.slackbot.BUL.Matchers.CreateChallengeMatcher;
 import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.*;
-import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,12 +45,12 @@ public class ChallengesWebService {
     private ResponseEntity<JsonNode> showMessage(String token, String teamDomain, Message message) {
         if (!tokenIsValid(token)) {
             message = new Message("Wrong verification token !");
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         if (!teamIdIsValid(teamDomain)) {
             message = new Message("Only for FinaxysTM members !");
-            FinaxysSlackBotLogger.logCommandResponse(message.getText());
+            Log.info(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
@@ -78,7 +78,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByType(@RequestParam("text") String text,
                                                         @RequestParam("AppVerificationToken") String appVerificationToken,
                                                         @RequestParam("slackTeam") String slackTeam) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_challenges_by_type");
+        Log.info("/fx_challenges_by_type");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam})) {
             if (tokenIsValid(appVerificationToken) && teamIdIsValid(slackTeam)) {
@@ -93,7 +93,7 @@ public class ChallengesWebService {
                         String result = " /fx_challenges_by_type "+text+" \n "+getStringFromList(challenges);
                         message.setText(result);
 
-                        FinaxysSlackBotLogger.logCommandResponse(message.toString());
+                        Log.info(message.toString());
                         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                     }
 
@@ -101,7 +101,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText(" /fx_challenges_by_type "+text+" \n "+"There was a problem treating your request. Please try again.");
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return this.showMessage(appVerificationToken, slackTeam, message);
 
     }
@@ -111,7 +111,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByName(@RequestParam("text") String text,
                                                         @RequestParam("appVerificationToken") String appVerificationToken,
                                                         @RequestParam("slackTeam") String slackTeam) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_challenge_named");
+        Log.info("/fx_challenge_named");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam})) {
             if (tokenIsValid(appVerificationToken) && teamIdIsValid(slackTeam)) {
@@ -121,14 +121,14 @@ public class ChallengesWebService {
                 else {
                     String result = "/fx_challenges_named "+text+"\n "+getStringFromList(challenges);
                     message.setText(result);
-                    FinaxysSlackBotLogger.logCommandResponse(message.toString());
+                    Log.info(message.toString());
                     return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
                 }
             }
 
         } else
             message.setText(" /fx_challenges_named "+text+" \n "+"There was a problem treating your request. Please try again.");
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return this.showMessage(appVerificationToken, slackTeam, message);
     }
 
@@ -137,7 +137,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getChallengesByDate(@RequestParam("text") String text,
                                                         @RequestParam("appVerificationToken") String appVerificationToken,
                                                         @RequestParam("slackTeam") String slackTeam) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_challenges_by_date");
+        Log.info("/fx_challenges_by_date");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam})) {
             if (tokenIsValid(appVerificationToken) && teamIdIsValid(slackTeam)) {
@@ -163,7 +163,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText(" /fx_challenges_by_date "+text+" \n "+"There was a problem treating your request. Please try again.");
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return this.showMessage(appVerificationToken, slackTeam, message);
     }
 
@@ -172,7 +172,7 @@ public class ChallengesWebService {
     public ResponseEntity<JsonNode> getAllChallenges(@RequestParam("token") String token,
                                                      @RequestParam("slackTeam") String slackTeam
     ) {
-        FinaxysSlackBotLogger.logCommandRequest("/fx_challenge_list");
+        Log.info("/fx_challenge_list");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{token, slackTeam})) {
             if (tokenIsValid(token) && teamIdIsValid(slackTeam)) {
@@ -197,7 +197,7 @@ public class ChallengesWebService {
                                                     @RequestParam("slackTeam") String slackTeam,
                                                     @RequestParam("user_id") String profileId,
                                                     @RequestParam("text") String text) {
-        FinaxysSlackBotLogger.logCommandResponse("/fx_challenge_add");
+        Log.info("/fx_challenge_add");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{appVerificationToken, slackTeam, text})) {
             if (tokenIsValid(appVerificationToken) && teamIdIsValid(slackTeam)) {
@@ -221,7 +221,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText("/fx_challenge_add "+text+" \n "+"There was a problem treating your request. Please try again.");
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return this.showMessage(appVerificationToken, slackTeam, message);
     }
 
@@ -231,7 +231,7 @@ public class ChallengesWebService {
                                            @RequestParam("slackTeam") String slackTeam,
                                            @RequestParam("user_id") String profileId,
                                            @RequestParam("text") String text) {
-        FinaxysSlackBotLogger.logCommandResponse("/fxadmin_manager_challenge_del");
+        Log.info("/fxadmin_manager_challenge_del");
         Message message = new Message("");
         if (requestParametersAreValid(new String[]{appVerificationToken, slackTeam, text})) {
             if (tokenIsValid(appVerificationToken) && teamIdIsValid(slackTeam)) {
@@ -260,7 +260,7 @@ public class ChallengesWebService {
             }
         } else
             message.setText("/fxadmin_manager_challenge "+text+" \n "+"There was a problem treating your request. Please try again.");
-        FinaxysSlackBotLogger.logCommandResponse(message.getText());
+        Log.info(message.getText());
         return this.showMessage(appVerificationToken, slackTeam, message);
     }
     public boolean userIsChallengeManager(String adminFinaxysProfileId, String challengeName) {
