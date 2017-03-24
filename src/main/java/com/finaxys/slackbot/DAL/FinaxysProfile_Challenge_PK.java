@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Domains;
+package com.finaxys.slackbot.DAL;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

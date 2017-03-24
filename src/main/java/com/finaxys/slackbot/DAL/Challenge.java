@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.Domains;
+package com.finaxys.slackbot.DAL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -58,10 +58,7 @@ public class Challenge implements Serializable {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
+    public void setCreationDate(Date creationDate) { this.creationDate = creationDate; }
     public String getType() {
         return type;
     }

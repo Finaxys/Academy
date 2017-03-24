@@ -9,11 +9,7 @@ import org.springframework.stereotype.Component;
 public class FinaxysSlackBotLogger {
 
     public static Logger logger = Logger.getLogger(FinaxysSlackBotLogger.class);
-    private static PropertyLoader propertyLoader;
-    @Autowired
-    public void setPropertyLoader(PropertyLoader propertyLoader) {
-        FinaxysSlackBotLogger.propertyLoader =propertyLoader;
-    }
+
     public static void logChannelCreated(String name,String channelName) {
         String msg = name+" created "+ channelName;
         logger.fatal(msg);
@@ -54,22 +50,19 @@ public class FinaxysSlackBotLogger {
         logger.fatal(msg);
         postDebugMessageToDebugChannel(msg);
     }
-    public static void logCommandRequest(String Command) {
-        String msg = "A command was invoked" + Command;
-        logger.fatal(msg);
-        postDebugMessageToDebugChannel(msg);
+    public static void logCommandRequest(String command) {
+        logger.fatal(command);
+        postDebugMessageToDebugChannel(command);
     }
     public static void logCommandResponse(String command) {
-        String msg = "the command response was" + command;
-        logger.fatal(msg);
-        postDebugMessageToDebugChannel(msg);
+        logger.fatal(command);
+        postDebugMessageToDebugChannel(command);
     }
 
     public static void postDebugMessageToDebugChannel(String message) {
-        String debugChannel = propertyLoader.loadSlackBotProperties().getProperty("debugChannel");
         SlackWebApiClient slackWebApi = SlackBot.getSlackWebApiClient();
         new Thread(() -> {
-            slackWebApi.postMessage(debugChannel, message);
+            slackWebApi.postMessage(Settings.debugChannelId, message);
         }).start();
     }
 }

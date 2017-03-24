@@ -3,9 +3,7 @@ package com.finaxys.slackbot.Configuration;
 import com.finaxys.slackbot.BUL.Classes.*;
 import com.finaxys.slackbot.BUL.Interfaces.*;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Domains.*;
-import com.finaxys.slackbot.Utilities.PropertyLoader;
+import com.finaxys.slackbot.DAL.*;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -128,8 +126,8 @@ public class SpringContext {
     }
 
     @Bean
-    public PropertyLoader propertyLoader() {
-        return new PropertyLoader();
+    public Repository<EventScore, String> eventScoreRepository() {
+        return new Repository<>(EventScore.class);
     }
 
 }

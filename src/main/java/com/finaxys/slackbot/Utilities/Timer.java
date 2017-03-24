@@ -1,8 +1,5 @@
 package com.finaxys.slackbot.Utilities;
 
-/**
- * Created by user on 21/03/2017.
- */
 public class Timer {
     private static long _startTime;
     private static long _lastCheckTime;

@@ -2,11 +2,11 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
+import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Domains.FinaxysProfile;
-import com.finaxys.slackbot.Domains.Message;
 import com.finaxys.slackbot.Utilities.FinaxysSlackBotLogger;
-import com.finaxys.slackbot.Utilities.PropertyLoader;
+import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,61 +28,50 @@ public class FinaxysProfileWebService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    @Autowired
-    PropertyLoader propertyLoader;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("token") String token,
+    public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("appVerificationToken") String appVerificationToken,
                                                            @RequestParam("text") String text,
-                                                           @RequestParam("team_domain") String teamDomain) {
-        String messageText = "The command /Fx_display_scores was invoked with args score = " + text;
+                                                           @RequestParam("slackTeam") String slackTeam) {
+        String messageText = "/fx_LeaderBoard " + text;
+        FinaxysSlackBotLogger.logCommandRequest("/fx_LeaderBoard ");
+        if (!Settings.appVerificationToken.equals(appVerificationToken)) {
 
-
-        FinaxysSlackBotLogger.logCommandRequest("/fx_display_scores ");
-        if (propertiesAreNotEqual("verification_token", token)) {
-            Message message = new Message("Wrong verification token !");
+            Message message = new Message("Wrong verification token !" + Settings.appVerificationToken);
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-        ;
-
-        if (propertiesAreNotEqual("finaxys_team_name", teamDomain)) {
-            Message message = new Message(messageText+" \n"+"Only for FinaxysTM members !");
+        if (!Settings.slackTeam.equals(slackTeam)) {
+            Message message = new Message("Only for FinaxysTM members !");
             FinaxysSlackBotLogger.logCommandResponse(message.getText());
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        ;
+        } ;
+          if(text.equals(" "))
+          {
+              List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false,finaxysProfileRepository.getAll().size());
+              for (int i = 0; i < users.size(); i++) {
+                  messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
+              }
+              Message message = new Message(messageText);
+              FinaxysSlackBotLogger.logCommandResponse(message.getText());
+              return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
 
-        if (text.isEmpty()) text = propertyLoader.loadSlackBotProperties().getProperty("defaultnumber");
+          }
         if (!text.trim().matches("^[1-9][0-9]*")) {
-            Message message = new Message(messageText+" \n"+"command not valid");
+            Message message = new Message(messageText+" \n"+"Arguments should be [number]");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
-        Timer.start();
-
-        Timer.elapsed("Service1 ");
 
         List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
-        Timer.elapsed("Service2 ");
-        messageText += "*name score*  \n";
         for (int i = 0; i < users.size(); i++) {
             messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
         }
-        Timer.elapsed("Service3 ");
         Message message = new Message(messageText);
-        Timer.elapsed("Service4 ");
         FinaxysSlackBotLogger.logCommandResponse(message.getText());
-        Timer.elapsed("Service5 ");
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
-
-    public boolean propertiesAreNotEqual(String propertyName, String propertyValue) {
-        return !propertyValue.equals(propertyLoader.loadSlackBotProperties().getProperty(propertyName));
-    }
-
-
 }
