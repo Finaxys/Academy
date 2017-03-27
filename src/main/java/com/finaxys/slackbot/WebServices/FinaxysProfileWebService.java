@@ -17,57 +17,40 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/finaxysProfiles")
-public class FinaxysProfileWebService {
+public class FinaxysProfileWebService extends BaseWebService{
 
     @Autowired
     SlackBotCommandService slackBotCommandServiceImpl;
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-
-    ObjectMapper objectMapper = new ObjectMapper();
-
-
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("appVerificationToken") String appVerificationToken,
-                                                           @RequestParam("text") String text,
-                                                           @RequestParam("slackTeam") String slackTeam) {
-        String messageText = "/fx_LeaderBoard " + text;
-        Log.info("/fx_LeaderBoard ");
-        if (!Settings.appVerificationToken.equals(appVerificationToken)) {
+    public ResponseEntity<JsonNode> listScores(@RequestParam("token") String appVerificationToken,
+                                               @RequestParam("team_domain")  String slackTeam,
+                                               @RequestParam("text") String text){
+        String messageText = "/fx_LeaderBoard " + text+"\n";
 
-            Message message = new Message("Wrong verification token !" + Settings.appVerificationToken);
-            Log.info(message.getText());
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        if (!Settings.slackTeam.equals(slackTeam)) {
-            Message message = new Message("Only for FinaxysTM members !");
-            Log.info(message.getText());
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        } ;
+        if (NoAccess(appVerificationToken, slackTeam))
+            return NoAccessResponseEntity(appVerificationToken, slackTeam);
           if(text.equals(" "))
           {
               List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false,finaxysProfileRepository.getAll().size());
               for (int i = 0; i < users.size(); i++) {
                   messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
               }
-              Message message = new Message(messageText);
-              Log.info(message.getText());
-              return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-
+              return NewResponseEntity(messageText, true);
           }
         if (!text.trim().matches("^[1-9][0-9]*")) {
-            Message message = new Message(messageText+" \n"+"Arguments should be [number]");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+            return NewResponseEntity(messageText+" \n"+"Arguments should be [number]", true);
+
         }
 
         List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
         for (int i = 0; i < users.size(); i++) {
-            messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
+            messageText += users.get(i).getName() + " " + users.get(i).getScore() ;
         }
-        Message message = new Message(messageText);
-        Log.info(message.getText());
-        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+
+        return NewResponseEntity(messageText, true);
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class EventApiWebService {
+public class EventApiWebService extends BaseWebService{
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -25,17 +25,10 @@ public class EventApiWebService {
         if (jsonNode.has("challenge"))
             return new ResponseEntity(jsonNode.get("challenge").asText(), HttpStatus.OK);
 
-        if (!Settings.appVerificationToken.equals(jsonNode.get("token").asText())) {
-            Message message = new Message("Wrong verification token !");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-
-        if (!Settings.slackTeamId.equals(jsonNode.get("team_id").asText())) {
-            Message message = new Message("Only for FinaxysTM members !");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-
+        if (NoAccess(jsonNode.get("token").asText(), jsonNode.get("team_id").asText()))
+            return NoAccessStringResponseEntity(jsonNode.get("token").toString(),jsonNode.get("team_id").asText());
         return new ResponseEntity(HttpStatus.OK);
+
     }
 
 

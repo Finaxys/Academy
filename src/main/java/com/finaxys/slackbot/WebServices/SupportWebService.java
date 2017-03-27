@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fx_help")
 public class SupportWebService extends BaseWebService {
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<JsonNode> fx_help(@RequestParam("appVerificationToken") String appVerificationToken,
-                                            @RequestParam("slackTeam") String slackTeam,
-                                            @RequestParam("userId") String userId) {
+    public ResponseEntity<JsonNode> fx_help(@RequestParam("token") String appVerificationToken,
+                                            @RequestParam("team_domain")  String slackTeam,
+                                            @RequestParam("user_id") String userId) {
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
 
@@ -38,10 +38,10 @@ public class SupportWebService extends BaseWebService {
         String fxAdminCommands =
                 "*/fxadmin_add* @username \n Add an administrator. \n" +
                         "*/fxadmin_del* @username \n Delete an administrator. \n" +
-                        "*/fxadmin_manager_challenge_del* \n Delete a challenge!";
+                 "*/fxadmin_manager_challenge_del* \n Delete a challenge!";
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
-        Log.info(message);
-        return NewResponseEntity(message);
+
+        return NewResponseEntity(message,true);
     }
 }

@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by jiji on 22/03/2017.
- */
 @RestController
 @RequestMapping("/event")
-public class EventScoreWebService {
+public class EventScoreWebService extends BaseWebService {
 
-    ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private Repository<EventScore, String> eventScoreRepository;
     int score;
@@ -31,37 +27,21 @@ public class EventScoreWebService {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<List<FinaxysProfile>> listScores(@RequestParam("appVerificationToken") String appVerificationToken,
-                                                           @RequestParam("text") String text
-            , @RequestParam("slackTeam") String slackTeam) {
-        String messageText = "/fx_event_add " + text;
+    public ResponseEntity<JsonNode> listScores(@RequestParam("token") String appVerificationToken,
+                                               @RequestParam("team_domain") String slackTeam,
+                                               @RequestParam("text") String text
+    ) {
 
-
-        Log.info("/fx_event_add "+text);
-        if (!Settings.appVerificationToken.equals(appVerificationToken)) {
-
-            Message message = new Message("Wrong verification token !" + Settings.appVerificationToken);
-            Log.info(message.getText());
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        if (!Settings.slackTeam.equals(slackTeam)) {
-            Message message = new Message("Only for FinaxysTM members !");
-            Log.info(message.getText());
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
-        ;
+        if (NoAccess(appVerificationToken, slackTeam))
+            return NoAccessResponseEntity(appVerificationToken, slackTeam);
 
         EventScoreAddMatcher eventScoreAddMatcher = new EventScoreAddMatcher();
-        if (!eventScoreAddMatcher.isCorrect(text)) {
-            Message message = new Message(messageText + " \n" + "Arguments should be : [\"event\"] [points earned]");
-            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
-        }
+        if (!eventScoreAddMatcher.isCorrect(text))
+            return NewResponseEntity("/fx_event_add " + text + " \n" + "Arguments should be : [\"event\"] [points earned]" , true);
+
         score = eventScoreAddMatcher.getActionScoreArgument(text);
         event = eventScoreAddMatcher.getActionNameArgument(text);
-
-
         eventScoreRepository.saveOrUpdate(new EventScore(event, score));
-        Message message = new Message(messageText + " \n" + "event added successfully ");
-        return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        return NewResponseEntity("/fx_event_add " + text + " \n" + "event added successfully ",true);
     }
 }

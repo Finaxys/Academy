@@ -19,7 +19,7 @@ public class Log {
     }
     public static void info(String message) {
         SlackBot.postMessageToDebugChannelAsync(message);
-        logger.info(message);
+        logger.fatal(message);
     }
 
     // --------------------------------------------------------------------

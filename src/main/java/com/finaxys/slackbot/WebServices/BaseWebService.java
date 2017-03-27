@@ -2,9 +2,11 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finaxys.slackbot.DAL.Challenge;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import java.util.List;
 public class BaseWebService {
     @Autowired
     public Repository<Role, Integer> roleRepository;
+    @Autowired
+    Repository<Challenge, Integer> challengeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -24,6 +28,16 @@ public class BaseWebService {
         for (Role role : roles)
             if (role.getFinaxysProfile().getId().equals(userId))
                 return true;
+        return false;
+    }
+    public boolean isChallengeManager(String userId, String challengeName) {
+        List<Role> roles = roleRepository.getByCriterion("role", "challenge_manager");
+        int challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
+        for (Role role : roles) {
+            if (role.getFinaxysProfile().getId().equals(userId) && role.getChallengeId() == challengeId) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -41,11 +55,28 @@ public class BaseWebService {
         return null;
     }
 
+    public ResponseEntity<String> NoAccessStringResponseEntity(String appVerificationToken, String slackTeam) {
+        if (!Settings.appVerificationToken.equals(appVerificationToken)) {
+            Message message = new Message("Wrong verification token !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+
+        if (!Settings.slackTeamId.equals(slackTeam)) {
+            Message message = new Message("Only for FinaxysTM members !");
+            return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
+        }
+        return null;
+    }
     public ResponseEntity<JsonNode> NewResponseEntity(Message message) {
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
     public ResponseEntity<JsonNode> NewResponseEntity(String message) {
         return NewResponseEntity(new Message(message));
+    }
+    public ResponseEntity<JsonNode> NewResponseEntity(String message,boolean logAsInfo) {
+        if(logAsInfo)
+            Log.info(message);
+       return NewResponseEntity(new Message(message));
     }
 }
