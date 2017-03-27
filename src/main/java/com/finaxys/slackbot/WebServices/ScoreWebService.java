@@ -51,7 +51,7 @@ public class ScoreWebService extends BaseWebService{
         if(challenges.size()==0)
             return NewResponseEntity("Nonexistent challenge", true);
 
-      if (!isChallengeManager(challengeManagerId,challengeName )||!isAdmin(challengeManagerId))
+      if (!isChallengeManager(challengeManagerId,challengeName ) && !isAdmin(challengeManagerId))
             return NewResponseEntity("/fx_challenge_score_add "+arguments+"\n"+"You are neither admin nor a challenge manager !", true);
 
 
