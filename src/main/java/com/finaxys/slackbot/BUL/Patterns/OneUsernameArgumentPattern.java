@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
  * Created by Bannou on 16/03/2017.
  */
 public class OneUsernameArgumentPattern {
+	
     private static Pattern pattern;
     final String oneUsernameArgumentPattern;
 
