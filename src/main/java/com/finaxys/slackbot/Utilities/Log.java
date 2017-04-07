@@ -20,7 +20,7 @@ public class Log {
     public static void info(String message) {
     	System.out.println("eee");
         SlackBot.postMessageToDebugChannelAsync(message);
-        logger.fatal(message);
+        logger.info(message);
     }
 
     // --------------------------------------------------------------------

@@ -11,6 +11,7 @@ import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
 
 import com.finaxys.slackbot.Utilities.PropertyLoader;
+import com.finaxys.slackbot.Utilities.Settings;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -38,7 +39,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	
 	private static SlackWebApiClient slackWebApiClient;
 	private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
-	private static String slackBotToken = "xoxb-153383642771-upcRB6OsamNb4IOAcn1C3fZA";//TODO : PropertyLoader.loadSlackBotProperties().getProperty("token");
+	private static String slackBotToken = Settings.botUserOauthAccessToken;
 
 	
 	
