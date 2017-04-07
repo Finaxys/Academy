@@ -13,6 +13,8 @@ import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
 import com.finaxys.slackbot.Utilities.PropertyLoader;
 import com.finaxys.slackbot.Utilities.Settings;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -51,6 +53,12 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 
 		if (!eventHolderBean.getEventFired()) {
+			
+			File f = new File(".");
+			System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+			System.out.println(f.getAbsolutePath());
+			System.out.println(Settings.botUserOauthAccessToken);
+			/*
 			eventHolderBean.setEventFired(true);
 			System.out.println("Context Event Received");
 			System.out.println(Settings.botUserOauthAccessToken);
@@ -75,6 +83,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			
 			System.out.println((MessageListener) context.getBean("messageListener"));
 			System.out.println("End : Jar Project Config");
+			*/
 		}
 
 	}
