@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.Utilities;
 
-import allbegray.slack.webapi.SlackWebApiClient;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
