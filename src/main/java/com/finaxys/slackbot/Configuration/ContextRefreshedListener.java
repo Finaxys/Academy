@@ -39,7 +39,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	
 	private static SlackWebApiClient slackWebApiClient;
 	private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
-	private static String slackBotToken = Settings.botUserOauthAccessToken;
 
 	
 	
@@ -54,6 +53,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 		if (!eventHolderBean.getEventFired()) {
 			eventHolderBean.setEventFired(true);
 			System.out.println("Context Event Received");
+			System.out.println(Settings.botUserOauthAccessToken);
 			ApplicationContext context = contextRefreshedEvent.getApplicationContext();
 			System.out.println(context.getClass().toString());
 			System.out.println("Start : Jar Project Config");
@@ -80,11 +80,11 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	}
 	
 	private SlackWebApiClient getSlackWebApiClient() {
-		return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(slackBotToken) : slackWebApiClient;
+		return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(Settings.botUserOauthAccessToken) : slackWebApiClient;
 	}
 
 	private SlackRealTimeMessagingClient getSlackRealTimeMessagingClient() {
 		return slackRealTimeMessagingClient == null
-				? SlackClientFactory.createSlackRealTimeMessagingClient(slackBotToken) : slackRealTimeMessagingClient;
+				? SlackClientFactory.createSlackRealTimeMessagingClient(Settings.botUserOauthAccessToken) : slackRealTimeMessagingClient;
 	}
 }

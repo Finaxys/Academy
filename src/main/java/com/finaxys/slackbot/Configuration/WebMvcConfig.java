@@ -15,11 +15,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	
 	
 	public WebMvcConfig() {
-		
-		
-		System.out.println("BEGIN : jar project starting!");
-		
-		System.out.println("END : jar project started!");
+	
 	}
 
 	

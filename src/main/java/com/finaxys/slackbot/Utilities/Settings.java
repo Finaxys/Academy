@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-@PropertySource(value = "file:/credentials.properties")
+@PropertySource(value = "classpath:credentials.properties")
 @Component
 public class Settings {
     private static Environment environment;
