@@ -21,7 +21,8 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 
     @Override
     public void addReactionAddedScore(JsonNode jsonNode) {
-
+    	System.out.println("addReactionAddedScore!");
+        
         List<String> listEmojis = new ArrayList<String>();
         listEmojis.add("+1");
         listEmojis.add("clap");

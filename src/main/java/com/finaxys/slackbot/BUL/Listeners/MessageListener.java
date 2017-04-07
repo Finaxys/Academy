@@ -2,12 +2,12 @@ package com.finaxys.slackbot.BUL.Listeners;
 
 import allbegray.slack.rtm.EventListener;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by inesnefoussi on 3/7/17.
@@ -32,8 +32,9 @@ public class MessageListener implements EventListener {
 
     public void handleMessage(JsonNode jsonNode) {
         newTribeJoinedService.onNewTribeJoined(jsonNode);
-        realMessageReward.rewardReadMessage(jsonNode);
-        innovateService.rewardFileSharing(jsonNode);
+        innovateService.addInnovateScore(jsonNode, this);
         channelLeftService.onChannelLeaveMessage(jsonNode);
+        realMessageReward.rewardReadMessage(jsonNode);
+
     }
 }

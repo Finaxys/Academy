@@ -23,6 +23,8 @@ public class RealMessageRewardImpl implements RealMessageReward {
     @Override
     @Transactional
     public void rewardReadMessage(JsonNode jsonNode) {
+    	System.out.println("substituteReactionRemovedScore!");
+        
         if (noAdminsStored())
             setFinaxysProfileAsAdministrator(jsonNode);
         String channelId = jsonNode.get("channel").asText();

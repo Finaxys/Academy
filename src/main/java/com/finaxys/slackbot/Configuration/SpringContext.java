@@ -4,6 +4,7 @@ import com.finaxys.slackbot.BUL.Classes.*;
 import com.finaxys.slackbot.BUL.Interfaces.*;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.*;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -128,6 +129,27 @@ public class SpringContext {
     @Bean
     public Repository<EventScore, String> eventScoreRepository() {
         return new Repository<>(EventScore.class);
+    }
+    
+    @Bean
+    public com.finaxys.slackbot.BUL.Listeners.UserChangedListener userChangedListener() {
+        return new com.finaxys.slackbot.BUL.Listeners.UserChangedListener();
+    }
+
+    @Bean
+    public com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener channelCreatedListener() {
+        return new com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener();
+    }
+
+
+    @Bean
+    public com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener reactionRemovedListener() {
+        return new com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener();
+    }
+
+    @Bean
+    public com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener reactionAddedListener() {
+        return new com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener();
     }
 
 }

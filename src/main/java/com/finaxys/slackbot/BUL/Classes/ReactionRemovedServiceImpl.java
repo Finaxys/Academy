@@ -20,7 +20,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
     @Override
     public void substituteReactionRemovedScore(JsonNode jsonNode) {
-
+	    System.out.println("substituteReactionRemovedScore!");
         List<String> listEmojis = new ArrayList<String>();
         listEmojis.add("+1");
         listEmojis.add("clap");

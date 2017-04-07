@@ -26,6 +26,8 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Override
     @Transactional
     public List<FinaxysProfile> listeScores(int profilesCount) {
+    	System.out.println("listeScores!");
+        
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getAllOrderedByAsList("score", false, profilesCount);
 
 

@@ -24,6 +24,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
     @Transactional
     @Override
     public void onChannelLeaveMessage(JsonNode jsonNode) {
+    	System.out.println("onChannelLeaveMessage!");
         if (jsonIsValid(jsonNode)) {
             String channelId = jsonNode.get("channel").asText();
             Channel channel = SlackBot.getSlackWebApiClient().getChannelInfo(channelId);

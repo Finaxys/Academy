@@ -12,6 +12,7 @@ public class AddChallengeManagerArgumentsPattern {
     private AddChallengeManagerArgumentsPattern() {
         challengeManagerArgumentsPattern = ".+(<@\\w{9}|.*>){1}";
         pattern = Pattern.compile(challengeManagerArgumentsPattern);
+        
     }
 
     public static Pattern getPattern() {
