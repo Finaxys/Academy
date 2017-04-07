@@ -24,7 +24,7 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @ComponentScan({"com.finaxys.slackbot.*"})
-@PropertySource(value = "file:\\d\\homesite\\wwwroot\\bin\\apache-tomcat-8.0.41\\dataSourceInformation.properties")
+@PropertySource(value = "file:\\d\\home\\site\\wwwroot\\bin\\apache-tomcat-8.0.41\\dataSourceInformation.properties")
 public class SpringContext {
 
     @Autowired
