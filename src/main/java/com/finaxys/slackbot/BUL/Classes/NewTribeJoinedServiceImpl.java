@@ -40,7 +40,7 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
             }
 
             finaxysProfileRepository.saveOrUpdate(userProfile);
-            Log.logChannelTributeJoined(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+            Log.logChannelTribeJoined(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
         }
     }

@@ -24,11 +24,11 @@ public class Log {
 
     // --------------------------------------------------------------------
 
-    public static void logChannelTribuCreated(String name , String tribuChannel) {
+    public static void logChannelTribeCreated(String name , String tribuChannel) {
     	System.out.println("eee");
         info(name+" created "+tribuChannel);
     }
-    public static void logChannelTributeJoined(String name,String tribuChannel) {
+    public static void logChannelTribeJoined(String name,String tribuChannel) {
     	System.out.println("eee");
         info(name+" joined "+tribuChannel);
     }

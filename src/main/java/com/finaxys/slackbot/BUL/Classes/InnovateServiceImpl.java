@@ -37,7 +37,7 @@ public class InnovateServiceImpl implements InnovateService {
         }
         userProfile.incrementScore(SCORE_GRID.WAS_INNOVATIVE.value());
         finaxysProfileRepository.saveOrUpdate(userProfile);
-        Log.logChannelTribuCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+        Log.logChannelTribeCreated(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
 
 
     }
