@@ -54,11 +54,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 		if (!eventHolderBean.getEventFired()) {
 			
-			File f = new File(".");
-			System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-			System.out.println(f.getAbsolutePath());
-			System.out.println(Settings.botUserOauthAccessToken);
-			/*
 			eventHolderBean.setEventFired(true);
 			System.out.println("Context Event Received");
 			System.out.println(Settings.botUserOauthAccessToken);
@@ -83,7 +78,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			
 			System.out.println((MessageListener) context.getBean("messageListener"));
 			System.out.println("End : Jar Project Config");
-			*/
+			
 		}
 
 	}
