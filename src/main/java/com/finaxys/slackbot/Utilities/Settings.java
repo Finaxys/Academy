@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-@PropertySource(value = "file:d:/home/site/wwwroot/bin/apache-tomcat-8.0.41/credentials.properties")
+@PropertySource(value = "file:${catalina.home}/credentials.properties")
 @Component
 public class Settings {
     private static Environment environment;

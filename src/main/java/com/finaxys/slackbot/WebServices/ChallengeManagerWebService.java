@@ -36,11 +36,10 @@ public class ChallengeManagerWebService extends BaseWebService{
         if (!challengeManagerArgumentsMatcher.isCorrect(arguments))
             return NewResponseEntity("/fx_manager_add  :" + arguments + "\n " + "Arguments should be :[challenge name] @Username",true);
 
-
-
-        String profileId = challengeManagerArgumentsMatcher.getUserIdArgument(arguments);
-        String profileName = challengeManagerArgumentsMatcher.getUserNameArgument(arguments);
+        String profileId     = challengeManagerArgumentsMatcher.getUserIdArgument  (arguments);
+        String profileName   = challengeManagerArgumentsMatcher.getUserNameArgument(arguments);
         String challengeName = challengeManagerArgumentsMatcher.getChallengeName(arguments);
+        
         if (isChallengeManager(adminFinaxysProfileId, challengeName) || isAdmin(adminFinaxysProfileId)) {
             FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(profileId);
             List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
