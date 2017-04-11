@@ -13,60 +13,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by inesnefoussi on 3/7/17.
- */
 @Service
 public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
-    @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileRepository;
+	@Autowired
+	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    @Override
-    @Transactional
-    public void onNewTribeJoined(JsonNode jsonNode) {
+	@Override
+	@Transactional
+	public void onNewTribeJoined(JsonNode jsonNode) {
+		if (jsonIsValid(jsonNode)) {
+			String userId = jsonNode.get("user").asText();
+			String channelId = jsonNode.get("channel").asText();
+			FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
 
-        if (jsonIsValid(jsonNode)) {
-            String userId = jsonNode.get("user").asText();
-            String channelId = jsonNode.get("channel").asText();
-            FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
+			String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+			userProfile = (userProfile == null) ? new FinaxysProfile(userId, name) : userProfile;
 
-            if (userProfile != null)
-                userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
-            else {
-                userProfile = new FinaxysProfile();
-                userProfile.setId(userId);
-                userProfile.setScore(SCORE_GRID.JOINED_TRIBUTE.value());
-            }
+			userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 
-            finaxysProfileRepository.saveOrUpdate(userProfile);
-            Log.logChannelTribeJoined(SlackBot.getSlackWebApiClient().getUserInfo(userId).getName(), SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+			finaxysProfileRepository.saveOrUpdate(userProfile);
+			Log.logChannelTribeJoined(name, SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+		}
+	}
 
-        }
-    }
+	private boolean jsonIsValid(JsonNode jsonNode) {
+		if (!jsonNode.has("subtype"))
+			return false;
 
-    private boolean jsonIsValid(JsonNode jsonNode) {
-        System.out.println(jsonNode.toString());
-        if (jsonNode == null) return false;
-        if (!jsonNode.has("subtype")) return false;
+		String messageSubtype = jsonNode.get("subtype").asText();
 
-        String messageSubtype = jsonNode.get("subtype").asText();
+		if (!messageSubtype.equals("channel_join"))
+			return false;
 
-        if (!messageSubtype.equals("channel_join")) return false;
+		String channelId = jsonNode.get("channel").asText();
+		SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
+		Channel channel = webApiClient.getChannelInfo(channelId);
+		String channelName = channel.getName();
 
-        String channelId = jsonNode.get("channel").asText();
-        SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
-        Channel channel = webApiClient.getChannelInfo(channelId);
-        String channelName = channel.getName();
+		if (channelName == null)
+			return false;
 
-        if (channelName == null) return false;
+		TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
 
-        TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
-
-        if (tribeChannelMatcher.isNotTribe(channelName)) return false;
-        if (jsonNode.get("user").asText() == null)
-            return false;
-        return true;
-    }
-
+		if (tribeChannelMatcher.isNotTribe(channelName))
+			return false;
+		if (jsonNode.get("user").asText() == null)
+			return false;
+		return true;
+	}
 }

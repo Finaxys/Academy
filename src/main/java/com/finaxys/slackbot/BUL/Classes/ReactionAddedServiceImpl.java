@@ -15,41 +15,32 @@ import java.util.List;
 @Service
 public class ReactionAddedServiceImpl implements ReactionAddedService {
 
-    @Autowired
-    Repository<FinaxysProfile, String> finaxysProfileRepository;
+	@Autowired
+	Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+	@Override
+	public void addReactionAddedScore(JsonNode jsonNode) {
+		System.out.println(jsonNode.toString());
 
-    @Override
-    public void addReactionAddedScore(JsonNode jsonNode) {
-    	System.out.println("addReactionAddedScore!");
-        
-        List<String> listEmojis = new ArrayList<String>();
-        listEmojis.add("+1");
-        listEmojis.add("clap");
-        listEmojis.add("ok_hand");
-        if (jsonNode == null) return;
-        if (jsonNode.get("item_user").asText() == null) return;
-        String itemUserId = jsonNode.get("item_user").asText();
-        String myUserId = jsonNode.get("user").asText();
-        String reaction = jsonNode.get("reaction").asText();
-        FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
-        if (listEmojis.contains(reaction)) {
-            if (itemUserId != null && itemUserId != myUserId && userProfile != null) {
-                {
-                    System.out.println(itemUserId);
+		List<String> listEmojis = new ArrayList<String>();
+		listEmojis.add("+1");
+		listEmojis.add("clap");
+		listEmojis.add("ok_hand");
 
-                    if (userProfile != null) {
-                        userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-                        finaxysProfileRepository.updateEntity(userProfile);
-                    } else {
-                        String userName =  SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName();
-                        finaxysProfileRepository.addEntity(new FinaxysProfile(itemUserId, userName,false, SCORE_GRID.APPRECIATED_MESSAGE.value()));
+		if (jsonNode.get("item_user").asText() == null)
+			return;
 
-                    }
-                }
-            }
-        }
-        Log.logReactionAdded(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(), SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
-    }
+		String itemUserId = jsonNode.get("item_user").asText();
+		String myUserId = jsonNode.get("user").asText();
+		String reaction = jsonNode.get("reaction").asText();
+		FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
 
+		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
+			userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
+			finaxysProfileRepository.updateEntity(userProfile);
+			Log.logReactionAdded(userProfile.getName(),
+					SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+		}
+
+	}
 }

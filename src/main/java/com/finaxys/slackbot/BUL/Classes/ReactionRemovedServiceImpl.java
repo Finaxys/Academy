@@ -15,37 +15,34 @@ import java.util.List;
 @Service
 public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
-    @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileRepository;
+	@Autowired
+	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-    @Override
-    public void substituteReactionRemovedScore(JsonNode jsonNode) {
-	    System.out.println("substituteReactionRemovedScore!");
-        List<String> listEmojis = new ArrayList<String>();
-        listEmojis.add("+1");
-        listEmojis.add("clap");
-        listEmojis.add("ok_hand");
-        if (jsonNode == null) return;
-        if (jsonNode.get("item_user").asText() == null) return;
-        String itemUserId = jsonNode.get("item_user").asText();
-        String myUserId = jsonNode.get("user").asText();
-        String reaction = jsonNode.get("reaction").asText();
-        if (listEmojis.contains(reaction)) {
-            if (itemUserId != null && itemUserId != myUserId) {
-                {
+	@Override
+	public void substituteReactionRemovedScore(JsonNode jsonNode) {
+		List<String> listEmojis = new ArrayList<String>();
+		listEmojis.add("+1");
+		listEmojis.add("clap");
+		listEmojis.add("ok_hand");
 
-                    FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
-                    if (userProfile != null) {
-                        userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-                        finaxysProfileRepository.updateEntity(userProfile);
-                    }
+		if (jsonNode == null)
+			return;
 
-                }
-            }
-            Log.logReactionRemoved(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(), SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
-        }
-    }
+		if (jsonNode.get("item_user").asText() == null)
+			return;
+
+		String itemUserId = jsonNode.get("item_user").asText();
+		String myUserId = jsonNode.get("user").asText();
+		String reaction = jsonNode.get("reaction").asText();
+		FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
+
+		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
+			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
+			finaxysProfileRepository.updateEntity(userProfile);
+			Log.logReactionRemoved(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(),
+					SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+
+		}
+	}
 
 }
-
-
