@@ -16,67 +16,98 @@ import java.util.List;
 
 @Component
 public class BaseWebService {
+	
     @Autowired
     public Repository<Role, Integer> roleRepository;
+    
     @Autowired
     Repository<Challenge, Integer> challengeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public boolean isAdmin(String userId) {
+    
+    public boolean isAdmin(String userId)
+    {
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
+        
         for (Role role : roles)
             if (role.getFinaxysProfile().getId().equals(userId))
                 return true;
+        
         return false;
     }
-    public boolean isChallengeManager(String userId, String challengeName) {
-        List<Role> roles = roleRepository.getByCriterion("role", "challenge_manager");
-        int challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
-        for (Role role : roles) {
-            if (role.getFinaxysProfile().getId().equals(userId) && role.getChallengeId() == challengeId) {
+    
+    
+    public boolean isChallengeManager(String userId, String challengeName) 
+    {
+        List<Role> roles 	   = roleRepository.getByCriterion("role", "challenge_manager");
+        int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
+        
+        for (Role role : roles)
+            if (role.getFinaxysProfile().getId().equals(userId) && role.getChallengeId() == challengeId)
                 return true;
-            }
-        }
+        
         return false;
     }
 
-    public boolean NoAccess(String appVerificationToken, String slackTeam) {
-        if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
+    
+    public boolean NoAccess(String appVerificationToken, String slackTeam) 
+    {
+        if (appVerific(cela sous-entend évidemment que vous aurez anticipé afin d'aller chercher votre dej avant si vous ne l'avez pas apporté). 
+
+        		 ationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
             return false;
+        
         return true;
     }
 
-    public ResponseEntity<JsonNode> NoAccessResponseEntity(String appVerificationToken, String slackTeam) {
+    
+    public ResponseEntity<JsonNode> NoAccessResponseEntity(String appVerificationToken, String slackTeam) 
+    {
         if (!appVerificationToken.equals(Settings.appVerificationToken))
             return NewResponseEntity("Wrong app verification token !");
+        
         if (!slackTeam.equals(Settings.slackTeam))
             return NewResponseEntity("Only for Finaxys members !");
+        
         return null;
     }
 
-    public ResponseEntity<String> NoAccessStringResponseEntity(String appVerificationToken, String slackTeam) {
-        if (!Settings.appVerificationToken.equals(appVerificationToken)) {
+    public ResponseEntity<String> NoAccessStringResponseEntity(String appVerificationToken, String slackTeam) 
+    {
+        if (!Settings.appVerificationToken.equals(appVerificationToken)) 
+        {
             Message message = new Message("Wrong verification token !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
 
-        if (!Settings.slackTeamId.equals(slackTeam)) {
+        if (!Settings.slackTeamId.equals(slackTeam)) 
+        {
             Message message = new Message("Only for FinaxysTM members !");
             return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
         }
+        
         return null;
     }
-    public ResponseEntity<JsonNode> NewResponseEntity(Message message) {
+    
+    
+    public ResponseEntity<JsonNode> NewResponseEntity(Message message) 
+    {
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
-    public ResponseEntity<JsonNode> NewResponseEntity(String message) {
+    
+    public ResponseEntity<JsonNode> NewResponseEntity(String message) 
+    {
         return NewResponseEntity(new Message(message));
     }
-    public ResponseEntity<JsonNode> NewResponseEntity(String message,boolean logAsInfo) {
+    
+    
+    public ResponseEntity<JsonNode> NewResponseEntity(String message,boolean logAsInfo) 
+    {
         if(logAsInfo)
             Log.info(message);
+        
        return NewResponseEntity(new Message(message));
     }
 }
