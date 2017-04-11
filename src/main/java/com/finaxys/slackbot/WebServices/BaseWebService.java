@@ -28,6 +28,8 @@ public class BaseWebService {
     
     public boolean isAdmin(String userId)
     {
+    	//faire une requête unique du type "SELECT ROLE_ID FROM Role WHERE FINAXYSPROFILE_ID = userId AND role = "admin"
+    	
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
         
         for (Role role : roles)
@@ -40,6 +42,8 @@ public class BaseWebService {
     
     public boolean isChallengeManager(String userId, String challengeName) 
     {
+    	//faire une requête du type "SELECT ROLE_ID FROM Role WHERE FINAXYSPROFILE_ID = userId AND role = challenge_manager AND #p
+    	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "challenge_manager");
         int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
         
@@ -53,9 +57,7 @@ public class BaseWebService {
     
     public boolean NoAccess(String appVerificationToken, String slackTeam) 
     {
-        if (appVerific(cela sous-entend évidemment que vous aurez anticipé afin d'aller chercher votre dej avant si vous ne l'avez pas apporté). 
-
-        		 ationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
+        if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
             return false;
         
         return true;
