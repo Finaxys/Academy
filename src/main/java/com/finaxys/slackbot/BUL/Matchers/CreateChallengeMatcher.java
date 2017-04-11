@@ -6,20 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by inesnefoussi on 3/16/17.
- */
 public class CreateChallengeMatcher {
+	
     private List<Pattern> createChallengePatterns;
 
     public CreateChallengeMatcher() {
+    	
         createChallengePatterns = new ArrayList<>();
         createChallengePatterns.add(CreateChallengePattern.getPattern());
     }
 
     public boolean match(String message) {
+    	
         for (Pattern pattern : createChallengePatterns)
             if (!pattern.matcher(message).matches()) return false;
+        
         return true;
     }
 }

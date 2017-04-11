@@ -10,12 +10,10 @@ import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.SlackBot;
 
-/**
- * Created by Sahar on 21/03/2017.
- */
 @Component
 public class UserChangedListener implements EventListener {
-    @Autowired
+    
+	@Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
     public UserChangedListener() {
@@ -23,18 +21,24 @@ public class UserChangedListener implements EventListener {
 
     @Override
     public void handleMessage(JsonNode jsonNode) {
+    	
         System.out.println("i'aaaaaam here" + jsonNode.toString());
+        
         if (jsonNode.has("type")) {
+        	
             if (!jsonNode.get("type").asText().equals("user_change")) return;
-            if (jsonNode.get("type").asText().equals("user_change")) {
-                String finaxysProfileId = jsonNode.get("user").get("id").asText();
-                String finaxysProfileIName = SlackBot.getSlackWebApiClient()
-                                                     .getUserInfo(finaxysProfileId)
-                                                     .getName();
+            if ( jsonNode.get("type").asText().equals("user_change")) {
+            	
+                String finaxysProfileId 	= jsonNode.get("user").get("id").asText();
+                String finaxysProfileIName 	= SlackBot.getSlackWebApiClient()
+                                                      .getUserInfo(finaxysProfileId)
+                                                      .getName();
                 FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
+                
                 if (finaxysProfile == null) {
                     finaxysProfile = new FinaxysProfile(finaxysProfileId, finaxysProfileIName);
                 }
+                
                 finaxysProfile.setName(finaxysProfileIName);
                 finaxysProfileRepository.saveOrUpdate(finaxysProfile);
             }

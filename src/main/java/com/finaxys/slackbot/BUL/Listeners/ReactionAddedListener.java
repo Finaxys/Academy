@@ -16,8 +16,8 @@ public class ReactionAddedListener implements EventListener {
     public ReactionAddedListener() {
     }
 
-
     public void handleMessage(JsonNode jsonNode) {
+    	
         System.out.println(jsonNode.toString());
         reactionAddedService.addReactionAddedScore(jsonNode);
 

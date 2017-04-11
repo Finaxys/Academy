@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by Bannou on 21/03/2017.
- */
 @Component
 public class UserChangeListener {
+	
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
@@ -23,13 +21,17 @@ public class UserChangeListener {
     }
 
     public void handleMessage(JsonNode jsonNode) {
-        String finaxysProfileId = jsonNode.get("user").get("user_id").asText();
-        FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
-        if (finaxysProfile == null){
+    	
+        String finaxysProfileId 		= jsonNode.get("user").get("user_id").asText();
+        FinaxysProfile finaxysProfile 	= finaxysProfileRepository.findById(finaxysProfileId);
+        
+        if (finaxysProfile == null) {
+        	
             SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String finaxysProfileIName = slackWebApiClient.getUserInfo(finaxysProfileId).getName();
-            finaxysProfile = new FinaxysProfile(finaxysProfileId, finaxysProfileIName);
+            String finaxysProfileIName 			= slackWebApiClient.getUserInfo(finaxysProfileId).getName();
+            finaxysProfile 						= new FinaxysProfile(finaxysProfileId, finaxysProfileIName);
         }
+        
         finaxysProfile.setAdministrator(true);
         finaxysProfileRepository.saveOrUpdate(finaxysProfile);
     }

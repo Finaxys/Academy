@@ -9,9 +9,6 @@ import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 
-/**
- * Created by inesnefoussi on 3/7/17.
- */
 @Component
 public class MessageListener implements EventListener {
 
@@ -31,6 +28,7 @@ public class MessageListener implements EventListener {
     }
 
     public void handleMessage(JsonNode jsonNode) {
+    	
         newTribeJoinedService.onNewTribeJoined(jsonNode);
         innovateService.addInnovateScore(jsonNode, this);
         channelLeftService.onChannelLeaveMessage(jsonNode);
