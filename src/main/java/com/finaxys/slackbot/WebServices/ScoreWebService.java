@@ -4,6 +4,8 @@ import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.Timer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,43 +34,59 @@ public class ScoreWebService extends BaseWebService{
     												  @RequestParam("team_domain") String slackTeam,
                                                       @RequestParam("text") 	   String arguments,
                                                       @RequestParam("user_id") 	   String challengeManagerId) {
+    	
+    	Timer timer = new Timer();
 
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
-
+        
+        timer.capture();
+        
         ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
 
         if (!challengeScoreArgumentsMatcher.isCorrect(arguments))
-            return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n "+"Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !", true);
+            return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n "+"Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !" + timer , true);
 
         String userId 		 = challengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
         String challengeName = challengeScoreArgumentsMatcher.getChallengeName	 (arguments);
         
+        timer.capture();
+        
         List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
         
+        timer.capture();
+        
         if(challenges.size()==0)
-            return NewResponseEntity("Nonexistent challenge", true);
+            return NewResponseEntity("Nonexistent challenge" + timer , true);
 
         if (!isChallengeManager(challengeManagerId,challengeName ) && !isAdmin(challengeManagerId))
-            return NewResponseEntity("/fx_challenge_score_add "+arguments+"\n"+"You are neither admin nor a challenge manager !", true);
+            return NewResponseEntity("/fx_challenge_score_add "+arguments+"\n"+"You are neither admin nor a challenge manager !" + timer , true);
 
         int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
         
         FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score, challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
         
+        timer.capture();
+        
         finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
         finaxysProfile_challenge.setChallenge	  (challengeRepository.getByCriterion("name", challengeName).get(0));
         
+        timer.capture();
+        
         try 
-        {
+        {	
+        	timer.capture();
+        	
             finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+            
+            timer.capture();
         }
         catch (Exception e)
         {
-            return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n"+"A problem has occured! The user may have a score for this challenge already !",true);
+            return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n"+"A problem has occured! The user may have a score for this challenge already !" + timer,true);
         }
         
-        return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n"+"Score has been added !",true);
+        return NewResponseEntity("/fx_challenge_score_add "+arguments+" \n"+"Score has been added !" + timer ,true);
     }
 
     
@@ -77,6 +95,8 @@ public class ScoreWebService extends BaseWebService{
     public ResponseEntity<JsonNode> listScoreForChallenge(@RequestParam("token") 	   String appVerificationToken,
                                                           @RequestParam("team_domain") String slackTeam,
                                                           @RequestParam("text") 	   String arguments) {
+    	
+    	Timer timer = new Timer();
 
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
