@@ -18,6 +18,9 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 	@Autowired
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
 	@Override
 	public void substituteReactionRemovedScore(JsonNode jsonNode) {
 		List<String> listEmojis = new ArrayList<String>();
@@ -39,8 +42,8 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			finaxysProfileRepository.updateEntity(userProfile);
-			Log.logReactionRemoved(SlackBot.getSlackWebApiClient().getUserInfo(myUserId).getName(),
-					SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+			Log.logReactionRemoved(slackApiAccessService.getUser(myUserId).getName(),
+					slackApiAccessService.getUser(itemUserId).getName());
 
 		}
 	}

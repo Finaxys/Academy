@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.SlackBot;
@@ -15,7 +16,10 @@ public class UserChangedListener implements EventListener {
     
 	@Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
-
+	
+	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
     public UserChangedListener() {
     }
 
@@ -30,8 +34,7 @@ public class UserChangedListener implements EventListener {
             if ( jsonNode.get("type").asText().equals("user_change")) {
             	
                 String finaxysProfileId 	= jsonNode.get("user").get("id").asText();
-                String finaxysProfileIName 	= SlackBot.getSlackWebApiClient()
-                                                      .getUserInfo(finaxysProfileId)
+                String finaxysProfileIName 	= slackApiAccessService.getUser(finaxysProfileId)
                                                       .getName();
                 FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
                 

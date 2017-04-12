@@ -17,18 +17,21 @@ public class InnovateServiceImpl implements InnovateService {
 
 	@Autowired
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
-
+	
+	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
 	public void addInnovateScore(JsonNode json, ChannelCreatedListener channelCreatedListener) {
 		String userId = json.get("channel").get("creator").asText();
 		String channelId = json.get("channel").get("id").asText();
-		String channelName = SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName();
+		String channelName = slackApiAccessService.getChannel(channelId).getName();
 		TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
 
 		if (tribeChannelMatcher.isNotTribe(channelName))
 			return;
 
 		FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
-		String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new FinaxysProfile(userId, name) : userProfile;
 		
 		addInnovateScore(userProfile);
@@ -45,7 +48,7 @@ public class InnovateServiceImpl implements InnovateService {
 
 		String userId = json.get("user").asText();
 		FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
-		String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new FinaxysProfile(userId, name) : userProfile;
 		
 		addInnovateScore(userProfile);

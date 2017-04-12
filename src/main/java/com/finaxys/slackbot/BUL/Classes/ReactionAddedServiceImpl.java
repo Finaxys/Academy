@@ -18,6 +18,9 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 	@Autowired
 	Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
 	@Override
 	public void addReactionAddedScore(JsonNode jsonNode) {
 		System.out.println(jsonNode.toString());
@@ -39,7 +42,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 			userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			finaxysProfileRepository.updateEntity(userProfile);
 			Log.logReactionAdded(userProfile.getName(),
-					SlackBot.getSlackWebApiClient().getUserInfo(itemUserId).getName());
+					slackApiAccessService.getUser(itemUserId).getName());
 		}
 
 	}

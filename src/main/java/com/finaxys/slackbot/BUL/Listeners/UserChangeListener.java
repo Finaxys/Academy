@@ -3,6 +3,7 @@ package com.finaxys.slackbot.BUL.Listeners;
 import allbegray.slack.rtm.EventListener;
 import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Interfaces.*;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
@@ -17,6 +18,9 @@ public class UserChangeListener {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+    @Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
     public UserChangeListener() {
     }
 
@@ -28,7 +32,7 @@ public class UserChangeListener {
         if (finaxysProfile == null) {
         	
             SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String finaxysProfileIName 			= slackWebApiClient.getUserInfo(finaxysProfileId).getName();
+            String finaxysProfileIName 			= slackApiAccessService.getUser(finaxysProfileId).getName();
             finaxysProfile 						= new FinaxysProfile(finaxysProfileId, finaxysProfileIName);
         }
         

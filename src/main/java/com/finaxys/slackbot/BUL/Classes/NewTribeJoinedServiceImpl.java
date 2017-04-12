@@ -19,6 +19,9 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 	@Autowired
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
 	@Override
 	@Transactional
 	public void onNewTribeJoined(JsonNode jsonNode) {
@@ -27,13 +30,13 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 			String channelId = jsonNode.get("channel").asText();
 			FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
 
-			String name = SlackBot.getSlackWebApiClient().getUserInfo(userId).getName();
+			String name = slackApiAccessService.getUser(userId).getName();
 			userProfile = (userProfile == null) ? new FinaxysProfile(userId, name) : userProfile;
 
 			userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 
 			finaxysProfileRepository.saveOrUpdate(userProfile);
-			Log.logChannelTribeJoined(name, SlackBot.getSlackWebApiClient().getChannelInfo(channelId).getName());
+			Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
 		}
 	}
 
@@ -48,7 +51,7 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
 		String channelId = jsonNode.get("channel").asText();
 		SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
-		Channel channel = webApiClient.getChannelInfo(channelId);
+		Channel channel = slackApiAccessService.getChannel(channelId);
 		String channelName = channel.getName();
 
 		if (channelName == null)

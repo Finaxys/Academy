@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChannelLeftServiceImpl implements ChannelLeftService {
 
 	@Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
+	@Autowired
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
 	@Transactional
@@ -23,7 +26,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 	public void onChannelLeaveMessage(JsonNode jsonNode) {
 		if (jsonIsValid(jsonNode)) {
 			String channelId = jsonNode.get("channel").asText();
-			Channel channel = SlackBot.getSlackWebApiClient().getChannelInfo(channelId);
+			Channel channel = slackApiAccessService.getChannel(channelId);
 			TribeChannelMatcher matcher = new TribeChannelMatcher();
 
 			if (matcher.isNotTribe(channel.getName()))

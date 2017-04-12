@@ -2,7 +2,11 @@ package com.finaxys.slackbot.Configuration;
 
 import allbegray.slack.SlackClientFactory;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;
+
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.Utilities.SlackBot;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -32,7 +36,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			System.out.println("Start");
 			ApplicationContext context = contextRefreshedEvent.getApplicationContext();
 
-			SlackRealTimeMessagingClient slackRealTimeMessagingClient = getSlackRealTimeMessagingClient();
+			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
 
 			
 			/*
@@ -56,6 +60,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			*/
 
 			slackRealTimeMessagingClient.connect();
+			SlackApiAccessService.init();
 			System.out.println("End");
 			
 		}
@@ -69,9 +74,4 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	 * slackWebApiClient; }
 	 */
 
-	private SlackRealTimeMessagingClient getSlackRealTimeMessagingClient() {
-		return slackRealTimeMessagingClient == null
-				? SlackClientFactory.createSlackRealTimeMessagingClient(Settings.botUserOauthAccessToken)
-				: slackRealTimeMessagingClient;
-	}
 }

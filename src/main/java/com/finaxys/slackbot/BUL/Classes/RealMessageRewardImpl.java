@@ -20,6 +20,9 @@ public class RealMessageRewardImpl implements RealMessageReward {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
+    @Autowired
+	public SlackApiAccessService slackApiAccessService;
+	
     @Override
     @Transactional
     public void rewardReadMessage(JsonNode jsonNode) {
@@ -45,7 +48,7 @@ public class RealMessageRewardImpl implements RealMessageReward {
     public void setFinaxysProfileAsAdministrator(JsonNode jsonNode) {
         String finaxysProfileId = jsonNode.get("user").asText();
 
-        String profileName = SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName();
+        String profileName = slackApiAccessService.getUser(finaxysProfileId).getName();
 
         FinaxysProfile finaxysProfile = new FinaxysProfile(finaxysProfileId, profileName);
         finaxysProfile.setAdministrator(true);
@@ -60,7 +63,7 @@ public class RealMessageRewardImpl implements RealMessageReward {
         FinaxysProfile profile = finaxysProfileRepository.findById(userId);
         if (profile == null) {
             SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String profileName = slackWebApiClient.getUserInfo(userId).getName();
+            String profileName = slackApiAccessService.getUser(userId).getName();
             profile = new FinaxysProfile(userId, profileName);
         }
         profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
@@ -68,6 +71,6 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     private Channel getChannelById(String channelId) {
-        return SlackBot.getSlackWebApiClient().getChannelInfo(channelId);
+        return slackApiAccessService.getChannel(channelId);
     }
 }
