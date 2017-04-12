@@ -45,20 +45,17 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getAllOrderedByAsList(String orderedByField, boolean ascending, int rowsCount) throws IllegalArgumentException {
-        Timer.elapsed("hibernate1 ");
         // args check
         if (orderedByField == null || orderedByField.isEmpty())
             throw new IllegalArgumentException("orderedByField must not be null or empty.");
         if (rowsCount < 1)
             throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0.");
         // work
-        Timer.elapsed("hibernate2 ");
         List<T> x = sessionFactory.getCurrentSession()
                 .createQuery("from " + persistentClass.getSimpleName()
                         + " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
                 .setMaxResults(rowsCount)
                 .list();
-        Timer.elapsed("hibernate3 ");
         return x;
     }
 

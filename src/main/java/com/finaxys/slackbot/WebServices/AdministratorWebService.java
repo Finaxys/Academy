@@ -6,10 +6,13 @@ import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.Timer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,17 +31,18 @@ public class AdministratorWebService extends BaseWebService {
                                            @RequestParam("team_domain") String slackTeam,
                                            @RequestParam("user_id") 	String profileId,
                                            @RequestParam("text") 		String arguments) {
-
+    	Timer timer = new Timer();
+		
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
         
         if (!isAdmin(profileId) && roleRepository.getByCriterion("role", "admin").size() != 0)
-            return NewResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!",true);
+            return NewResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);
 
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
         
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username", true);
+            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username " + timer, true);
 
         String userId 	= oneUsernameArgumentsMatcher.getUserIdArgument	 (arguments);
         String userName = oneUsernameArgumentsMatcher.getUserNameArgument(arguments);
@@ -58,10 +62,10 @@ public class AdministratorWebService extends BaseWebService {
             
             roleRepository.saveOrUpdate(role);
             
-            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> has just became an administrator!", true);
+            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> has just became an administrator! " + timer, true);
         } 
         else
-            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> is already an administrator!", true);
+            return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> is already an administrator!"  + timer, true);
 
     }
 
@@ -73,23 +77,24 @@ public class AdministratorWebService extends BaseWebService {
                                                                        @RequestParam("team_domain") String slackTeam,
                                                                        @RequestParam("user_id") 	String userId,
                                                                        @RequestParam("text") 		String arguments) {
-
+    	Timer timer = new Timer();
+		
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
-
+        timer.capture();
         if (!isAdmin(userId))
-            return NewResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!");
-
+            return NewResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
+        timer.capture();
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
 
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-            return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "Arguments should be:@Username !",true);
-
+            return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "Arguments should be:@Username !" + timer,true);
+        timer.capture();
         String id = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
         
         if (!isAdmin(id))
-            return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!",true);
-
+            return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!" + timer,true);
+        timer.capture();
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
         
         for (Role role : roles) 
@@ -97,11 +102,11 @@ public class AdministratorWebService extends BaseWebService {
             if (role.getFinaxysProfile().getId().equals(id)) 
             {
                 roleRepository.delete(role);
-                return  NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!",true);
+                return  NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
             }
         }
-        
-        return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is not an administrator!",true);
+        timer.capture();
+        return NewResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is not an administrator!" + timer,true);
     }
     
     
@@ -110,7 +115,8 @@ public class AdministratorWebService extends BaseWebService {
     @ResponseBody
     public ResponseEntity<JsonNode> getAdministrators(@RequestParam("token") 		String appVerificationToken,
                                                       @RequestParam("team_domain")  String slackTeam) {
-    	
+    	Timer timer = new Timer();
+		
         Log.info("/fxadmin_list");
         
         if (NoAccess(appVerificationToken, slackTeam))
@@ -118,12 +124,12 @@ public class AdministratorWebService extends BaseWebService {
 
         List<Role> roles 	   = roleRepository.getByCriterion("role", "admin");
         String 	   messageText = "List of Admins: \n";
-        
+        timer.capture();
         for (Role role : roles)
             messageText += "<@" + role.getFinaxysProfile().getName() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(role.getFinaxysProfile().getId()).getName() + "> \n";
         
         messageText = (roles.size() > 0) ? messageText : "";
-        
-        return NewResponseEntity("/fxadmin_list :" + " \n" + messageText,true);
+        timer.capture();
+        return NewResponseEntity("/fxadmin_list :" + " \n" + messageText + timer,true);
     }
 }
