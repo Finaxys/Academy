@@ -35,15 +35,17 @@ public class AdministratorWebService extends BaseWebService {
 		
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
-        
+        timer.capture();
         if (!isAdmin(profileId) && roleRepository.getByCriterion("role", "admin").size() != 0)
             return NewResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);
-
+        timer.capture();
+        
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
         
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
             return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username " + timer, true);
-
+        timer.capture();
+        
         String userId 	= oneUsernameArgumentsMatcher.getUserIdArgument	 (arguments);
         String userName = oneUsernameArgumentsMatcher.getUserNameArgument(arguments);
         
@@ -61,6 +63,7 @@ public class AdministratorWebService extends BaseWebService {
             role.setFinaxysProfile(finaxysProfile);
             
             roleRepository.saveOrUpdate(role);
+            timer.capture();
             
             return NewResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> has just became an administrator! " + timer, true);
         } 
@@ -124,12 +127,16 @@ public class AdministratorWebService extends BaseWebService {
 
         List<Role> roles 	   = roleRepository.getByCriterion("role", "admin");
         String 	   messageText = "List of Admins: \n";
+        
         timer.capture();
+        
         for (Role role : roles)
             messageText += "<@" + role.getFinaxysProfile().getName() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(role.getFinaxysProfile().getId()).getName() + "> \n";
         
         messageText = (roles.size() > 0) ? messageText : "";
+        
         timer.capture();
+        
         return NewResponseEntity("/fxadmin_list :" + " \n" + messageText + timer,true);
     }
 }

@@ -33,10 +33,10 @@ public class Timer {
 		int numberOfCapture = 1;
 		
 		for (Long time : captures) {
-			sb.append( "(" + numberOfCapture++ + " : " + time + "), ");
+			sb.append( "(" + numberOfCapture++ + " : " + time + " ms ), ");
 		}
 		
-		sb.append("Total : " + captures.stream().mapToLong(e->e).sum());
+		sb.append("Total : " + captures.stream().mapToLong(e->e).sum() + " ms");
 		return sb.toString();
 	}
 
