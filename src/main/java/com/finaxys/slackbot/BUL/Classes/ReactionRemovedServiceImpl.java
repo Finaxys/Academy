@@ -31,10 +31,10 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		if (jsonNode.get("item_user").asText() == null)
 			return;
 
-		String itemUserId = jsonNode.get("item_user").asText();
-		String myUserId = jsonNode.get("user").asText();
-		String reaction = jsonNode.get("reaction").asText();
-		FinaxysProfile userProfile = finaxysProfileRepository.findById(itemUserId);
+		String itemUserId			= jsonNode.get("item_user").asText();
+		String myUserId 			= jsonNode.get("user").asText();
+		String reaction 			= jsonNode.get("reaction").asText();
+		FinaxysProfile userProfile 	= finaxysProfileRepository.findById(itemUserId);
 
 		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());

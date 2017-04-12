@@ -15,7 +15,6 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     @Autowired
     private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
-
     @Override
     @Transactional
     public List<FinaxysProfile> listerUsers() {
@@ -29,7 +28,6 @@ public class SlackBotCommandServiceImpl implements SlackBotCommandService {
     	System.out.println("listeScores!");
         
         List<FinaxysProfile> finaxysProfiles = finaxysProfileRepository.getAllOrderedByAsList("score", false, profilesCount);
-
 
         return finaxysProfiles;
     }
