@@ -31,9 +31,11 @@ public class Timer {
 		capture();
 		StringBuilder sb = new StringBuilder();
 		int numberOfCapture = 1;
+		
 		for (Long time : captures) {
 			sb.append( "(" + numberOfCapture++ + " : " + time + "), ");
 		}
+		
 		sb.append("Total : " + captures.stream().mapToLong(e->e).sum());
 		return sb.toString();
 	}
