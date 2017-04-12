@@ -25,8 +25,9 @@ public class RealMessageRewardImpl implements RealMessageReward {
     public void rewardReadMessage(JsonNode jsonNode) {
         if (noAdminsStored())
             setFinaxysProfileAsAdministrator(jsonNode);
-        String channelId = jsonNode.get("channel").asText();
-        Channel channel = getChannelById(channelId);
+        
+        String 	channelId 	= jsonNode.get("channel").asText();
+        Channel channel 	= getChannelById(channelId);
         TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
         
         if (tribeChannelMatcher.isNotTribe(channel.getName())) 
