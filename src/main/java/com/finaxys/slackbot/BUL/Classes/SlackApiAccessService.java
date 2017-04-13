@@ -3,6 +3,8 @@ package com.finaxys.slackbot.BUL.Classes;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
@@ -15,6 +17,8 @@ public class SlackApiAccessService {
 	private static Map<String, User> allUsers;
 
 	private static Map<String, Channel> allChannels;
+	
+	
 
 	public static void init() {
 		System.out.println("Init SlackApiAccessService" + Settings.appVerificationToken);

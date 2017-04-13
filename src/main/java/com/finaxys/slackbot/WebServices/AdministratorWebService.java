@@ -1,6 +1,7 @@
 package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Log;
@@ -24,6 +25,9 @@ public class AdministratorWebService extends BaseWebService {
     
     @Autowired
     Repository<Challenge, Integer> challengeRepository;
+    
+    @Autowired
+	public SlackApiAccessService slackApiAccessService;
 
     @RequestMapping(value = "/admins/new", method = RequestMethod.POST)
     @ResponseBody
@@ -121,17 +125,17 @@ public class AdministratorWebService extends BaseWebService {
     	Timer timer = new Timer();
 		
         Log.info("/fxadmin_list");
-        
+        timer.capture();
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
-
+        timer.capture();
         List<Role> roles 	   = roleRepository.getByCriterion("role", "admin");
         String 	   messageText = "List of Admins: \n";
         
         timer.capture();
         
         for (Role role : roles)
-            messageText += "<@" + role.getFinaxysProfile().getName() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(role.getFinaxysProfile().getId()).getName() + "> \n";
+            messageText += "<@" + slackApiAccessService.getUser(role.getFinaxysProfile().getId()).getName() + "|" + slackApiAccessService.getUser(role.getFinaxysProfile().getId()).getName() + "> \n";
         
         messageText = (roles.size() > 0) ? messageText : "";
         
