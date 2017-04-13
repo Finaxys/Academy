@@ -1,10 +1,10 @@
 package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.ChallengeManagerArgumentsMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.Timer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/challenge")
 public class ChallengeManagerWebService extends BaseWebService{
+	
+	@Autowired
+	private SlackApiAccessService slackApiAccessService;
 
     @Autowired
     Repository<FinaxysProfile, String> finaxysProfileRepository;
@@ -76,7 +79,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             roleRepository.saveOrUpdate(role);
             timer.capture();
             
-            return NewResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfile.getId()).getName() + "> has just became a challenge manager!" + timer ,true);
+            return NewResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getId()).getName() + "> has just became a challenge manager!" + timer ,true);
         }
         
         return NewResponseEntity("/fx_manager_add  : " + arguments + " you are not a challenge manager!" + timer ,true);
@@ -137,7 +140,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                     {
                         roleRepository.delete(role);
                         
-                        Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName() + "> is no more a challenge manager!");
+                        Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + slackApiAccessService.getUser(finaxysProfileId).getName() + "> is no more a challenge manager!");
                         
                         Log.info(message.getText());
                         
@@ -147,7 +150,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                 
                 timer.capture();
                 
-                Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(finaxysProfileId).getName() + "> is already not a challenge manager!");
+                Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + slackApiAccessService.getUser(finaxysProfileId).getName() + "> is already not a challenge manager!");
                 
                 Log.info(message.getText());
                 
@@ -193,7 +196,7 @@ public class ChallengeManagerWebService extends BaseWebService{
         
         for (Role role : roles) 
         {
-            messageText += "<@" + role.getFinaxysProfile().getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(role.getFinaxysProfile().getId()).getName() + "> \n";
+            messageText += "<@" + role.getFinaxysProfile().getId() + "|" + slackApiAccessService.getUser(role.getFinaxysProfile().getId()).getName() + "> \n";
             
             Message message = new Message("/fx_challenge_list " + "\n " + messageText);
             
