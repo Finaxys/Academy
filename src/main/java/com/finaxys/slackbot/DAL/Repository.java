@@ -67,9 +67,13 @@ public class Repository<T, K extends Serializable> {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
 
-    public List<T> getByCriterion(String criterion, Object criterionValue) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(persistentClass);
-        criteria.add(Restrictions.eq(criterion, criterionValue));
-        return criteria.list();
+    public List<T> getByCriterion(Object ...objects)
+    {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(persistentClass);
+    	
+    	for (int i = 0; i < objects.length - 1; i+=2)
+    		criteria.add(Restrictions.eq(objects[i].toString(), objects[i+1]));
+    		
+    	return criteria.list();
     }
 }
