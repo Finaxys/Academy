@@ -75,7 +75,6 @@ public class ScoreWebService extends BaseWebService{
         
         try 
         {	
-        	timer.capture();
         	
             finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
             
@@ -100,19 +99,23 @@ public class ScoreWebService extends BaseWebService{
 
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        
+        timer.capture();
 
         String 			challengeName = arguments.trim();
         List<Challenge> challenges 	  = challengeRepository.getByCriterion("name", challengeName);
         
         if (challenges.size() == 0)
-            return NewResponseEntity("/fx_challenge_score_list "+arguments+" \n"+"No such challenge ! Check the challenge name", true);
+            return NewResponseEntity("/fx_challenge_score_list "+arguments+" \n"+"No such challenge ! Check the challenge name" + timer, true);
 
         Challenge challenge = challenges.get(0);
         
         List<FinaxysProfile_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge", challenge);
-
+        
+        timer.capture();
+        
         if (listChallenges.size() == 0)
-            NewResponseEntity("/fx_challenge_score_list "+arguments+" \n"+"No score has been saved till the moment !",true);
+            NewResponseEntity("/fx_challenge_score_list "+arguments+" \n"+"No score has been saved till the moment !" + timer,true);
         
         String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
         
@@ -123,7 +126,9 @@ public class ScoreWebService extends BaseWebService{
             textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "+finaxysProfileChallenge.getScore()+" \n";
         }
         
-        return NewResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage, true);
+        timer.capture();
+        
+        return NewResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
     }
 
     
@@ -132,6 +137,8 @@ public class ScoreWebService extends BaseWebService{
     public ResponseEntity<JsonNode> scoreList(@RequestParam("token") 	   String appVerificationToken,
                                               @RequestParam("team_domain") String slackTeam,
                                               @RequestParam("text") 	   String arguments) {
+    	
+    	Timer timer = new Timer();
 
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
@@ -139,11 +146,13 @@ public class ScoreWebService extends BaseWebService{
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
         
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-            return  NewResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" , true);
+            return  NewResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer, true);
 
         String 		   profileId 	  = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
         FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(profileId);
         
-        return NewResponseEntity("<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(profileId).getName() + "> score :"+finaxysProfile.getScore() , true);
+        timer.capture();
+        
+        return NewResponseEntity("<@" + finaxysProfile.getId() + "|" + SlackBot.getSlackWebApiClient().getUserInfo(profileId).getName() + "> score :"+finaxysProfile.getScore() + timer, true);
     }
 }
