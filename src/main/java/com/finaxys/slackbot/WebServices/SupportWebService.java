@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.Utilities.Timer;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,8 @@ public class SupportWebService extends BaseWebService {
     public ResponseEntity<JsonNode> fx_help(@RequestParam("token") 		 String appVerificationToken,
                                             @RequestParam("team_domain") String slackTeam,
                                             @RequestParam("user_id") 	 String userId) {
+    	
+    	Timer timer = new Timer();
     	
         if (NoAccess(appVerificationToken, slackTeam))
             return NoAccessResponseEntity(appVerificationToken, slackTeam);
@@ -45,6 +49,6 @@ public class SupportWebService extends BaseWebService {
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
-        return NewResponseEntity(message,true);
+        return NewResponseEntity(message + timer,true);
     }
 }
