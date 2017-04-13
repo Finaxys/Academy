@@ -41,9 +41,7 @@ public class BaseWebService {
     
     
     public boolean isChallengeManager(String userId, String challengeName) 
-    {
-    	//faire une requête du type "SELECT ROLE_ID FROM Role WHERE FINAXYSPROFILE_ID = userId AND role = challenge_manager AND #p
-    	
+    {	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "challenge_manager");
         int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
         
