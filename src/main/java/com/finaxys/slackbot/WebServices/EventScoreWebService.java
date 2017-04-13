@@ -30,9 +30,9 @@ public class EventScoreWebService extends BaseWebService {
     
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonNode> listScores(@RequestParam("token") 		String appVerificationToken,
-                                               @RequestParam("team_domain") String slackTeam,
-                                               @RequestParam("text") 		String text) {
+    public ResponseEntity<JsonNode> eventAdd(@RequestParam("token") 		String appVerificationToken,
+                                             @RequestParam("team_domain") String slackTeam,
+                                             @RequestParam("text") 		String text) {
     	
     	Timer timer = new Timer();
 

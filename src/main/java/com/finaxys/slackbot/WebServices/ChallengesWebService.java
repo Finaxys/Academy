@@ -224,23 +224,28 @@ public class ChallengesWebService extends BaseWebService {
 			challenge.setType		(challengeInfo[1]);
 			challenge.setDescription(challengeInfo[2]);
 			
-			challengeRepository.addEntity(challenge);
+			new Thread(new Runnable()
+			{
+				public void run()
+				{
+					challengeRepository.addEntity(challenge);
+					
+					Role role = new Role();
+					
+					role.setRole		  ("challenge_manager");
+					role.setFinaxysProfile(finaxysProfileRepository.findById(userId));
+					role.setChallengeId	  (challenge.getId());
+					
+					roleRepository.addEntity(role);
+					
+					NewResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement terminé" + timer , true);
+				}
+			}).start();
+
 			
 			timer.capture();
 			
-			Role role = new Role();
-			
-			role.setRole		  ("challenge_manager");
-			role.setFinaxysProfile(finaxysProfileRepository.findById(userId));
-			role.setChallengeId	  (challenge.getId());
-			
-			timer.capture();
-			
-			roleRepository.addEntity(role);
-			
-			timer.capture();
-			
-			return NewResponseEntity("/fx_challenge_add "+text+" \n "+"Challenge successfully added and you are the challenge manager." + timer , true);
+			return NewResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement en cours" + timer , true);
 		}
 
 	}
@@ -271,24 +276,27 @@ public class ChallengesWebService extends BaseWebService {
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
 			return NewResponseEntity(" /fx_challenge_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
-		if(!isChallengeManager(profileId,challengeName) || !isAdmin(profileId))
+		if(!isChallengeManager(profileId,challengeName) && !isAdmin(profileId))
 			return NewResponseEntity("fx_challenge_del "+"\n"+"You are neither an admin nor a challenge manager!" + timer ,true);
 		
 		timer.capture();
 		
 		Challenge  challenge =  challenges.get(0);
-		List<Role> roles 	 = roleRepository.getByCriterion("challengeId",challenges.get(0).getId());
 		
-		timer.capture();
-		
-		for(Role role : roles)
+		new Thread(new Runnable()
 		{
-			roleRepository.delete(role);
-		}
-		
-		timer.capture();
-		
-		challengeRepository.delete(challenge);
+			public void run()
+			{
+				List<Role> roles = roleRepository.getByCriterion("challengeId",challenges.get(0).getId());
+				
+				for(Role role : roles)
+				{
+					roleRepository.delete(role);
+				}
+				
+				challengeRepository.delete(challenge);
+			}
+		}).start();
 		
 		timer.capture();
 		
