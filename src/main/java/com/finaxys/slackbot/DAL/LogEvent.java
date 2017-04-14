@@ -15,9 +15,9 @@ public class LogEvent implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String logger;
-	private String level;
+	private int 	id;
+	private String 	logger;
+	private String 	level;
 	
 	@Column(columnDefinition = "TEXT")
 	private String message;

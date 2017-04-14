@@ -13,10 +13,10 @@ import java.util.List;
 public class Challenge implements Serializable {
 
     private Integer id;
-    private String name;
-    private String description;
-    private Date creationDate;
-    private String type;
+    private String 	name;
+    private String 	description;
+    private Date 	creationDate;
+    private String 	type;
     private List<FinaxysProfile_Challenge> participants;
 
     public Challenge() {

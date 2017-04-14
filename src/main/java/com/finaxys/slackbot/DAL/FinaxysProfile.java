@@ -7,15 +7,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @Entity
 @Table(name = "FINAXYS_PROFILE")
 public class FinaxysProfile implements Serializable {
-    private String id;
-    private String name;
-    private int score;
+    private String 	id;
+    private String 	name;
+    private int 	score;
     private boolean challengeManager;
     private boolean administrator;
 
@@ -28,15 +25,15 @@ public class FinaxysProfile implements Serializable {
     }
 
     public FinaxysProfile(String userId, String userName) {
-        this.score = 0;
-        this.id = userId;
-        this.name = userName;
+        this.score 	= 0;
+        this.id 	= userId;
+        this.name 	= userName;
     }
 
     public FinaxysProfile(String userId, String userName, boolean isChallengeManager, int score) {
-        this.id = userId;
-        this.name = userName;
-        this.score = score;
+        this.id 	= userId;
+        this.name 	= userName;
+        this.score 	= score;
         this.challengeManager = isChallengeManager;
     }
 
@@ -105,6 +102,4 @@ public class FinaxysProfile implements Serializable {
     public void decrementScore(int score) {
         this.score -= score;
     }
-
-
 }

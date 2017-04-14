@@ -15,8 +15,8 @@ import java.util.List;
 public class Repository<T, K extends Serializable> {
 
     @Autowired
-    private SessionFactory sessionFactory;
-    private Class persistentClass;
+    private SessionFactory 	sessionFactory;
+    private Class 			persistentClass;
 
     public Repository() {
     }
@@ -52,8 +52,8 @@ public class Repository<T, K extends Serializable> {
             throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0.");
         // work
         List<T> x = sessionFactory.getCurrentSession()
-                .createQuery("from " + persistentClass.getSimpleName()
-                        + " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
+                .createQuery(	"from " + persistentClass.getSimpleName()
+                        		+ " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
                 .setMaxResults(rowsCount)
                 .list();
         return x;
