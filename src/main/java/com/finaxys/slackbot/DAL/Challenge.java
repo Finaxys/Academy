@@ -6,7 +6,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "CHALLENGE")
@@ -17,11 +19,11 @@ public class Challenge implements Serializable {
     private String 	description;
     private Date 	creationDate;
     private String 	type;
-    private List<FinaxysProfile_Challenge> participants;
+    private Set<FinaxysProfile_Challenge> participants;
 
     public Challenge() {
         creationDate = new Date();
-        participants = new ArrayList<>();
+        participants = new HashSet<>();
     }
 
     @Id
@@ -66,11 +68,11 @@ public class Challenge implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
-    public List<FinaxysProfile_Challenge> getParticipants() {
+    public Set<FinaxysProfile_Challenge> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<FinaxysProfile_Challenge> participants) {
+    public void setParticipants(Set<FinaxysProfile_Challenge> participants) {
         this.participants = participants;
     }
 }
