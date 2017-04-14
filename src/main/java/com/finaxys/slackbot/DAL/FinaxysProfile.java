@@ -1,24 +1,26 @@
 package com.finaxys.slackbot.DAL;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "FINAXYS_PROFILE")
 public class FinaxysProfile implements Serializable {
-    private String 	id;
+
+	private static final long serialVersionUID = 1L;
+	
+	private String 	id;
     private String 	name;
     private int 	score;
     private boolean challengeManager;
     private boolean administrator;
 
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles;
     
-    private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
+    private Set<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
     public FinaxysProfile() {
         this.score = 0;
@@ -79,19 +81,20 @@ public class FinaxysProfile implements Serializable {
     }
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile", cascade = CascadeType.ALL)
-    public List<FinaxysProfile_Challenge> getFinaxysProfile_challenges() {
+    public Set<FinaxysProfile_Challenge> getFinaxysProfile_challenges() {
         return finaxysProfile_challenges;
     }
 
-    public void setFinaxysProfile_challenges(List<FinaxysProfile_Challenge> finaxysProfile_challenges) {
+    public void setFinaxysProfile_challenges(Set<FinaxysProfile_Challenge> finaxysProfile_challenges) {
         this.finaxysProfile_challenges = finaxysProfile_challenges;
     }
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "slackUser")
-    public List<Role> getRoles() {
+    
+    @OneToMany(mappedBy = "slackUser", fetch = FetchType.EAGER)
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

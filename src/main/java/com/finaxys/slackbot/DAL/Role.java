@@ -10,8 +10,9 @@ public class Role implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	
-	private Integer id ;
+	private int id ;
     private String role ;
+    
     private Challenge challenge;
     private FinaxysProfile slackUser ;
     
@@ -19,18 +20,17 @@ public class Role implements Serializable{
     public Role() {
     }
 
-    
     public Role(String role){
     	this.role = role;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROLE_ID")
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
