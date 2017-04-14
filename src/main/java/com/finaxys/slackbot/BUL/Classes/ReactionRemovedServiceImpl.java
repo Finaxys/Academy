@@ -5,7 +5,6 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		if (jsonNode == null)
 			return;
 
-		if (jsonNode.get("item_user").asText() == null)
+		if (jsonNode.get("item_user") == null)
 			return;
 
 		String itemUserId			= jsonNode.get("item_user").asText();
