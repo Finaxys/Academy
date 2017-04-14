@@ -36,25 +36,31 @@ public class EventScoreWebService extends BaseWebService {
     	
     	Timer timer = new Timer();
 
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
         
         timer.capture();
         
         EventScoreAddMatcher eventScoreAddMatcher = new EventScoreAddMatcher();
         
         if (!eventScoreAddMatcher.isCorrect(text))
-            return NewResponseEntity("/fx_event_add " + text + " \n" + "Arguments should be : [\"event\"] [points earned]" + timer , true);
+            return newResponseEntity("/fx_event_add " + text + " \n" + "Arguments should be : [\"event\"] [points earned]" + timer , true);
 
         score = eventScoreAddMatcher.getActionScoreArgument(text);
         event = eventScoreAddMatcher.getActionNameArgument (text);
         
         timer.capture();
         
-        eventScoreRepository.saveOrUpdate(new EventScore(event, score));
+        new Thread(new Runnable()
+        {
+        	public void run()
+        	{
+        		eventScoreRepository.saveOrUpdate(new EventScore(event, score));
+        	}
+        }).start();
         
         timer.capture();
         
-        return NewResponseEntity("/fx_event_add " + text + " \n" + "event added successfully " + timer, true);
+        return newResponseEntity("/fx_event_add " + text + " \n" + "event added successfully " + timer, true);
     }
 }

@@ -32,43 +32,20 @@ public class FinaxysProfileWebService extends BaseWebService{
     	
         String messageText = "/fx_LeaderBoard " + text + "\n";
 
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
         
         timer.capture();
         
-        if(text.equals(""))
+        int size = text.isEmpty() ? -1 : Integer.parseInt(text);
+        
+        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, size);
+        
+        for (FinaxysProfile profile : users)
         {
-        	List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false,finaxysProfileRepository.getAll().size());
-        	
-        	timer.capture();
-        	
-            for (int i = 0; i < users.size(); i++)
-            {
-            	messageText += users.get(i).getName() + " " + users.get(i).getScore() + "\n";
-            }
-            
-            timer.capture();
-            
-              return NewResponseEntity(messageText + timer, true);
+        	messageText += profile.getName() + " " + profile.getScore() + "\n";
         }
         
-        timer.capture();
-        
-        if (!text.trim().matches("^[1-9][0-9]*"))
-            return NewResponseEntity(messageText+" \n"+"Arguments should be [number]" + timer , true);
-
-        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, Integer.parseInt(text));
-        
-        timer.capture();
-        
-        for (int i = 0; i < users.size(); i++)
-        {
-            messageText += users.get(i).getName() + " " + users.get(i).getScore();
-        }
-        
-        timer.capture();
-
-        return NewResponseEntity(messageText + timer, true);
+        return newResponseEntity(messageText + timer, true);
     }
 }

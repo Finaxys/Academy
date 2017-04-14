@@ -1,14 +1,15 @@
 package com.finaxys.slackbot.DAL;
 
-import com.finaxys.slackbot.Utilities.Timer;
+import java.io.Serializable;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.transaction.Transactional;
-import java.io.Serializable;
-import java.util.List;
 
 @org.springframework.stereotype.Repository
 @Transactional
@@ -45,18 +46,24 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getAllOrderedByAsList(String orderedByField, boolean ascending, int rowsCount) throws IllegalArgumentException {
-        // args check
+    	
+    	// args check
         if (orderedByField == null || orderedByField.isEmpty())
             throw new IllegalArgumentException("orderedByField must not be null or empty.");
-        if (rowsCount < 1)
-            throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0.");
-        // work
-        List<T> x = sessionFactory.getCurrentSession()
-                .createQuery(	"from " + persistentClass.getSimpleName()
-                        		+ " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"))
-                .setMaxResults(rowsCount)
-                .list();
-        return x;
+
+        if (rowsCount < 1 && rowsCount != -1)
+            throw new IllegalArgumentException("rowsCount=" + rowsCount + ". Must be > 0 or -1");
+    	
+    	Query query = sessionFactory.getCurrentSession().createQuery("from " + persistentClass.getSimpleName() + " f ORDER BY f." + orderedByField + (ascending ? "" : " DESC"));
+    	
+    	if (rowsCount > 0)
+    	{
+    		query.setMaxResults(rowsCount);
+    	}
+    	
+    	List<T> x = query.list();
+    	
+    	return x;
     }
 
     public T findById(K id) {

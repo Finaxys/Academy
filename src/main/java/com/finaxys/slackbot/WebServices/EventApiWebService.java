@@ -26,8 +26,8 @@ public class EventApiWebService extends BaseWebService{
         if (jsonNode.has("challenge"))
             return new ResponseEntity(jsonNode.get("challenge").asText(), HttpStatus.OK);
 
-        if (NoAccess(jsonNode.get("token").asText(), jsonNode.get("team_id").asText()))
-            return NoAccessStringResponseEntity(jsonNode.get("token").toString(),jsonNode.get("team_id").asText());
+        if (noAccess(jsonNode.get("token").asText(), jsonNode.get("team_id").asText()))
+            return noAccessStringResponseEntity(jsonNode.get("token").toString(),jsonNode.get("team_id").asText());
         
         return new ResponseEntity(HttpStatus.OK);
     }

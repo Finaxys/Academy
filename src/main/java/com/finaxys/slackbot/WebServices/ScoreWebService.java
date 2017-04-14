@@ -33,26 +33,26 @@ public class ScoreWebService extends BaseWebService {
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> addChallengeScore(@RequestParam("token") String appVerificationToken,
+	public ResponseEntity<JsonNode> addChallengeScore(@RequestParam("token") 	   String appVerificationToken,
 													  @RequestParam("team_domain") String slackTeam, 
-													  @RequestParam("text") String arguments,
-													  @RequestParam("user_id") String challengeManagerId) {
+													  @RequestParam("text") 	   String arguments,
+													  @RequestParam("user_id") 	   String challengeManagerId) {
 
 		Timer timer = new Timer();
 
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		timer.capture();
 
 		ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
 
 		if (!challengeScoreArgumentsMatcher.isCorrect(arguments))
-			return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n "
-					+ "Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !"
-					+ timer, true);
+			return newResponseEntity("/fx_challenge_score_add " + arguments + " \n "
+									 + "Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !"
+									 + timer, true);
 
-		String userId = challengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
+		String userId 		 = challengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
 		String challengeName = challengeScoreArgumentsMatcher.getChallengeName(arguments);
 
 		timer.capture();
@@ -62,22 +62,18 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 
 		if (challenges.size() == 0)
-			return NewResponseEntity("Nonexistent challenge" + timer, true);
+			return newResponseEntity("Nonexistent challenge" + timer, true);
 
 		if (!isChallengeManager(challengeManagerId, challengeName) && !isAdmin(challengeManagerId))
-			return NewResponseEntity("/fx_challenge_score_add " + arguments + "\n"
-					+ "You are neither admin nor a challenge manager !" + timer, true);
+			return newResponseEntity("/fx_challenge_score_add " + arguments + "\n"
+									 + "You are neither admin nor a challenge manager !" 
+									 + timer, true);
 
 		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
 
 		FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score, challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
 
 		timer.capture();
-
-		//finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
-		//finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
-
-		//timer.capture();
 		
 		new Thread(new Runnable()
 		{
@@ -89,30 +85,19 @@ public class ScoreWebService extends BaseWebService {
 			}
 		}).start();
 
-//		try {
-//			timer.capture();
-//
-//			finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
-//
-//			timer.capture();
-//		} catch (Exception e) {
-//			return NewResponseEntity(
-//					"/fx_challenge_score_add " + arguments + " \n"
-//							+ "A problem has occurred! The user may have a score for this challenge already !" + timer, true);
-//		}
-
-		return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer, true);
+		return newResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer, true);
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> listScoreForChallenge(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments) {
+	public ResponseEntity<JsonNode> listScoreForChallenge(@RequestParam("token")	   String appVerificationToken,
+														  @RequestParam("team_domain") String slackTeam, 
+														  @RequestParam("text") 	   String arguments) {
 
 		Timer timer = new Timer();
 
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 		
@@ -120,57 +105,56 @@ public class ScoreWebService extends BaseWebService {
 		List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
 
 		if (challenges.size() == 0)
-			return NewResponseEntity(
-					"/fx_challenge_score_list " + arguments + " \n" + "No such challenge ! Check the challenge name" +timer,
-					true);
+			return newResponseEntity("/fx_challenge_score_list " + arguments + " \n" + "No such challenge ! Check the challenge name" + timer, true);
 
 		Challenge challenge = challenges.get(0);
 		
 		timer.capture();
 		
-		List<FinaxysProfile_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
-				challenge);
+		List<FinaxysProfile_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge", challenge);
 
 		if (listChallenges.size() == 0)
-			NewResponseEntity(
-					"/fx_challenge_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer ,
-					true);
+			newResponseEntity("/fx_challenge_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer, true);
 
 		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
 
 		for (FinaxysProfile_Challenge finaxysProfileChallenge : listChallenges) {
+			
 			FinaxysProfile finaxysProfile = finaxysProfileChallenge.getFinaxysProfile();
 
-			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
-					+ finaxysProfileChallenge.getScore() + " \n";
+			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> " + finaxysProfileChallenge.getScore() + " \n";
 		}
 
-		return NewResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
+		return newResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
 	}
+	
+	
+	
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> scoreList(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments) {
+	public ResponseEntity<JsonNode> scoreList(@RequestParam("token") 	   String appVerificationToken,
+											  @RequestParam("team_domain") String slackTeam, 
+											  @RequestParam("text") 	   String arguments) {
 		
 		Timer timer = new Timer();
 		
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
 		
 		timer.capture();
 		
 		if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-			return NewResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
+			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
 		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
 		FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(profileId);
 		
 		timer.capture();
 		
-		return NewResponseEntity("<@" + finaxysProfile.getId() + "|"
+		return newResponseEntity("<@" + finaxysProfile.getId() + "|"
 				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + finaxysProfile.getScore() + timer , true);
 	}
 }

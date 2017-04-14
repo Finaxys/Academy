@@ -24,8 +24,8 @@ public class SupportWebService extends BaseWebService {
     	
     	Timer timer = new Timer();
     	
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         String fxCommands =
                 		 "*/fx_challenge_list* \n List all the challenges. \n" +
@@ -49,6 +49,6 @@ public class SupportWebService extends BaseWebService {
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
-        return NewResponseEntity(message + timer,true);
+        return newResponseEntity(message + timer,true);
     }
 }
