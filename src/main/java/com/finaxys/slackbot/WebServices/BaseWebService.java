@@ -49,6 +49,7 @@ public class BaseWebService {
         return false;
     }
     
+    //TODO: uncomment the following method when the DB is ready
 //    public boolean isAdminOrChallengeManager(String userId, String challengeName)
 //    {
 //    	List<Role> roles = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
@@ -63,7 +64,7 @@ public class BaseWebService {
 //    }
 
     
-    public boolean NoAccess(String appVerificationToken, String slackTeam) 
+    public boolean noAccess(String appVerificationToken, String slackTeam) 
     {
         if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
             return false;
@@ -72,18 +73,18 @@ public class BaseWebService {
     }
 
     
-    public ResponseEntity<JsonNode> NoAccessResponseEntity(String appVerificationToken, String slackTeam) 
+    public ResponseEntity<JsonNode> noAccessResponseEntity(String appVerificationToken, String slackTeam) 
     {
         if (!appVerificationToken.equals(Settings.appVerificationToken))
-            return NewResponseEntity("Wrong app verification token !");
+            return newResponseEntity("Wrong app verification token !");
         
         if (!slackTeam.equals(Settings.slackTeam))
-            return NewResponseEntity("Only for Finaxys members !");
+            return newResponseEntity("Only for Finaxys members !");
         
         return null;
     }
 
-    public ResponseEntity<String> NoAccessStringResponseEntity(String appVerificationToken, String slackTeam) 
+    public ResponseEntity<String> noAccessStringResponseEntity(String appVerificationToken, String slackTeam) 
     {
         if (!Settings.appVerificationToken.equals(appVerificationToken)) 
         {
@@ -101,23 +102,23 @@ public class BaseWebService {
     }
     
     
-    public ResponseEntity<JsonNode> NewResponseEntity(Message message) 
+    public ResponseEntity<JsonNode> newResponseEntity(Message message) 
     {
         return new ResponseEntity(objectMapper.convertValue(message, JsonNode.class), HttpStatus.OK);
     }
 
     
-    public ResponseEntity<JsonNode> NewResponseEntity(String message) 
+    public ResponseEntity<JsonNode> newResponseEntity(String message) 
     {
-        return NewResponseEntity(new Message(message));
+        return newResponseEntity(new Message(message));
     }
     
     
-    public ResponseEntity<JsonNode> NewResponseEntity(String message,boolean logAsInfo) 
+    public ResponseEntity<JsonNode> newResponseEntity(String message,boolean logAsInfo) 
     {
         if(logAsInfo)
             Log.info(message);
         
-       return NewResponseEntity(new Message(message));
+       return newResponseEntity(new Message(message));
     }
 }

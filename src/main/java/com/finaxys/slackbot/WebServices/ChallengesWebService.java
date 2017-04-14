@@ -65,26 +65,26 @@ public class ChallengesWebService extends BaseWebService {
 
 		Timer timer = new Timer();
 		
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return NewResponseEntity( " /fx_challenges_by_type " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_challenges_by_type " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
 		ChallengeTypeMatcher challengeTypeMatcher = new ChallengeTypeMatcher();
 		
 		if (!challengeTypeMatcher.match(text))
-			return NewResponseEntity(" /fx_challenges_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
+			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
 		timer.capture();
 		
 		List<Challenge> challenges = challengeRepository.getByCriterion("type", text);
 		
 		if (challenges.isEmpty())
-			return NewResponseEntity(" /fx_challenges_by_type " + text + " \n " + "No challenges with type" + text + timer ,true);
+			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "No challenges with type" + text + timer ,true);
 
-		return NewResponseEntity(" /fx_challenges_by_type " + text + " \n " + getStringFromList(challenges) + timer , true);
+		return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + getStringFromList(challenges) + timer , true);
 
 	}
 
@@ -98,13 +98,13 @@ public class ChallengesWebService extends BaseWebService {
 		
 		Log.info("/fx_challenge_named " + text);
 		
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return NewResponseEntity( " /fx_challenge_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_challenge_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
 		
 		List<Challenge> challenges = challengeRepository.getByCriterion("name", text);
@@ -112,9 +112,9 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (challenges.isEmpty())
-			return NewResponseEntity("/fx_challenge_named "+text+"\n"+"Nonexistent challenge." + timer,true);
+			return newResponseEntity("/fx_challenge_named "+text+"\n"+"Nonexistent challenge." + timer,true);
 		else
-			return NewResponseEntity( "/fx_challenges_named " + text + "\n " + getStringFromList(challenges) + timer , true);
+			return newResponseEntity( "/fx_challenges_named " + text + "\n " + getStringFromList(challenges) + timer , true);
 
 	}
 
@@ -127,18 +127,18 @@ public class ChallengesWebService extends BaseWebService {
 
 		Timer timer = new Timer();
 		
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return NewResponseEntity( " /fx_challenges_by_date " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_challenges_by_date " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
 		DateMatcher dateMatcher = new DateMatcher();
 		
 		if (!dateMatcher.match(text.trim()))
-			return NewResponseEntity(" /fx_challenges_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer ,true);
+			return newResponseEntity(" /fx_challenges_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer ,true);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -156,9 +156,9 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (challenges.isEmpty())
-			return NewResponseEntity(" /fx_challenges_by_date " + text + " \n " + "There are no challenges on this date: " + text + timer ,true);
+			return newResponseEntity(" /fx_challenges_by_date " + text + " \n " + "There are no challenges on this date: " + text + timer ,true);
 		else
-			return NewResponseEntity(getStringFromList(challenges) + timer ,true);
+			return newResponseEntity(getStringFromList(challenges) + timer ,true);
 	}
 
 
@@ -169,13 +169,13 @@ public class ChallengesWebService extends BaseWebService {
 		
 		Timer timer = new Timer();
 
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{appVerificationToken, slackTeam}))
-			return NewResponseEntity(" /fx_challenge_list " + " \n " + "There was a problem treating your request. Please try again." + timer, true);
+			return newResponseEntity(" /fx_challenge_list " + " \n " + "There was a problem treating your request. Please try again." + timer, true);
 		
 		timer.capture();
 		
@@ -184,9 +184,9 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (challenges.isEmpty())
-			return NewResponseEntity("/fx_challenge_list" + " \n " + "There no previous challenges! Come on create one!" + timer, true);
+			return newResponseEntity("/fx_challenge_list" + " \n " + "There no previous challenges! Come on create one!" + timer, true);
 		else
-			return NewResponseEntity(getStringFromList(challenges) + timer, true);
+			return newResponseEntity(getStringFromList(challenges) + timer, true);
 	}
 	
 
@@ -199,12 +199,12 @@ public class ChallengesWebService extends BaseWebService {
 		
 		Timer timer = new Timer();
 
-		if(NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if(noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return NewResponseEntity(" /fx_challenge_add " + text+ " \n " + "There was a problem treating your request. Please try again." + timer, true);
+			return newResponseEntity(" /fx_challenge_add " + text+ " \n " + "There was a problem treating your request. Please try again." + timer, true);
 
 
 		CreateChallengeMatcher createChallengeMatcher = new CreateChallengeMatcher();
@@ -212,7 +212,7 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!createChallengeMatcher.match(text.trim()))
-			return  NewResponseEntity(" /fx_challenge_add "+text+" \n "+"Your request should have the following format: [challengeName],[group|individual],[descriptionText]" + timer ,true);
+			return  newResponseEntity(" /fx_challenge_add "+text+" \n "+"Your request should have the following format: [challengeName],[group|individual],[descriptionText]" + timer ,true);
 		else 
 		{	
 			timer.capture();
@@ -238,14 +238,14 @@ public class ChallengesWebService extends BaseWebService {
 					
 					roleRepository.addEntity(role);
 					
-					NewResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement terminé" + timer , true);
+					newResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement terminé" + timer , true);
 				}
 			}).start();
 
 			
 			timer.capture();
 			
-			return NewResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement en cours" + timer , true);
+			return newResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement en cours" + timer , true);
 		}
 
 	}
@@ -253,15 +253,15 @@ public class ChallengesWebService extends BaseWebService {
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> delete(@RequestParam("token") 		String appVerificationToken,
+	public ResponseEntity<JsonNode> remove(@RequestParam("token") 		String appVerificationToken,
 										   @RequestParam("team_domain") String slackTeam,
 										   @RequestParam("user_id") 	String profileId,
 										   @RequestParam("text") 		String text) {
 		
 		Timer timer = new Timer();
 
-		if(NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if(noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 		
@@ -271,13 +271,13 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if(challenges.size()==0)
-			return NewResponseEntity("fx_challenge_del "+"\n"+"Non existent challenge." + timer ,true);
+			return newResponseEntity("fx_challenge_del "+"\n"+"Non existent challenge." + timer ,true);
 
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return NewResponseEntity(" /fx_challenge_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity(" /fx_challenge_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
 		if(!isChallengeManager(profileId,challengeName) && !isAdmin(profileId))
-			return NewResponseEntity("fx_challenge_del "+"\n"+"You are neither an admin nor a challenge manager!" + timer ,true);
+			return newResponseEntity("fx_challenge_del "+"\n"+"You are neither an admin nor a challenge manager!" + timer ,true);
 		
 		timer.capture();
 		
@@ -300,6 +300,6 @@ public class ChallengesWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		return NewResponseEntity("fx_challenge_del "+text+" \n "+"Challenge successfully removed." + timer , true);
+		return newResponseEntity("fx_challenge_del "+text+" \n "+"Challenge successfully removed." + timer , true);
 	}
 }
