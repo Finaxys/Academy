@@ -29,7 +29,12 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 		listEmojis.add("+1");
 		listEmojis.add("clap");
 		listEmojis.add("ok_hand");
-
+		listEmojis.add("smile");
+		listEmojis.add("smiley");
+		listEmojis.add("heart");
+		listEmojis.add("v");
+		listEmojis.add("white_check_mark");
+		listEmojis.add("cookie");
 		if (jsonNode.get("item_user")== null)
 			return;
 
