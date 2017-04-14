@@ -2,14 +2,11 @@ package com.finaxys.slackbot.DAL;
 
 import javax.persistence.*;
 
-/**
- * Created by Sahar on 23/03/2017.
- */
 @Entity
 public class Role {
     private Integer id ;
-    private String role ;
-    private int challengeId ;
+    private String 	role ;
+    private int 	challengeId ;
     private FinaxysProfile finaxysProfile ;
 
     public Role() {
@@ -54,6 +51,4 @@ public class Role {
     public void setFinaxysProfile(FinaxysProfile finaxysProfile) {
         this.finaxysProfile = finaxysProfile;
     }
-
-
 }

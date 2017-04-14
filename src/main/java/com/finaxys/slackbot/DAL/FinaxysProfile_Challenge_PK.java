@@ -4,9 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @Embeddable
 public class FinaxysProfile_Challenge_PK implements Serializable {
 
