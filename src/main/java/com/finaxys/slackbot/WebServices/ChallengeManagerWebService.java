@@ -194,18 +194,27 @@ public class ChallengeManagerWebService extends BaseWebService{
         List<Role> roles   = roleRepository.getByCriterion("challengeId", challenges.get(0).getId());
         String messageText = "List of Challenge managers list:\n";
         
+        if (roles.size() == 0)
+        {
+        	Message message = new Message("/fx_challenge_list : No challenge manager found");
+        	
+        	Log.info(message.getText());
+        	
+        	return NewResponseEntity(message);
+        }
+        
         for (Role role : roles) 
         {
             messageText += "<@" + role.getFinaxysProfile().getId() + "|" + slackApiAccessService.getUser(role.getFinaxysProfile().getId()).getName() + "> \n";
             
-            Message message = new Message("/fx_challenge_list " + "\n " + messageText);
+            //Message message = new Message("/fx_challenge_list " + "\n " + messageText);
             
-            Log.info(message.getText());
+            //Log.info(message.getText());
             
-            return NewResponseEntity(message);
+            //return NewResponseEntity(message);
         }
         
-        Message message = new Message("/fx_challenge_list :" + "\n " + messageText+" No challenge managers are found");
+        Message message = new Message("/fx_challenge_list :" + "\n " + messageText);
         
         Log.info(message.getText());
         

@@ -34,8 +34,9 @@ public class ScoreWebService extends BaseWebService {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> addChallengeScore(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments,
-			@RequestParam("user_id") String challengeManagerId) {
+													  @RequestParam("team_domain") String slackTeam, 
+													  @RequestParam("text") String arguments,
+													  @RequestParam("user_id") String challengeManagerId) {
 
 		Timer timer = new Timer();
 
@@ -69,31 +70,38 @@ public class ScoreWebService extends BaseWebService {
 
 		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
 
-		FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score,
-				challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
+		FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score, challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
 
 		timer.capture();
 
-		finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
-		finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
+		//finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
+		//finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
 
-		timer.capture();
+		//timer.capture();
+		
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
+				finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
+				finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+			}
+		}).start();
 
-		try {
-			timer.capture();
+//		try {
+//			timer.capture();
+//
+//			finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+//
+//			timer.capture();
+//		} catch (Exception e) {
+//			return NewResponseEntity(
+//					"/fx_challenge_score_add " + arguments + " \n"
+//							+ "A problem has occurred! The user may have a score for this challenge already !" + timer, true);
+//		}
 
-			finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
-
-			timer.capture();
-		} catch (Exception e) {
-			return NewResponseEntity(
-					"/fx_challenge_score_add " + arguments + " \n"
-							+ "A problem has occured! The user may have a score for this challenge already !" + timer,
-					true);
-		}
-
-		return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer,
-				true);
+		return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer, true);
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
