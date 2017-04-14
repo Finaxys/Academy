@@ -1,27 +1,32 @@
 package com.finaxys.slackbot.DAL;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
-/**
- * Created by Sahar on 23/03/2017.
- */
 @Entity
-public class Role {
-    private Integer id ;
-    private String role ;
-    private int challengeId ;
-    private FinaxysProfile finaxysProfile ;
+public class Role implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
+	
+	private Integer id ;
+    private String role ;
+    private Challenge challenge;
+    private FinaxysProfile slackUser ;
+
+    
+    
     public Role() {
     }
 
-    public Role(String role) {
-        this.role = role;
+    
+    public Role(String role){
+    	this.role = role;
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROLE_ID", unique = true, nullable = false)
+    @Column(name = "ROLE_ID")
     public Integer getId() {
         return id;
     }
@@ -38,22 +43,24 @@ public class Role {
         this.role = role;
     }
 
-    public int getChallengeId() {
-        return challengeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    public Challenge getChallenge() {
+        return challenge;
     }
 
-    public void setChallengeId(int challengeId) {
-        this.challengeId = challengeId;
+    public void setChallenge(Challenge challenge) {
+        this.challenge = challenge;
     }
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "FINAXYSPROFILE_ID", nullable = false)
-    public FinaxysProfile getFinaxysProfile() {
-        return finaxysProfile;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    public FinaxysProfile getSlackUser() {
+        return slackUser;
     }
 
-    public void setFinaxysProfile(FinaxysProfile finaxysProfile) {
-        this.finaxysProfile = finaxysProfile;
+    public void setSlackUser(FinaxysProfile finaxysProfile) {
+        this.slackUser = finaxysProfile;
     }
+    
 
 
 }

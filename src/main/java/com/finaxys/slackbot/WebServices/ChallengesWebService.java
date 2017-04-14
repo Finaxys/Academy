@@ -233,8 +233,8 @@ public class ChallengesWebService extends BaseWebService {
 					Role role = new Role();
 					
 					role.setRole		  ("challenge_manager");
-					role.setFinaxysProfile(finaxysProfileRepository.findById(userId));
-					role.setChallengeId	  (challenge.getId());
+					role.setSlackUser(finaxysProfileRepository.findById(userId));
+					role.setChallenge  (challenge);
 					
 					roleRepository.addEntity(role);
 					

@@ -13,7 +13,7 @@ public class FinaxysProfile_Challenge implements Serializable {
     private FinaxysProfile_Challenge_PK key;
     private int score;
     private Challenge challenge;
-    private FinaxysProfile finaxysProfile;
+    private FinaxysProfile profile;
 
     public FinaxysProfile_Challenge() {
     }
@@ -24,7 +24,7 @@ public class FinaxysProfile_Challenge implements Serializable {
         key.setChallenge(challengeId);
         key.setFinaxysProfile(finaxysProfileId);
         this.challenge = challenge ;
-        this.finaxysProfile=finaxysProfile;
+        this.profile=finaxysProfile;
 
     }
     public FinaxysProfile_Challenge(int score, Integer challengeId, String finaxysProfileId) {
@@ -53,7 +53,7 @@ public class FinaxysProfile_Challenge implements Serializable {
         this.score = score;
     }
 
-    @JoinColumn(name = "CHALLENGE_FK", insertable = true, updatable = false)
+    @JoinColumn(name = "CHALLENGE_ID" , insertable = false, updatable = false)
     @ManyToOne
     public Challenge getChallenge() {
         return challenge;
@@ -63,13 +63,13 @@ public class FinaxysProfile_Challenge implements Serializable {
         this.challenge = challenge;
     }
 
-    @JoinColumn(name = "FINAXYSPROFILE_FK", insertable = true, updatable = false)
+    @JoinColumn(name = "FINAXYSPROFILE_ID", insertable = false, updatable = false)
     @ManyToOne
-    public FinaxysProfile getFinaxysProfile() {
-        return finaxysProfile;
+    public FinaxysProfile getProfile() {
+        return profile;
     }
 
-    public void setFinaxysProfile(FinaxysProfile finaxysProfile) {
-        this.finaxysProfile = finaxysProfile;
+    public void setProfile(FinaxysProfile finaxysProfile) {
+        this.profile = finaxysProfile;
     }
 }

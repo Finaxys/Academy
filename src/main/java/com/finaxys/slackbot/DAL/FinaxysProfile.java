@@ -20,7 +20,7 @@ public class FinaxysProfile implements Serializable {
     private boolean administrator;
 
     private List<Role> roles = new ArrayList<>();
-    @JsonIgnore
+    
     private List<FinaxysProfile_Challenge> finaxysProfile_challenges;
 
     public FinaxysProfile() {
@@ -81,7 +81,7 @@ public class FinaxysProfile implements Serializable {
         this.administrator = administrator;
     }
 
-    @OneToMany(mappedBy = "finaxysProfile", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile", cascade = CascadeType.ALL)
     public List<FinaxysProfile_Challenge> getFinaxysProfile_challenges() {
         return finaxysProfile_challenges;
     }
@@ -89,7 +89,7 @@ public class FinaxysProfile implements Serializable {
     public void setFinaxysProfile_challenges(List<FinaxysProfile_Challenge> finaxysProfile_challenges) {
         this.finaxysProfile_challenges = finaxysProfile_challenges;
     }
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "finaxysProfile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "slackUser")
     public List<Role> getRoles() {
         return roles;
     }

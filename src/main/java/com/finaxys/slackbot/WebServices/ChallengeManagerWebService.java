@@ -73,8 +73,8 @@ public class ChallengeManagerWebService extends BaseWebService{
             Role role = new Role();
             
             role.setRole		  ("challenge_manager");
-            role.setChallengeId	  (challenges.get(0).getId());
-            role.setFinaxysProfile(finaxysProfile);
+            role.setChallenge	  (challenges.get(0));
+            role.setSlackUser(finaxysProfile);
             
             roleRepository.saveOrUpdate(role);
             timer.capture();
@@ -136,7 +136,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                 
                 for (Role role : roles) 
                 {
-                    if (role.getFinaxysProfile().getId().equals(finaxysProfileId)) 
+                    if (role.getSlackUser().getId().equals(finaxysProfileId)) 
                     {
                         roleRepository.delete(role);
                         
@@ -196,7 +196,7 @@ public class ChallengeManagerWebService extends BaseWebService{
         
         for (Role role : roles) 
         {
-            messageText += "<@" + role.getFinaxysProfile().getId() + "|" + slackApiAccessService.getUser(role.getFinaxysProfile().getId()).getName() + "> \n";
+            messageText += "<@" + role.getSlackUser().getId() + "|" + slackApiAccessService.getUser(role.getSlackUser().getId()).getName() + "> \n";
             
             Message message = new Message("/fx_challenge_list " + "\n " + messageText);
             

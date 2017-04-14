@@ -33,7 +33,7 @@ public class BaseWebService {
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
         
         for (Role role : roles)
-            if (role.getFinaxysProfile().getId().equals(userId))
+            if (role.getSlackUser().getId().equals(userId))
                 return true;
         
         return false;
@@ -46,7 +46,7 @@ public class BaseWebService {
         int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
         
         for (Role role : roles)
-            if (role.getFinaxysProfile().getId().equals(userId) && role.getChallengeId() == challengeId)
+            if (role.getSlackUser().getId().equals(userId) && role.getChallenge().getId() == challengeId)
                 return true;
         
         return false;

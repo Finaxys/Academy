@@ -74,7 +74,7 @@ public class ScoreWebService extends BaseWebService {
 
 		timer.capture();
 
-		finaxysProfile_challenge.setFinaxysProfile(finaxysProfileRepository.findById(userId));
+		finaxysProfile_challenge.setProfile(finaxysProfileRepository.findById(userId));
 		finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
 
 		timer.capture();
@@ -131,7 +131,7 @@ public class ScoreWebService extends BaseWebService {
 		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
 
 		for (FinaxysProfile_Challenge finaxysProfileChallenge : listChallenges) {
-			FinaxysProfile finaxysProfile = finaxysProfileChallenge.getFinaxysProfile();
+			FinaxysProfile finaxysProfile = finaxysProfileChallenge.getProfile();
 
 			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
 					+ finaxysProfileChallenge.getScore() + " \n";
