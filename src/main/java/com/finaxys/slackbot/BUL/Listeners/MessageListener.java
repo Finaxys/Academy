@@ -29,16 +29,18 @@ public class MessageListener implements EventListener {
 
 	public void handleMessage(JsonNode jsonNode) {
 		if (!jsonNode.has("subtype"))
-			realMessageReward.rewardReadMessage(jsonNode);
+		realMessageReward.rewardReadMessage(jsonNode);
 		else {
 			String messageSubtype = jsonNode.get("subtype").asText();
 
 			if (messageSubtype.equals("channel_join"))
-				newTribeJoinedService.onNewTribeJoined(jsonNode);
+			newTribeJoinedService.onNewTribeJoined(jsonNode);
+			
 			else if (messageSubtype.equals("file_share"))
-				innovateService.addInnovateScore(jsonNode, this);
+			innovateService.addInnovateScore(jsonNode, this);
+			
 			else if (messageSubtype.equals("channel_leave"))
-				channelLeftService.onChannelLeaveMessage(jsonNode);
+			channelLeftService.onChannelLeaveMessage(jsonNode);
 		}
 
 	}
