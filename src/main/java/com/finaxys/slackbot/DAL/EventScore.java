@@ -2,15 +2,12 @@ package com.finaxys.slackbot.DAL;
 
 import javax.persistence.*;
 
-/**
- * Created by user on 22/03/2017.
- */
 @Entity
 @Table(name = "EVENT_SCORE")
 public class EventScore {
     private Integer code;
-    private String action;
-    private int points;
+    private String 	action;
+    private int 	points;
 
     public EventScore(Integer code, String action, int points) {
         this.code = code;

@@ -7,13 +7,13 @@ public class Message implements Serializable{
     private String response_type;
 
     public Message(String text) {
-        this.text = text;
-        this.response_type ="ephemeral";
+        this.text 			= text;
+        this.response_type 	="ephemeral";
     }
 
     public Message(String text, String response_type) {
-        this.text = text;
-        this.response_type = response_type;
+        this.text 			= text;
+        this.response_type 	= response_type;
     }
 
     public String getText() {

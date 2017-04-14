@@ -3,9 +3,6 @@ package com.finaxys.slackbot.DAL;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by inesnefoussi on 3/6/17.
- */
 @Entity
 @Table(name = "FINAXYS_PROFILE_CHALLENGE")
 public class FinaxysProfile_Challenge implements Serializable {
@@ -32,8 +29,6 @@ public class FinaxysProfile_Challenge implements Serializable {
         this.key = new FinaxysProfile_Challenge_PK();
         key.setChallenge(challengeId);
         key.setFinaxysProfile(finaxysProfileId);
-
-
     }
 
     @EmbeddedId

@@ -14,7 +14,6 @@ public class Role implements Serializable{
     private String role ;
     private Challenge challenge;
     private FinaxysProfile slackUser ;
-
     
     
     public Role() {
@@ -60,7 +59,4 @@ public class Role implements Serializable{
     public void setSlackUser(FinaxysProfile finaxysProfile) {
         this.slackUser = finaxysProfile;
     }
-    
-
-
 }

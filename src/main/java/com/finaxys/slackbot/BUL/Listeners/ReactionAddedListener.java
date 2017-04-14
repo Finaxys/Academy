@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
-
 import allbegray.slack.rtm.EventListener;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
