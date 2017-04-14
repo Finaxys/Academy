@@ -1,12 +1,15 @@
 package com.finaxys.slackbot.Configuration;
 
-import allbegray.slack.SlackClientFactory;
+import allbegray.slack.rtm.Event;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
+import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
+import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
 import com.finaxys.slackbot.Utilities.SlackBot;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -17,9 +20,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent> {
 
 	private EventHolderBean eventHolderBean;
-	
-	// private static SlackWebApiClient slackWebApiClient;
-	private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
 
 	@Autowired
 	public void setEventHolderBean(EventHolderBean eventHolderBean) {
@@ -38,8 +38,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
 
-			
-			/*
 			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
 					(UserChangedListener) context.getBean("userChangedListener"));
 
@@ -51,27 +49,15 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
 					(ReactionRemovedListener) context.getBean("reactionRemovedListener"));
-			*/
-			
-			/*
+
 			slackRealTimeMessagingClient.addListener(Event.MESSAGE,
 					(MessageListener) context.getBean("messageListener"));
-			
-			*/
 
 			slackRealTimeMessagingClient.connect();
 			SlackApiAccessService.init();
 			System.out.println("End");
-			
+
 		}
 
 	}
-
-	/*
-	 * private SlackWebApiClient getSlackWebApiClient() { return
-	 * slackWebApiClient == null ?
-	 * SlackClientFactory.createWebApiClient(Settings.botUserOauthAccessToken) :
-	 * slackWebApiClient; }
-	 */
-
 }

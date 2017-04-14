@@ -1,14 +1,12 @@
 package com.finaxys.slackbot.BUL.Classes;
 
 import allbegray.slack.type.Channel;
-import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,16 +39,7 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 	}
 
 	private boolean jsonIsValid(JsonNode jsonNode) {
-		if (!jsonNode.has("subtype"))
-			return false;
-
-		String messageSubtype = jsonNode.get("subtype").asText();
-
-		if (!messageSubtype.equals("channel_join"))
-			return false;
-
 		String channelId = jsonNode.get("channel").asText();
-		SlackWebApiClient webApiClient = SlackBot.getSlackWebApiClient();
 		Channel channel = slackApiAccessService.getChannel(channelId);
 		String channelName = channel.getName();
 

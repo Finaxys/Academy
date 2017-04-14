@@ -7,7 +7,6 @@ import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
-	
+
 	@Autowired
 	private Repository<FinaxysProfile, String> finaxysProfileRepository;
 
@@ -40,18 +39,13 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 
 			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 			finaxysProfileRepository.updateEntity(profile);
-			
+
 			Log.logMemberLeftChannel(profile.getName(), channel.getName());
 		}
 	}
 
 	private boolean jsonIsValid(JsonNode jsonNode) {
-		if (jsonNode == null)
-			return false;
-		if (!jsonNode.has("subtype") || !jsonNode.has("user"))
-			return false;
-		if (!(jsonNode.get("type").asText().equals("message")
-				&& jsonNode.get("subtype").asText().equals("channel_leave")))
+		if (!jsonNode.has("user"))
 			return false;
 		return true;
 	}

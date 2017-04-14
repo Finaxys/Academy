@@ -30,7 +30,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 		listEmojis.add("clap");
 		listEmojis.add("ok_hand");
 
-		if (jsonNode.get("item_user").asText() == null)
+		if (jsonNode.get("item_user")== null)
 			return;
 
 		String itemUserId 			= jsonNode.get("item_user").asText();
