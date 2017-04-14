@@ -37,7 +37,7 @@ public class FinaxysProfileWebService extends BaseWebService{
         
         timer.capture();
         
-        if(text.equals(" "))
+        if(text.equals(""))
         {
         	List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false,finaxysProfileRepository.getAll().size());
         	
