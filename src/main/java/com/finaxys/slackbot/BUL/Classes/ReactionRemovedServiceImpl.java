@@ -5,7 +5,6 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +26,18 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		listEmojis.add("+1");
 		listEmojis.add("clap");
 		listEmojis.add("ok_hand");
+		listEmojis.add("smile");
+		listEmojis.add("smiley");
+		listEmojis.add("heart");
+		listEmojis.add("v");
+		listEmojis.add("white_check_mark");
+		listEmojis.add("cookie"); //give that guy a cookie
+		
 
 		if (jsonNode == null)
 			return;
 
-		if (jsonNode.get("item_user").asText() == null)
+		if (jsonNode.get("item_user") == null)
 			return;
 
 		String itemUserId			= jsonNode.get("item_user").asText();

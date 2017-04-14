@@ -3,8 +3,6 @@ package com.finaxys.slackbot.BUL.Classes;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
@@ -17,8 +15,6 @@ public class SlackApiAccessService {
 	private static Map<String, User> allUsers;
 
 	private static Map<String, Channel> allChannels;
-	
-	
 
 	public static void init() {
 		System.out.println("Init SlackApiAccessService" + Settings.appVerificationToken);
@@ -33,20 +29,14 @@ public class SlackApiAccessService {
 
 		for (int i = 0; i < users.size(); i++) {
 			allUsers.put(users.get(i).getId(), users.get(i));
-
-			System.out.println(users.get(i).getName());
 		}
 		for (int i = 0; i < channels.size(); i++) {
 			allChannels.put(channels.get(i).getId(), channels.get(i));
-			System.out.println(channels.get(i).getName());
 		}
 
 	}
 
 	public User getUser(String userId) {
-		if (allUsers == null) {
-			allUsers = new HashMap<String, User>();
-		}
 		if (!allUsers.containsKey(userId)) {
 			allUsers.put(userId, SlackBot.getSlackWebApiClient().getUserInfo(userId));
 		}
@@ -54,9 +44,6 @@ public class SlackApiAccessService {
 	}
 
 	public Channel getChannel(String channelId) {
-		if (allChannels == null) {
-			allChannels = new HashMap<String, Channel>();
-		}
 		if (!allChannels.containsKey(channelId)) {
 			allChannels.put(channelId, SlackBot.getSlackWebApiClient().getChannelInfo(channelId));
 		}

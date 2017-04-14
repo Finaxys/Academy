@@ -24,12 +24,9 @@ public class BaseWebService {
     Repository<Challenge, Integer> challengeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
     
     public boolean isAdmin(String userId)
-    {
-    	//faire une requête unique du type "SELECT ROLE_ID FROM Role WHERE FINAXYSPROFILE_ID = userId AND role = "admin"
-    	
+    {	
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
         
         for (Role role : roles)
@@ -51,6 +48,19 @@ public class BaseWebService {
         
         return false;
     }
+    
+//    public boolean isAdminOrChallengeManager(String userId, String challengeName)
+//    {
+//    	List<Role> roles = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
+//    	
+//    	for (Role role : roles)
+//    	{
+//    		if (role.getChallengeId() == 0 || role.getChallenge().getName() == challengeName)
+//    			return true;
+//    	}
+//    			
+//    	return false;
+//    }
 
     
     public boolean NoAccess(String appVerificationToken, String slackTeam) 

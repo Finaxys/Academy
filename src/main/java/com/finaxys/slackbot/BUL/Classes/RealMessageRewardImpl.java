@@ -1,15 +1,12 @@
 package com.finaxys.slackbot.BUL.Classes;
 
 import allbegray.slack.type.Channel;
-import allbegray.slack.webapi.SlackWebApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
-
-import com.finaxys.slackbot.Utilities.SlackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +59,6 @@ public class RealMessageRewardImpl implements RealMessageReward {
     private void increaseSlackUserScore(String userId) {
         FinaxysProfile profile = finaxysProfileRepository.findById(userId);
         if (profile == null) {
-            SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
             String profileName = slackApiAccessService.getUser(userId).getName();
             profile = new FinaxysProfile(userId, profileName);
         }

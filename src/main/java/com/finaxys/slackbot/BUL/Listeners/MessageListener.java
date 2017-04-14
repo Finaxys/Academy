@@ -12,27 +12,34 @@ import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 @Component
 public class MessageListener implements EventListener {
 
-    @Autowired
-    private NewTribeJoinedService newTribeJoinedService;
+	@Autowired
+	private NewTribeJoinedService newTribeJoinedService;
 
-    @Autowired
-    private RealMessageReward realMessageReward;
+	@Autowired
+	private RealMessageReward realMessageReward;
 
-    @Autowired
-    private InnovateService innovateService;
+	@Autowired
+	private InnovateService innovateService;
 
-    @Autowired
-    private ChannelLeftService channelLeftService;
+	@Autowired
+	private ChannelLeftService channelLeftService;
 
-    public MessageListener() {
-    }
+	public MessageListener() {
+	}
 
-    public void handleMessage(JsonNode jsonNode) {
-    	
-        newTribeJoinedService.onNewTribeJoined(jsonNode);
-        innovateService.addInnovateScore(jsonNode, this);
-        channelLeftService.onChannelLeaveMessage(jsonNode);
-        realMessageReward.rewardReadMessage(jsonNode);
+	public void handleMessage(JsonNode jsonNode) {
+		if (!jsonNode.has("subtype"))
+			realMessageReward.rewardReadMessage(jsonNode);
+		else {
+			String messageSubtype = jsonNode.get("subtype").asText();
 
-    }
+			if (messageSubtype.equals("channel_join"))
+				newTribeJoinedService.onNewTribeJoined(jsonNode);
+			else if (messageSubtype.equals("file_share"))
+				innovateService.addInnovateScore(jsonNode, this);
+			else if (messageSubtype.equals("channel_leave"))
+				channelLeftService.onChannelLeaveMessage(jsonNode);
+		}
+
+	}
 }
