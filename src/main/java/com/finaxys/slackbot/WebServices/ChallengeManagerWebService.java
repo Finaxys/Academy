@@ -40,15 +40,15 @@ public class ChallengeManagerWebService extends BaseWebService{
     	
         Log.info("/fx_manager_add  ");
 
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
         
         timer.capture();
         
         ChallengeManagerArgumentsMatcher challengeManagerArgumentsMatcher = new ChallengeManagerArgumentsMatcher();
         
         if (!challengeManagerArgumentsMatcher.isCorrect(arguments))
-            return NewResponseEntity("/fx_manager_add  :" + arguments + "\n " + "Arguments should be :[challenge name] @Username" + timer ,true);
+            return newResponseEntity("/fx_manager_add  :" + arguments + "\n " + "Arguments should be :[challenge name] @Username" + timer ,true);
         timer.capture();
         
         String profileId     = challengeManagerArgumentsMatcher.getUserIdArgument  (arguments);
@@ -68,7 +68,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             finaxysProfileRepository.saveOrUpdate(finaxysProfile);
             timer.capture();
             if (challenges.size() == 0)
-                return NewResponseEntity("/fx_manager_add  :" + arguments + "\n " + "challenge does not exist" + timer ,true);
+                return newResponseEntity("/fx_manager_add  :" + arguments + "\n " + "challenge does not exist" + timer ,true);
             
             Role role = new Role();
             
@@ -79,10 +79,10 @@ public class ChallengeManagerWebService extends BaseWebService{
             roleRepository.saveOrUpdate(role);
             timer.capture();
             
-            return NewResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getId()).getName() + "> has just became a challenge manager!" + timer ,true);
+            return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getId()).getName() + "> has just became a challenge manager!" + timer ,true);
         }
         
-        return NewResponseEntity("/fx_manager_add  : " + arguments + " you are not a challenge manager!" + timer ,true);
+        return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a challenge manager!" + timer ,true);
     }
 
     
@@ -96,8 +96,8 @@ public class ChallengeManagerWebService extends BaseWebService{
     	
         Log.info("/fx_manager_del"+arguments);
         
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         ChallengeManagerArgumentsMatcher challengeManagerArgumentsMatcher = new ChallengeManagerArgumentsMatcher();
         timer.capture();
@@ -105,7 +105,7 @@ public class ChallengeManagerWebService extends BaseWebService{
         {
             Message message = new Message("/fx_manager_del :" + arguments + "\n " + "Arguments should be :[challenge name] @Username");
             Log.info(message.getText().toString());
-            return NewResponseEntity(message);
+            return newResponseEntity(message);
         }
         
         timer.capture();
@@ -125,7 +125,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                 
                 Log.info(message.getText());
                 
-                return NewResponseEntity(message);
+                return newResponseEntity(message);
             }
             else 
             {
@@ -144,7 +144,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                         
                         Log.info(message.getText());
                         
-                        return NewResponseEntity(message);
+                        return newResponseEntity(message);
                     }
                 }
                 
@@ -154,7 +154,7 @@ public class ChallengeManagerWebService extends BaseWebService{
                 
                 Log.info(message.getText());
                 
-                return NewResponseEntity(message);
+                return newResponseEntity(message);
             }
         }
         
@@ -164,7 +164,7 @@ public class ChallengeManagerWebService extends BaseWebService{
         
         
         
-        return NewResponseEntity(message);
+        return newResponseEntity(message);
     }
 
     
@@ -176,8 +176,8 @@ public class ChallengeManagerWebService extends BaseWebService{
     	
         Log.info("/fx_challenge_list");
 
-        if (NoAccess(appVerificationToken, slackTeam))
-            return NoAccessResponseEntity(appVerificationToken, slackTeam);
+        if (noAccess(appVerificationToken, slackTeam))
+            return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         String 			challengeName = arguments.trim();
         List<Challenge> challenges 	  = challengeRepository.getByCriterion("name", challengeName);
@@ -188,7 +188,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             
             Log.info(message.getText());
             
-            return NewResponseEntity(message);
+            return newResponseEntity(message);
         }
         
         List<Role> roles   = roleRepository.getByCriterion("challengeId", challenges.get(0).getId());
@@ -202,14 +202,14 @@ public class ChallengeManagerWebService extends BaseWebService{
             
             Log.info(message.getText());
             
-            return NewResponseEntity(message);
+            return newResponseEntity(message);
         }
         
         Message message = new Message("/fx_challenge_list :" + "\n " + messageText+" No challenge managers are found");
         
         Log.info(message.getText());
         
-        return NewResponseEntity(message);
+        return newResponseEntity(message);
     }
 
 }

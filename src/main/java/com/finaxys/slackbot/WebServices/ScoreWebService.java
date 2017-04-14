@@ -39,15 +39,15 @@ public class ScoreWebService extends BaseWebService {
 
 		Timer timer = new Timer();
 
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		timer.capture();
 
 		ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
 
 		if (!challengeScoreArgumentsMatcher.isCorrect(arguments))
-			return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n "
+			return newResponseEntity("/fx_challenge_score_add " + arguments + " \n "
 					+ "Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !"
 					+ timer, true);
 
@@ -61,10 +61,10 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 
 		if (challenges.size() == 0)
-			return NewResponseEntity("Nonexistent challenge" + timer, true);
+			return newResponseEntity("Nonexistent challenge" + timer, true);
 
 		if (!isChallengeManager(challengeManagerId, challengeName) && !isAdmin(challengeManagerId))
-			return NewResponseEntity("/fx_challenge_score_add " + arguments + "\n"
+			return newResponseEntity("/fx_challenge_score_add " + arguments + "\n"
 					+ "You are neither admin nor a challenge manager !" + timer, true);
 
 		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
@@ -86,13 +86,13 @@ public class ScoreWebService extends BaseWebService {
 
 			timer.capture();
 		} catch (Exception e) {
-			return NewResponseEntity(
+			return newResponseEntity(
 					"/fx_challenge_score_add " + arguments + " \n"
 							+ "A problem has occured! The user may have a score for this challenge already !" + timer,
 					true);
 		}
 
-		return NewResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer,
+		return newResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer,
 				true);
 	}
 
@@ -103,8 +103,8 @@ public class ScoreWebService extends BaseWebService {
 
 		Timer timer = new Timer();
 
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 		
 		timer.capture();
 		
@@ -112,7 +112,7 @@ public class ScoreWebService extends BaseWebService {
 		List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
 
 		if (challenges.size() == 0)
-			return NewResponseEntity(
+			return newResponseEntity(
 					"/fx_challenge_score_list " + arguments + " \n" + "No such challenge ! Check the challenge name" +timer,
 					true);
 
@@ -124,7 +124,7 @@ public class ScoreWebService extends BaseWebService {
 				challenge);
 
 		if (listChallenges.size() == 0)
-			NewResponseEntity(
+			newResponseEntity(
 					"/fx_challenge_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer ,
 					true);
 
@@ -137,7 +137,7 @@ public class ScoreWebService extends BaseWebService {
 					+ finaxysProfileChallenge.getScore() + " \n";
 		}
 
-		return NewResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
+		return newResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -147,22 +147,22 @@ public class ScoreWebService extends BaseWebService {
 		
 		Timer timer = new Timer();
 		
-		if (NoAccess(appVerificationToken, slackTeam))
-			return NoAccessResponseEntity(appVerificationToken, slackTeam);
+		if (noAccess(appVerificationToken, slackTeam))
+			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
 		
 		timer.capture();
 		
 		if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-			return NewResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
+			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
 		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
 		FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(profileId);
 		
 		timer.capture();
 		
-		return NewResponseEntity("<@" + finaxysProfile.getId() + "|"
+		return newResponseEntity("<@" + finaxysProfile.getId() + "|"
 				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + finaxysProfile.getScore() + timer , true);
 	}
 }
