@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "ROLE")
 public class Role implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -13,7 +14,7 @@ public class Role implements Serializable{
 	private int id ;
     private String role ;
     
-    private Challenge challenge;
+    private Event event;
     private SlackUser slackUser ;
     
     
@@ -43,12 +44,12 @@ public class Role implements Serializable{
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public Challenge getChallenge() {
-        return challenge;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setChallenge(Challenge challenge) {
-        this.challenge = challenge;
+    public void setEvent(Event event) {
+        this.event = event;
     }
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -56,7 +57,7 @@ public class Role implements Serializable{
         return slackUser;
     }
 
-    public void setSlackUser(SlackUser finaxysProfile) {
-        this.slackUser = finaxysProfile;
+    public void setSlackUser(SlackUser slackUser) {
+        this.slackUser = slackUser;
     }
 }

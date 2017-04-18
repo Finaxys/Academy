@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.finaxys.slackbot.DAL.Challenge;
-import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUser_Challenge;
+import com.finaxys.slackbot.BUL.Classes.ScoreService;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.EventScore;
 import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.DAL.SlackUser_Event;
 
 @RestController
 public class TestController {
@@ -16,8 +18,25 @@ public class TestController {
 	Repository<SlackUser, String> users;
 
 	@Autowired
-	Repository<Challenge, Integer> challenges;
-
+	Repository<Event, Integer> challenges;
+	
+	@Autowired
+	ScoreService ss;
+	@Autowired
+	Repository<EventScore, Integer> es;
+	
+	
+	@RequestMapping("/test2")
+	public void test2() {
+		System.out.println(es.getPersistentClass());
+		
+		for (EventScore es2 : es.getAll()) {
+			System.out.println(es2.getPoints());
+		}
+		
+		//System.out.println(ss.getScore("SENT_A_REAL_MESSAGE"));
+	}
+	
 	@RequestMapping("/test")
 	public void test() {
 
@@ -25,28 +44,28 @@ public class TestController {
 
 		System.out.println(user);
 		
-		System.out.println(user.getFinaxysProfile_challenges().size());
+		System.out.println(user.getSlackUserEvents().size());
 		System.out.println(user.getRoles()==null?"null":user.getRoles().size());
 		// user.setScore(90);
 		
-		Challenge finaxysChallenge = challenges.findById(15);
-		SlackUser_Challenge fpc = new SlackUser_Challenge(13, finaxysChallenge.getId(), user.getId());
-		user.getFinaxysProfile_challenges().add(fpc);
+		Event finaxysChallenge = challenges.findById(15);
+		SlackUser_Event fpc = new SlackUser_Event(13, finaxysChallenge.getId(), user.getId());
+		user.getSlackUserEvents().add(fpc);
 
 		
 		
 		finaxysChallenge = challenges.findById(11);
-		fpc = new SlackUser_Challenge(13, finaxysChallenge.getId(), user.getId());
-		user.getFinaxysProfile_challenges().add(fpc);
+		fpc = new SlackUser_Event(13, finaxysChallenge.getId(), user.getId());
+		user.getSlackUserEvents().add(fpc);
 
 		finaxysChallenge = challenges.findById(12);
-		fpc = new SlackUser_Challenge(13, finaxysChallenge.getId(), user.getId());
-		user.getFinaxysProfile_challenges().add(fpc);
+		fpc = new SlackUser_Event(13, finaxysChallenge.getId(), user.getId());
+		user.getSlackUserEvents().add(fpc);
 
 		finaxysChallenge = challenges.findById(13);
-		fpc = new SlackUser_Challenge(13, finaxysChallenge.getId(), user.getId());
+		fpc = new SlackUser_Event(13, finaxysChallenge.getId(), user.getId());
 
-		user.getFinaxysProfile_challenges().add(fpc);
+		user.getSlackUserEvents().add(fpc);
 		
 		users.saveOrUpdate(user);
 		
@@ -55,7 +74,7 @@ public class TestController {
 
 		System.out.println(user);
 		
-		System.out.println(user.getFinaxysProfile_challenges().size());
+		System.out.println(user.getSlackUserEvents().size());
 		System.out.println(user.getRoles()==null?"null":user.getRoles().size());
 		
 

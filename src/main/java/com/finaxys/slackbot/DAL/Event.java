@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "CHALLENGE")
-public class Challenge implements Serializable {
+@Table(name = "EVENT")
+public class Event implements Serializable {
 
     private Integer id;
     private String 	name;
     private String 	description;
     private Date 	creationDate;
     private String 	type;
-    private Set<SlackUser_Challenge> participants;
+    private Set<SlackUser_Event> attendees;
 
-    public Challenge() {
+    public Event() {
         creationDate = new Date();
-        participants = new HashSet<>();
+        attendees = new HashSet<>();
     }
 
     @Id
@@ -67,12 +67,12 @@ public class Challenge implements Serializable {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
-    public Set<SlackUser_Challenge> getParticipants() {
-        return participants;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
+    public Set<SlackUser_Event> getAttendees() {
+        return attendees;
     }
 
-    public void setParticipants(Set<SlackUser_Challenge> participants) {
-        this.participants = participants;
+    public void setAttendees(Set<SlackUser_Event> attendees) {
+        this.attendees = attendees;
     }
 }

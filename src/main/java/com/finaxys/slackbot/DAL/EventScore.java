@@ -1,48 +1,59 @@
 package com.finaxys.slackbot.DAL;
 
-import javax.persistence.*;
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "EVENT_SCORE")
-public class EventScore {
-    private Integer code;
-    private String 	action;
-    private int 	points;
+public class EventScore implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer code;
+	private String 	action;
+	private int 	points;
 
-    public EventScore(Integer code, String action, int points) {
-        this.code = code;
-        this.action = action;
-        this.points = points;
-    }
+	public EventScore() {
+	}
 
-    public EventScore(String action, int points) {
-        this.action = action;
-        this.points = points;
-    }
+	public EventScore(String event, int score) {
+		action=event;
+		points=score;
+	}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer getCode() {
-        return code;
-    }
+	public void setCode(Integer code) {
+		this.code = code;
+	}
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer getCode() {
+		return code;
+	}
 
-    public String getAction() {
-        return action;
-    }
+	public void setCode(int code) {
+		this.code = code;
+	}
 
-    public void setAction(String action) {
-        this.action = action;
-    }
+	public String getAction() {
+		return action;
+	}
 
-    public int getPoints() {
-        return points;
-    }
+	public void setAction(String action) {
+		this.action = action;
+	}
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
 }

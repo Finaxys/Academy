@@ -24,7 +24,7 @@ public class AdministratorWebService extends BaseWebService {
     Repository<SlackUser, String> finaxysProfileRepository;
     
     @Autowired
-    Repository<Challenge, Integer> challengeRepository;
+    Repository<Event, Integer> challengeRepository;
     
     @Autowired
 	public SlackApiAccessService slackApiAccessService;

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/finaxysProfiles")
-public class FinaxysProfileWebService extends BaseWebService{
+public class SlackUserWebService extends BaseWebService{
 
     @Autowired
     private Repository<SlackUser, String> finaxysProfileRepository;

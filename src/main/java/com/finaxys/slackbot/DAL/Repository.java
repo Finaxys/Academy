@@ -19,10 +19,15 @@ public class Repository<T, K extends Serializable> {
     private SessionFactory 	sessionFactory;
     private Class 			persistentClass;
 
-    public Repository() {
+    public Class getPersistentClass() {
+		return persistentClass;
+	}
+
+	public Repository() {
     }
 
     public Repository(Class<T> persistentClass) {
+    	System.out.println(persistentClass);
         this.persistentClass = persistentClass;
     }
 
@@ -40,6 +45,8 @@ public class Repository<T, K extends Serializable> {
     }
 
     public List<T> getAll() {
+    	System.out.println(persistentClass.getSimpleName());
+    	System.out.println(sessionFactory.getCurrentSession());
         return sessionFactory.getCurrentSession()
                 .createQuery("from " + persistentClass.getSimpleName())
                 .list();

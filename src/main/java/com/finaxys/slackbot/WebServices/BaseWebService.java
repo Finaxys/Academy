@@ -2,7 +2,7 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finaxys.slackbot.DAL.Challenge;
+import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
@@ -21,7 +21,7 @@ public class BaseWebService {
     public Repository<Role, Integer> roleRepository;
     
     @Autowired
-    Repository<Challenge, Integer> challengeRepository;
+    Repository<Event, Integer> challengeRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
     
@@ -43,7 +43,7 @@ public class BaseWebService {
         int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
         
         for (Role role : roles)
-            if (role.getSlackUser().getId().equals(userId) && role.getChallenge().getId() == challengeId)
+            if (role.getSlackUser().getId().equals(userId) && role.getEvent().getId() == challengeId)
                 return true;
         
         return false;

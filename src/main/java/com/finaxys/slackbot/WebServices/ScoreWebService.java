@@ -23,10 +23,10 @@ public class ScoreWebService extends BaseWebService {
 	Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
-	Repository<Challenge, Integer> challengeRepository;
+	Repository<Event, Integer> challengeRepository;
 
 	@Autowired
-	Repository<SlackUser_Challenge, SlackUser_Challenge_PK> finaxysProfileChallengeRepository;
+	Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileChallengeRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
@@ -56,7 +56,7 @@ public class ScoreWebService extends BaseWebService {
 
 		timer.capture();
 
-		List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
+		List<Event> challenges = challengeRepository.getByCriterion("name", challengeName);
 
 		timer.capture();
 
@@ -69,13 +69,13 @@ public class ScoreWebService extends BaseWebService {
 
 		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
 
-		SlackUser_Challenge finaxysProfile_challenge = new SlackUser_Challenge(score,
+		SlackUser_Event finaxysProfile_challenge = new SlackUser_Event(score,
 				challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
 
 		timer.capture();
 
 		finaxysProfile_challenge.setProfile(finaxysProfileRepository.findById(userId));
-		finaxysProfile_challenge.setChallenge(challengeRepository.getByCriterion("name", challengeName).get(0));
+		finaxysProfile_challenge.setEvent(challengeRepository.getByCriterion("name", challengeName).get(0));
 
 		timer.capture();
 
@@ -115,18 +115,18 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 		
 		String challengeName = arguments.trim();
-		List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
+		List<Event> challenges = challengeRepository.getByCriterion("name", challengeName);
 
 		if (challenges.size() == 0)
 			return newResponseEntity(
 					"/fx_challenge_score_list " + arguments + " \n" + "No such challenge ! Check the challenge name" +timer,
 					true);
 
-		Challenge challenge = challenges.get(0);
+		Event challenge = challenges.get(0);
 		
 		timer.capture();
 		
-		List<SlackUser_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
+		List<SlackUser_Event> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
 				challenge);
 
 		if (listChallenges.size() == 0)
@@ -136,7 +136,7 @@ public class ScoreWebService extends BaseWebService {
 
 		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
 
-		for (SlackUser_Challenge finaxysProfileChallenge : listChallenges) {
+		for (SlackUser_Event finaxysProfileChallenge : listChallenges) {
 			SlackUser finaxysProfile = finaxysProfileChallenge.getProfile();
 
 			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "

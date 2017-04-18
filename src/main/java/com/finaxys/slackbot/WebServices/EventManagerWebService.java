@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/challenge")
-public class ChallengeManagerWebService extends BaseWebService{
+public class EventManagerWebService extends BaseWebService{
 	
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
@@ -27,7 +27,7 @@ public class ChallengeManagerWebService extends BaseWebService{
     Repository<Role, Integer> roleRepository;
     
     @Autowired
-    Repository<Challenge, Integer> challengeRepository;
+    Repository<Event, Integer> challengeRepository;
 
     @RequestMapping(value = "/challenge_manager/new", method = RequestMethod.POST)
     @ResponseBody
@@ -61,7 +61,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             SlackUser  finaxysProfile = finaxysProfileRepository.findById(profileId);
             
             timer.capture();
-            List<Challenge> challenges 	   = challengeRepository.getByCriterion("name", challengeName);
+            List<Event> challenges 	   = challengeRepository.getByCriterion("name", challengeName);
             
             finaxysProfile = (finaxysProfile == null) ? new SlackUser(profileId, profileName) : finaxysProfile;
             
@@ -73,7 +73,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             Role role = new Role();
             
             role.setRole		  ("challenge_manager");
-            role.setChallenge	  (challenges.get(0));
+            role.setEvent	  (challenges.get(0));
             role.setSlackUser(finaxysProfile);
             
             roleRepository.saveOrUpdate(role);
@@ -113,7 +113,7 @@ public class ChallengeManagerWebService extends BaseWebService{
         String finaxysProfileId = challengeManagerArgumentsMatcher.getUserIdArgument(arguments);
         String challengeName 	= challengeManagerArgumentsMatcher.getChallengeName	(arguments);
         
-        List<Challenge> challenges = challengeRepository.getByCriterion("name", challengeName);
+        List<Event> challenges = challengeRepository.getByCriterion("name", challengeName);
         
         timer.capture();
         
@@ -129,7 +129,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             }
             else 
             {
-                Challenge  challenge = challenges.get(0);
+                Event  challenge = challenges.get(0);
                 List<Role> roles 	 = roleRepository.getByCriterion("challengeId", challenge.getId());
                 
                 timer.capture();
@@ -180,7 +180,7 @@ public class ChallengeManagerWebService extends BaseWebService{
             return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         String 			challengeName = arguments.trim();
-        List<Challenge> challenges 	  = challengeRepository.getByCriterion("name", challengeName);
+        List<Event> challenges 	  = challengeRepository.getByCriterion("name", challengeName);
         
         if (challenges.size() == 0) 
         {

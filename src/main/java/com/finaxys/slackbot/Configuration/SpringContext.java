@@ -110,17 +110,17 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<Challenge, Integer> challengeRepository() {
-        return new Repository<>(Challenge.class);
+    public Repository<Event, Integer> challengeRepository() {
+        return new Repository<>(Event.class);
     }
 
     @Bean
-    public Repository<SlackUser_Challenge, SlackUser_Challenge_PK> finaxysProfileChallengeRepository() {
-        return new Repository<>(SlackUser_Challenge.class);
+    public Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileChallengeRepository() {
+        return new Repository<>(SlackUser_Event.class);
     }
 
     @Bean
-    public Repository<EventScore, String> eventScoreRepository() {
+    public Repository<EventScore, Integer> eventScoreRepository() {
         return new Repository<>(EventScore.class);
     }
     

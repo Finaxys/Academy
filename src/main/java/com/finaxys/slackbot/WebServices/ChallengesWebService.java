@@ -24,7 +24,7 @@ import java.util.List;
 public class ChallengesWebService extends BaseWebService {
 
 	@Autowired
-	private Repository<Challenge, Integer> challengeRepository;
+	private Repository<Event, Integer> challengeRepository;
 
 	@Autowired
 	Repository<SlackUser, String> finaxysProfileRepository;
@@ -44,13 +44,13 @@ public class ChallengesWebService extends BaseWebService {
 	}
 
 
-	private String getStringFromList(List<Challenge> challenges) 
+	private String getStringFromList(List<Event> challenges) 
 	{
 		String result = "";
 
-		for (Challenge challenge : challenges) 
+		for (Event challenge : challenges) 
 		{
-			result += "Challenge name: " + challenge.getName() + ", number of participants: " + challenge.getParticipants().size() + " \n ";
+			result += "Challenge name: " + challenge.getName() + ", number of participants: " + challenge.getAttendees().size() + " \n ";
 		}
 
 		return result;
@@ -79,7 +79,7 @@ public class ChallengesWebService extends BaseWebService {
 			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
 		timer.capture();
 		
-		List<Challenge> challenges = challengeRepository.getByCriterion("type", text);
+		List<Event> challenges = challengeRepository.getByCriterion("type", text);
 		
 		if (challenges.isEmpty())
 			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "No challenges with type" + text + timer ,true);
@@ -107,7 +107,7 @@ public class ChallengesWebService extends BaseWebService {
 			return newResponseEntity( " /fx_challenge_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
 		
-		List<Challenge> challenges = challengeRepository.getByCriterion("name", text);
+		List<Event> challenges = challengeRepository.getByCriterion("name", text);
 		
 		timer.capture();
 		
@@ -151,7 +151,7 @@ public class ChallengesWebService extends BaseWebService {
 		{
 		}
 		
-		List<Challenge> challenges = challengeRepository.getByCriterion("creationDate", wantedDate);
+		List<Event> challenges = challengeRepository.getByCriterion("creationDate", wantedDate);
 		
 		timer.capture();
 		
@@ -179,7 +179,7 @@ public class ChallengesWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<Challenge> challenges = challengeRepository.getAll();
+		List<Event> challenges = challengeRepository.getAll();
 		
 		timer.capture();
 		
@@ -218,7 +218,7 @@ public class ChallengesWebService extends BaseWebService {
 			timer.capture();
 			
 			String[]  challengeInfo = text.trim().split(",");
-			Challenge challenge 	= new Challenge();
+			Event challenge 	= new Event();
 			
 			challenge.setName		(challengeInfo[0]);
 			challenge.setType		(challengeInfo[1]);
@@ -234,7 +234,7 @@ public class ChallengesWebService extends BaseWebService {
 					
 					role.setRole		  ("challenge_manager");
 					role.setSlackUser(finaxysProfileRepository.findById(userId));
-					role.setChallenge  (challenge);
+					role.setEvent  (challenge);
 					
 					roleRepository.addEntity(role);
 					
@@ -266,7 +266,7 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		String  		challengeName = text.trim();
-		List<Challenge> challenges 	  = challengeRepository.getByCriterion("name",challengeName);
+		List<Event> challenges 	  = challengeRepository.getByCriterion("name",challengeName);
 		
 		timer.capture();
 		
@@ -281,7 +281,7 @@ public class ChallengesWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		Challenge  challenge =  challenges.get(0);
+		Event  challenge =  challenges.get(0);
 		
 		new Thread(new Runnable()
 		{
