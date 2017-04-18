@@ -2,8 +2,6 @@ package com.finaxys.slackbot.BUL.Classes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
-import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.FinaxysProfile;
 import com.finaxys.slackbot.DAL.Repository;
@@ -20,7 +18,7 @@ public class InnovateServiceImpl implements InnovateService {
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
 
-	public void addInnovateScore(JsonNode json, ChannelCreatedListener channelCreatedListener) {
+	public void rewardChannelCreated(JsonNode json) {
 		String channelId = json.get("channel").get("id").asText();
 		String channelName = slackApiAccessService.getChannel(channelId).getName();
 		TribeChannelMatcher tribeChannelMatcher = new TribeChannelMatcher();
@@ -38,7 +36,7 @@ public class InnovateServiceImpl implements InnovateService {
 		Log.logChannelTribeCreated(name, channelName);
 	}
 
-	public void addInnovateScore(JsonNode json, MessageListener messageListener) {
+	public void rewardFileShared(JsonNode json) {
 
 		String userId = json.get("user").asText();
 		FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);

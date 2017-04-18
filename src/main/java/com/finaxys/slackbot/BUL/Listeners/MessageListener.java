@@ -37,7 +37,7 @@ public class MessageListener implements EventListener {
 			newTribeJoinedService.onNewTribeJoined(jsonNode);
 			
 			else if (messageSubtype.equals("file_share"))
-			innovateService.addInnovateScore(jsonNode, this);
+			innovateService.rewardFileShared(jsonNode);
 			
 			else if (messageSubtype.equals("channel_leave"))
 			channelLeftService.onChannelLeaveMessage(jsonNode);
