@@ -82,7 +82,13 @@ public class ScoreWebService extends BaseWebService {
 		try {
 			timer.capture();
 
-			finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+			new Thread(new Runnable()
+			{
+				public void run()
+				{
+					finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+				}
+			}).start();
 
 			timer.capture();
 		} catch (Exception e) {

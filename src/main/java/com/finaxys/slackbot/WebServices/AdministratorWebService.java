@@ -61,12 +61,18 @@ public class AdministratorWebService extends BaseWebService {
             
             finaxysProfileRepository.saveOrUpdate(finaxysProfile);
             
-            
             Role role = new Role("admin");
             
             role.setSlackUser(finaxysProfile);
             
-            roleRepository.saveOrUpdate(role);
+            new Thread(new Runnable()
+			{
+				public void run()
+				{
+		            roleRepository.saveOrUpdate(role);
+				}
+			}).start();
+            
             timer.capture();
             
             return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> has just became an administrator! " + timer, true);
@@ -108,7 +114,14 @@ public class AdministratorWebService extends BaseWebService {
         {
             if (role.getSlackUser().getId().equals(id)) 
             {
-                roleRepository.delete(role);
+            	new Thread(new Runnable()
+    			{
+    				public void run()
+    				{
+    					roleRepository.delete(role);
+    				}
+    			}).start();
+                
                 return  newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
             }
         }
