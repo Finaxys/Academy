@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RealMessageRewardImpl implements RealMessageReward {
 
     @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> finaxysProfileRepository;
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -47,8 +47,8 @@ public class RealMessageRewardImpl implements RealMessageReward {
 
         String profileName = slackApiAccessService.getUser(finaxysProfileId).getName();
 
-        FinaxysProfile finaxysProfile = new FinaxysProfile(finaxysProfileId, profileName);
-        finaxysProfile.setAdministrator(true);
+        SlackUser finaxysProfile = new SlackUser(finaxysProfileId, profileName);
+        //TODO finaxysProfile.setAdministrator(true);
         finaxysProfileRepository.addEntity(finaxysProfile);
     }
 
@@ -57,10 +57,10 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     private void increaseSlackUserScore(String userId) {
-        FinaxysProfile profile = finaxysProfileRepository.findById(userId);
+        SlackUser profile = finaxysProfileRepository.findById(userId);
         if (profile == null) {
             String profileName = slackApiAccessService.getUser(userId).getName();
-            profile = new FinaxysProfile(userId, profileName);
+            profile = new SlackUser(userId, profileName);
         }
         profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
         finaxysProfileRepository.saveOrUpdate(profile);

@@ -21,7 +21,7 @@ public class ChallengeManagerWebService extends BaseWebService{
 	private SlackApiAccessService slackApiAccessService;
 
     @Autowired
-    Repository<FinaxysProfile, String> finaxysProfileRepository;
+    Repository<SlackUser, String> finaxysProfileRepository;
     
     @Autowired
     Repository<Role, Integer> roleRepository;
@@ -58,12 +58,12 @@ public class ChallengeManagerWebService extends BaseWebService{
         if (isChallengeManager(adminFinaxysProfileId, challengeName) || isAdmin(adminFinaxysProfileId)) 
         {	
         	timer.capture();
-            FinaxysProfile  finaxysProfile = finaxysProfileRepository.findById(profileId);
+            SlackUser  finaxysProfile = finaxysProfileRepository.findById(profileId);
             
             timer.capture();
             List<Challenge> challenges 	   = challengeRepository.getByCriterion("name", challengeName);
             
-            finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(profileId, profileName) : finaxysProfile;
+            finaxysProfile = (finaxysProfile == null) ? new SlackUser(profileId, profileName) : finaxysProfile;
             
             finaxysProfileRepository.saveOrUpdate(finaxysProfile);
             timer.capture();

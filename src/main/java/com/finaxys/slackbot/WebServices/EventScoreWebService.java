@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.BUL.Matchers.EventScoreAddMatcher;
 import com.finaxys.slackbot.DAL.EventScore;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;

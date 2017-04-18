@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.SlackBot;
 
@@ -15,7 +15,7 @@ import com.finaxys.slackbot.Utilities.SlackBot;
 public class UserChangedListener implements EventListener {
     
 	@Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> finaxysProfileRepository;
 	
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -36,10 +36,10 @@ public class UserChangedListener implements EventListener {
                 String finaxysProfileId 	= jsonNode.get("user").get("id").asText();
                 String finaxysProfileIName 	= slackApiAccessService.getUser(finaxysProfileId)
                                                       .getName();
-                FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
+                SlackUser finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
                 
                 if (finaxysProfile == null) {
-                    finaxysProfile = new FinaxysProfile(finaxysProfileId, finaxysProfileIName);
+                    finaxysProfile = new SlackUser(finaxysProfileId, finaxysProfileIName);
                 }
                 
                 finaxysProfile.setName(finaxysProfileIName);

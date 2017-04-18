@@ -27,7 +27,7 @@ public class ChallengesWebService extends BaseWebService {
 	private Repository<Challenge, Integer> challengeRepository;
 
 	@Autowired
-	Repository<FinaxysProfile, String> finaxysProfileRepository;
+	Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;

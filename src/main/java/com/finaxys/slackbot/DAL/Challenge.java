@@ -19,7 +19,7 @@ public class Challenge implements Serializable {
     private String 	description;
     private Date 	creationDate;
     private String 	type;
-    private Set<FinaxysProfile_Challenge> participants;
+    private Set<SlackUser_Challenge> participants;
 
     public Challenge() {
         creationDate = new Date();
@@ -68,11 +68,11 @@ public class Challenge implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
-    public Set<FinaxysProfile_Challenge> getParticipants() {
+    public Set<SlackUser_Challenge> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Set<FinaxysProfile_Challenge> participants) {
+    public void setParticipants(Set<SlackUser_Challenge> participants) {
         this.participants = participants;
     }
 }

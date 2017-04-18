@@ -76,8 +76,8 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<FinaxysProfile, String> finaxysProfileRepository() {
-        return new Repository<>(FinaxysProfile.class);
+    public Repository<SlackUser, String> finaxysProfileRepository() {
+        return new Repository<>(SlackUser.class);
     }
     @Bean
     public Repository<Role, Integer> roleRepository() {
@@ -121,8 +121,8 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository() {
-        return new Repository<>(FinaxysProfile_Challenge.class);
+    public Repository<SlackUser_Challenge, SlackUser_Challenge_PK> finaxysProfileChallengeRepository() {
+        return new Repository<>(SlackUser_Challenge.class);
     }
 
     @Bean

@@ -2,7 +2,7 @@ package com.finaxys.slackbot.BUL.Classes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
 	@Autowired
-	private Repository<FinaxysProfile, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -43,7 +43,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		String itemUserId			= jsonNode.get("item_user").asText();
 		String myUserId 			= jsonNode.get("user").asText();
 		String reaction 			= jsonNode.get("reaction").asText();
-		FinaxysProfile userProfile 	= finaxysProfileRepository.findById(itemUserId);
+		SlackUser userProfile 	= finaxysProfileRepository.findById(itemUserId);
 
 		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());

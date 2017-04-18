@@ -4,7 +4,7 @@ import allbegray.slack.type.Channel;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 	public SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	private Repository<FinaxysProfile, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Transactional
 	@Override
@@ -32,7 +32,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 				return;
 
 			String userId = jsonNode.get("user").asText();
-			FinaxysProfile profile = finaxysProfileRepository.findById(userId);
+			SlackUser profile = finaxysProfileRepository.findById(userId);
 
 			if (profile.getScore() == 0)
 				return;

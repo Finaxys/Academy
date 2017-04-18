@@ -4,7 +4,7 @@ import allbegray.slack.type.Channel;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
 	@Autowired
-	private Repository<FinaxysProfile, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -26,10 +26,10 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 		if (jsonIsValid(jsonNode)) {
 			String userId = jsonNode.get("user").asText();
 			String channelId = jsonNode.get("channel").asText();
-			FinaxysProfile userProfile = finaxysProfileRepository.findById(userId);
+			SlackUser userProfile = finaxysProfileRepository.findById(userId);
 
 			String name = slackApiAccessService.getUser(userId).getName();
-			userProfile = (userProfile == null) ? new FinaxysProfile(userId, name) : userProfile;
+			userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
 			userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 

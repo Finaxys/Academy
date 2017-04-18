@@ -20,13 +20,13 @@ public class ScoreWebService extends BaseWebService {
 	private SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	Repository<FinaxysProfile, String> finaxysProfileRepository;
+	Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
 	Repository<Challenge, Integer> challengeRepository;
 
 	@Autowired
-	Repository<FinaxysProfile_Challenge, FinaxysProfile_Challenge_PK> finaxysProfileChallengeRepository;
+	Repository<SlackUser_Challenge, SlackUser_Challenge_PK> finaxysProfileChallengeRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
@@ -69,7 +69,7 @@ public class ScoreWebService extends BaseWebService {
 
 		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
 
-		FinaxysProfile_Challenge finaxysProfile_challenge = new FinaxysProfile_Challenge(score,
+		SlackUser_Challenge finaxysProfile_challenge = new SlackUser_Challenge(score,
 				challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
 
 		timer.capture();
@@ -120,7 +120,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<FinaxysProfile_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
+		List<SlackUser_Challenge> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
 				challenge);
 
 		if (listChallenges.size() == 0)
@@ -130,8 +130,8 @@ public class ScoreWebService extends BaseWebService {
 
 		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
 
-		for (FinaxysProfile_Challenge finaxysProfileChallenge : listChallenges) {
-			FinaxysProfile finaxysProfile = finaxysProfileChallenge.getProfile();
+		for (SlackUser_Challenge finaxysProfileChallenge : listChallenges) {
+			SlackUser finaxysProfile = finaxysProfileChallenge.getProfile();
 
 			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
 					+ finaxysProfileChallenge.getScore() + " \n";
@@ -158,7 +158,7 @@ public class ScoreWebService extends BaseWebService {
 			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
 		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
-		FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(profileId);
+		SlackUser finaxysProfile = finaxysProfileRepository.findById(profileId);
 		
 		timer.capture();
 		

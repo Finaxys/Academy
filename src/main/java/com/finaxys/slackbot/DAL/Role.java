@@ -14,7 +14,7 @@ public class Role implements Serializable{
     private String role ;
     
     private Challenge challenge;
-    private FinaxysProfile slackUser ;
+    private SlackUser slackUser ;
     
     
     public Role() {
@@ -52,11 +52,11 @@ public class Role implements Serializable{
     }
     
     @ManyToOne(fetch = FetchType.LAZY)
-    public FinaxysProfile getSlackUser() {
+    public SlackUser getSlackUser() {
         return slackUser;
     }
 
-    public void setSlackUser(FinaxysProfile finaxysProfile) {
+    public void setSlackUser(SlackUser finaxysProfile) {
         this.slackUser = finaxysProfile;
     }
 }

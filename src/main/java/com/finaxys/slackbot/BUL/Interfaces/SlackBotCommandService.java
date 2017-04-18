@@ -1,12 +1,12 @@
 package com.finaxys.slackbot.BUL.Interfaces;
 
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 
 import java.util.List;
 
 public interface SlackBotCommandService {
 
-    List<FinaxysProfile> listerUsers();
-    List<FinaxysProfile> listeScores(int n);
+    List<SlackUser> listerUsers();
+    List<SlackUser> listeScores(int n);
 
 }

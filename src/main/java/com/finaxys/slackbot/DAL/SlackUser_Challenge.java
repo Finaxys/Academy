@@ -5,38 +5,38 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "FINAXYS_PROFILE_CHALLENGE")
-public class FinaxysProfile_Challenge implements Serializable {
+public class SlackUser_Challenge implements Serializable {
 
-    private FinaxysProfile_Challenge_PK key;
+    private SlackUser_Challenge_PK key;
     private int score;
     private Challenge challenge;
-    private FinaxysProfile profile;
+    private SlackUser profile;
 
-    public FinaxysProfile_Challenge() {
+    public SlackUser_Challenge() {
     }
 
-    public FinaxysProfile_Challenge(int score, Integer challengeId, String finaxysProfileId,Challenge challenge,FinaxysProfile finaxysProfile) {
+    public SlackUser_Challenge(int score, Integer challengeId, String finaxysProfileId,Challenge challenge,SlackUser finaxysProfile) {
         this.score = score;
-        this.key = new FinaxysProfile_Challenge_PK();
+        this.key = new SlackUser_Challenge_PK();
         key.setChallenge(challengeId);
         key.setFinaxysProfile(finaxysProfileId);
         this.challenge = challenge ;
         this.profile=finaxysProfile;
 
     }
-    public FinaxysProfile_Challenge(int score, Integer challengeId, String finaxysProfileId) {
+    public SlackUser_Challenge(int score, Integer challengeId, String finaxysProfileId) {
         this.score = score;
-        this.key = new FinaxysProfile_Challenge_PK();
+        this.key = new SlackUser_Challenge_PK();
         key.setChallenge(challengeId);
         key.setFinaxysProfile(finaxysProfileId);
     }
 
     @EmbeddedId
-    public FinaxysProfile_Challenge_PK getKey() {
+    public SlackUser_Challenge_PK getKey() {
         return key;
     }
 
-    public void setKey(FinaxysProfile_Challenge_PK key) {
+    public void setKey(SlackUser_Challenge_PK key) {
         this.key = key;
     }
 
@@ -60,11 +60,11 @@ public class FinaxysProfile_Challenge implements Serializable {
 
     @JoinColumn(name = "FINAXYSPROFILE_ID", insertable = false, updatable = false)
     @ManyToOne
-    public FinaxysProfile getProfile() {
+    public SlackUser getProfile() {
         return profile;
     }
 
-    public void setProfile(FinaxysProfile finaxysProfile) {
+    public void setProfile(SlackUser finaxysProfile) {
         this.profile = finaxysProfile;
     }
 }

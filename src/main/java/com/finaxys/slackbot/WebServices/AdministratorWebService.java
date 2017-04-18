@@ -21,7 +21,7 @@ import java.util.List;
 public class AdministratorWebService extends BaseWebService {
 
     @Autowired
-    Repository<FinaxysProfile, String> finaxysProfileRepository;
+    Repository<SlackUser, String> finaxysProfileRepository;
     
     @Autowired
     Repository<Challenge, Integer> challengeRepository;
@@ -55,9 +55,9 @@ public class AdministratorWebService extends BaseWebService {
         
         if (!isAdmin(userId)) 
         {
-        	FinaxysProfile finaxysProfile = finaxysProfileRepository.findById(userId);
+        	SlackUser finaxysProfile = finaxysProfileRepository.findById(userId);
         	
-            finaxysProfile = (finaxysProfile == null) ? new FinaxysProfile(userId, userName) : finaxysProfile;
+            finaxysProfile = (finaxysProfile == null) ? new SlackUser(userId, userName) : finaxysProfile;
             
             finaxysProfileRepository.saveOrUpdate(finaxysProfile);
             

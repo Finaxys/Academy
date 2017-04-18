@@ -2,7 +2,7 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
-import com.finaxys.slackbot.DAL.FinaxysProfile;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Timer;
 
@@ -20,7 +20,7 @@ public class FinaxysProfileWebService extends BaseWebService{
     SlackBotCommandService slackBotCommandServiceImpl;
     
     @Autowired
-    private Repository<FinaxysProfile, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> finaxysProfileRepository;
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
@@ -39,9 +39,9 @@ public class FinaxysProfileWebService extends BaseWebService{
         
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         
-        List<FinaxysProfile> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, size);
+        List<SlackUser> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, size);
         
-        for (FinaxysProfile profile : users)
+        for (SlackUser profile : users)
         {
         	messageText += profile.getName() + " " + profile.getScore() + "\n";
         }
