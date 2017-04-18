@@ -85,12 +85,6 @@ public class SpringContext {
     }
 
     @Bean
-    public SlackBotCommandService slackBotCommandServiceImpl() {
-
-        return new SlackBotCommandServiceImpl();
-    }
-
-    @Bean
     public ReactionAddedService reactionAddedService() {
         return new ReactionAddedServiceImpl();
     }

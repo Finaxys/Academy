@@ -1,7 +1,6 @@
 package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.BUL.Interfaces.SlackBotCommandService;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Timer;
@@ -16,9 +15,6 @@ import java.util.List;
 @RequestMapping("/finaxysProfiles")
 public class FinaxysProfileWebService extends BaseWebService{
 
-    @Autowired
-    SlackBotCommandService slackBotCommandServiceImpl;
-    
     @Autowired
     private Repository<SlackUser, String> finaxysProfileRepository;
 
