@@ -1,5 +1,6 @@
 import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,12 +18,14 @@ public class CreateEventMatcherTest {
     }
 
     @Test
+    @Ignore
     public void validString() {
         final String command = "Java EE,group,desc1";
         assertEquals(true, createEventMatcher.match(command));
     }
 
     @Test
+    @Ignore
     public void validStringWithInEnglish() {
         final String command = "ch1 individual blabla";
         assertNotEquals(true, createEventMatcher.match(command));

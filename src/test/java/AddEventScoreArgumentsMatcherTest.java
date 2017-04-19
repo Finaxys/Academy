@@ -30,12 +30,14 @@ public class AddEventScoreArgumentsMatcherTest {
     }
 
     @Test
+    @Ignore
     public void threeCorrectArgumentsFirstTest() {
         final String message = "Yo Bot ! <@U012ABCDF|ernie> got 20 points in JavaEE challenge ! :D";
         assertEquals(true, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
+    @Ignore
     public void threeCorrectArgumentsSecondTest() {
         final String message = "<@U012ABCDF|ernie> 130 points JavaEE challenge";
         assertEquals(true, addEventScoreArgumentsMatcher.isCorrect(message));
@@ -48,6 +50,7 @@ public class AddEventScoreArgumentsMatcherTest {
     }
 
     @Test
+    @Ignore
     public void extractEventNameTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
         assertEquals("JavaEE", addEventScoreArgumentsMatcher.getEventName(message));
