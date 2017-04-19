@@ -7,21 +7,21 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChallengeScoreArgumentsMatcher {
+public class EventScoreArgumentsMatcher {
 	
     private Matcher 		matcher;
-    private List<Pattern> 	addChallengeScoreArgumentsPatterns;
-    private Pattern 		listChallengeScoreArgumentsPatterns;
-    private Pattern 		challengeNameArgument;
+    private List<Pattern> 	addEventScoreArgumentsPatterns;
+    private Pattern 		listEventScoreArgumentsPatterns;
+    private Pattern 		eventNameArgument;
     private Pattern 		scoreArgument;
     private Pattern 		finaxysProfileIdArgument;
 
-    public ChallengeScoreArgumentsMatcher() {
+    public EventScoreArgumentsMatcher() {
     	
-        addChallengeScoreArgumentsPatterns = new ArrayList<>();
-        addChallengeScoreArgumentsPatterns.add(AddChallengeScoreArgumentsPattern.getPattern());
-        listChallengeScoreArgumentsPatterns = ListScoresByChallengsArgumentsPattern.getPattern();
-        challengeNameArgument 				= ChallengeNameArgumentPattern.getPattern();
+        addEventScoreArgumentsPatterns = new ArrayList<>();
+        addEventScoreArgumentsPatterns.add(AddEventScoreArgumentsPattern.getPattern());
+        listEventScoreArgumentsPatterns = ListScoresByEventsArgumentsPattern.getPattern();
+        eventNameArgument 				= EventNameArgumentPattern.getPattern();
         scoreArgument 						= ScoreArgumentPattern.getPattern();
         finaxysProfileIdArgument 			= UserIdArgumentPattern.getPattern();
         
@@ -29,7 +29,7 @@ public class ChallengeScoreArgumentsMatcher {
 
     public boolean isCorrect(String message) {
     	
-        for (Pattern pattern : addChallengeScoreArgumentsPatterns)
+        for (Pattern pattern : addEventScoreArgumentsPatterns)
             if (!pattern.matcher(message).matches()) return false;
         
         return true;
@@ -37,12 +37,12 @@ public class ChallengeScoreArgumentsMatcher {
 
     public boolean isCorrectListRequest(String message) {
     	
-        return listChallengeScoreArgumentsPatterns.matcher(message).matches(); 
+        return listEventScoreArgumentsPatterns.matcher(message).matches(); 
     }
 
-    public String getChallengeName(String message) {
+    public String getEventName(String message) {
     	
-        matcher = challengeNameArgument.matcher(message);
+        matcher = eventNameArgument.matcher(message);
         return matcher.find() ? matcher.group().substring(0, matcher.group().indexOf(" ")) : "";    
     }
 

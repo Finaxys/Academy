@@ -28,24 +28,24 @@ public class SupportWebService extends BaseWebService {
             return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         String fxCommands =
-                		 "*/fx_challenge_list* \n List all the challenges. \n" +
-                         "*/fx_challenge_add* [challenge name],[group|individual],[description] \n Add a new challenge. \n" +
-                         "*/fx_manager_add* [challenge name] @username  \n Add a challenge manager. \n" +
-                         "*/fx_manager_list* [challenge name] \n List challenge managers . \n" +
+                		 "*/fx_event_list* \n List all the events. \n" +
+                         "*/fx_event_add* [event name],[group|individual],[description] \n Add a new event. \n" +
+                         "*/fx_manager_add* [event name] @username  \n Add a event manager. \n" +
+                         "*/fx_manager_list* [event name] \n List event managers . \n" +
                          "*/fxadmin_list* \n List all administrators. \n" +
-                         "*/fx_challenge_named* [challenge name] \n Get a challenge details. \n" +
-                         "*/fx_challenges_by_date* [yyyy-mm-dd] \n Get challenges by date \n" +
-                         "*/fx_challenges_by_type* [group|individual] \n Get challenges by type \n" +
-                         "*/fx_challenge_score_list*  [challengeName] challenge \n Gets the score list of a given challenge. \n" +
+                         "*/fx_event_named* [event name] \n Get a event details. \n" +
+                         "*/fx_events_by_date* [yyyy-mm-dd] \n Get events by date \n" +
+                         "*/fx_events_by_type* [group|individual] \n Get events by type \n" +
+                         "*/fx_event_score_list*  [eventName] event \n Gets the score list of a given event. \n" +
                          "*/fx_leaderboard* [optional: count] \nGets the top scores. \n" +
-                         "*/fxmanager_challenge_score_add* @username [points] points [name] challenge \n Add a score to a challenge participant. \n" +
-                         "*/fxmanager_del @username* \n delete a challenge manager. \n" +
+                         "*/fxmanager_event_score_add* @username [points] points [name] event \n Add a score to a event participant. \n" +
+                         "*/fxmanager_del @username* \n delete a event manager. \n" +
                          "*/fx_event_add [event]* [points earned] \n add an event.";
 
         String fxAdminCommands =
         				 "*/fxadmin_add* @username \n Add an administrator. \n" +
                          "*/fxadmin_del* @username \n Delete an administrator. \n" +
-                         "*/fxadmin_manager_challenge_del* \n Delete a challenge!";
+                         "*/fxadmin_manager_event_del* \n Delete a event!";
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 

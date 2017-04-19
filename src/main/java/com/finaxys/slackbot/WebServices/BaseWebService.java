@@ -21,7 +21,7 @@ public class BaseWebService {
     public Repository<Role, Integer> roleRepository;
     
     @Autowired
-    Repository<Event, Integer> challengeRepository;
+    Repository<Event, Integer> eventRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
     
@@ -37,26 +37,26 @@ public class BaseWebService {
     }
     
     
-    public boolean isChallengeManager(String userId, String challengeName) 
+    public boolean isEventManager(String userId, String eventName) 
     {	
-        List<Role> roles 	   = roleRepository.getByCriterion("role", "challenge_manager");
-        int 	   challengeId = challengeRepository.getByCriterion("name", challengeName).get(0).getId();
+        List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
+        int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getId();
         
         for (Role role : roles)
-            if (role.getSlackUser().getId().equals(userId) && role.getEvent().getId() == challengeId)
+            if (role.getSlackUser().getId().equals(userId) && role.getEvent().getId() == eventId)
                 return true;
         
         return false;
     }
     
     //TODO: uncomment the following method when the DB is ready
-//    public boolean isAdminOrChallengeManager(String userId, String challengeName)
+//    public boolean isAdminOrEventManager(String userId, String eventName)
 //    {
 //    	List<Role> roles = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
 //    	
 //    	for (Role role : roles)
 //    	{
-//    		if (role.getChallengeId() == 0 || role.getChallenge().getName() == challengeName)
+//    		if (role.getEventId() == 0 || role.getEvent().getName() == eventName)
 //    			return true;
 //    	}
 //    			

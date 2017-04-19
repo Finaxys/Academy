@@ -2,12 +2,12 @@ package com.finaxys.slackbot.BUL.Patterns;
 
 import java.util.regex.Pattern;
 
-public class CreateChallengePattern {
+public class CreateEventPattern {
 	
     private static 	Pattern pattern;
     private 		String 	regex;
 
-    private CreateChallengePattern() {
+    private CreateEventPattern() {
     	
         regex 	= ".+,(group|individual),.+";
         pattern = Pattern.compile(regex);
@@ -15,7 +15,7 @@ public class CreateChallengePattern {
 
     public static Pattern getPattern() {
     	
-        if (pattern == null) new CreateChallengePattern();
+        if (pattern == null) new CreateEventPattern();
         return pattern;
     }
 }
