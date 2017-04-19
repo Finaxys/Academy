@@ -7,6 +7,8 @@ import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,10 @@ public class RealMessageRewardImpl implements RealMessageReward {
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
-	
+    
+    @Autowired
+    private Repository<Role, Integer> roleRepository;
+    
     @Override
     @Transactional
     public void rewardReadMessage(JsonNode jsonNode) {
@@ -53,9 +58,8 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     public boolean noAdminsStored() {
-    	//TODO corriger avec le role admin
-    	return true;
-        //return finaxysProfileRepository.getByCriterion("administrator", true).isEmpty();
+        return roleRepository.getByCriterion("role", "admin").size()==0;
+
     }
 
     private void increaseSlackUserScore(String userId) {
