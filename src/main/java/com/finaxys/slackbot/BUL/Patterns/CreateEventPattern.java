@@ -9,7 +9,7 @@ public class CreateEventPattern {
 
     private CreateEventPattern() {
     	
-        regex 	= ".+,(group|individual),.+";
+        regex 	= ".+ (group|individual) .+";
         pattern = Pattern.compile(regex);
     }
 

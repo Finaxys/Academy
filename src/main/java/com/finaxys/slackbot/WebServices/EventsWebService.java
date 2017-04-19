@@ -212,7 +212,7 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!createEventMatcher.match(text.trim()))
-			return  newResponseEntity(" /fx_event_add "+text+" \n "+"Your request should have the following format: [eventName],[group|individual],[descriptionText]" + timer ,true);
+			return  newResponseEntity(" /fx_event_add "+text+" \n "+"Your request should have the following format: [eventName] [group|individual] [descriptionText]" + timer ,true);
 		else 
 		{	
 			timer.capture();
@@ -223,6 +223,10 @@ public class EventsWebService extends BaseWebService {
 			event.setName		(eventInfo[0]);
 			event.setType		(eventInfo[1]);
 			event.setDescription(eventInfo[2]);
+			for(int i=3; i<eventInfo.length; i++){
+				event.setDescription(event.getDescription()+ " " + eventInfo[i]);
+			}
+			
 			
 			new Thread(new Runnable()
 			{
