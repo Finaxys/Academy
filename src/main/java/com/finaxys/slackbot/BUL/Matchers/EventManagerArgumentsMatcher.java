@@ -1,38 +1,38 @@
 package com.finaxys.slackbot.BUL.Matchers;
 
-import com.finaxys.slackbot.BUL.Patterns.AddChallengeManagerArgumentsPattern;
+import com.finaxys.slackbot.BUL.Patterns.AddEventManagerArgumentsPattern;
 import com.finaxys.slackbot.BUL.Patterns.UserIdArgumentPattern;
 import com.finaxys.slackbot.BUL.Patterns.UserNameArgumentPattern;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChallengeManagerArgumentsMatcher {
+public class EventManagerArgumentsMatcher {
 	
     private Matcher matcher;
-    private Pattern addChallengeManagerArgumentsPattern;
+    private Pattern addEventManagerArgumentsPattern;
     private Pattern userIdArgumentPattern;
     private Pattern userNameArgumentPattern;
 
-    public ChallengeManagerArgumentsMatcher() {
+    public EventManagerArgumentsMatcher() {
     	
-        addChallengeManagerArgumentsPattern = AddChallengeManagerArgumentsPattern.getPattern();
+        addEventManagerArgumentsPattern = AddEventManagerArgumentsPattern.getPattern();
         userIdArgumentPattern 				= UserIdArgumentPattern.getPattern();
         userNameArgumentPattern 			= UserNameArgumentPattern.getPattern();
     }
 
     public boolean isCorrect(String message) {
 
-        if (!addChallengeManagerArgumentsPattern.matcher(message).matches()) return false;
+        if (!addEventManagerArgumentsPattern.matcher(message).matches()) return false;
         
         return true;
     }
 
-    public String getChallengeName(String message) {
+    public String getEventName(String message) {
     	
-        String challengeName = message.substring(0,message.indexOf('<'));
+        String eventName = message.substring(0,message.indexOf('<'));
         
-        return challengeName.trim();
+        return eventName.trim();
     }
 
     public String getUserName(String message) {

@@ -2,8 +2,8 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finaxys.slackbot.BUL.Matchers.ChallengeTypeMatcher;
-import com.finaxys.slackbot.BUL.Matchers.CreateChallengeMatcher;
+import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
+import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Log;
@@ -20,11 +20,11 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/challenges")
-public class ChallengesWebService extends BaseWebService {
+@RequestMapping("/events")
+public class EventsWebService extends BaseWebService {
 
 	@Autowired
-	private Repository<Event, Integer> challengeRepository;
+	private Repository<Event, Integer> eventRepository;
 
 	@Autowired
 	Repository<SlackUser, String> finaxysProfileRepository;
@@ -44,13 +44,13 @@ public class ChallengesWebService extends BaseWebService {
 	}
 
 
-	private String getStringFromList(List<Event> challenges) 
+	private String getStringFromList(List<Event> events) 
 	{
 		String result = "";
 
-		for (Event challenge : challenges) 
+		for (Event event : events) 
 		{
-			result += "Challenge name: " + challenge.getName() + ", number of participants: " + challenge.getAttendees().size() + " \n ";
+			result += "Event name: " + event.getName() + ", number of participants: " + event.getAttendees().size() + " \n ";
 		}
 
 		return result;
@@ -59,7 +59,7 @@ public class ChallengesWebService extends BaseWebService {
 
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getChallengesByType(@RequestParam("text") 		 String text,
+	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text") 		 String text,
 														@RequestParam("token") 		 String appVerificationToken,
 														@RequestParam("team_domain") String slackTeam) {
 
@@ -71,32 +71,32 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_challenges_by_type " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_events_by_type " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
-		ChallengeTypeMatcher challengeTypeMatcher = new ChallengeTypeMatcher();
+		EventTypeMatcher eventTypeMatcher = new EventTypeMatcher();
 		
-		if (!challengeTypeMatcher.match(text))
-			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
+		if (!eventTypeMatcher.match(text))
+			return newResponseEntity(" /fx_events_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
 		timer.capture();
 		
-		List<Event> challenges = challengeRepository.getByCriterion("type", text);
+		List<Event> events = eventRepository.getByCriterion("type", text);
 		
-		if (challenges.isEmpty())
-			return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + "No challenges with type" + text + timer ,true);
+		if (events.isEmpty())
+			return newResponseEntity(" /fx_events_by_type " + text + " \n " + "No events with type" + text + timer ,true);
 
-		return newResponseEntity(" /fx_challenges_by_type " + text + " \n " + getStringFromList(challenges) + timer , true);
+		return newResponseEntity(" /fx_events_by_type " + text + " \n " + getStringFromList(events) + timer , true);
 
 	}
 
 
 	@RequestMapping(value = "/name", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getChallengesByName(@RequestParam("text") 		 String text,
+	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 		 String text,
 														@RequestParam("token") 		 String appVerificationToken,
 														@RequestParam("team_domain") String slackTeam) {
 		Timer timer = new Timer();
 		
-		Log.info("/fx_challenge_named " + text);
+		Log.info("/fx_event_named " + text);
 		
 		if (noAccess(appVerificationToken, slackTeam))
 			return noAccessResponseEntity(appVerificationToken, slackTeam);
@@ -104,24 +104,24 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_challenge_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_event_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
 		
-		List<Event> challenges = challengeRepository.getByCriterion("name", text);
+		List<Event> events = eventRepository.getByCriterion("name", text);
 		
 		timer.capture();
 		
-		if (challenges.isEmpty())
-			return newResponseEntity("/fx_challenge_named "+text+"\n"+"Nonexistent challenge." + timer,true);
+		if (events.isEmpty())
+			return newResponseEntity("/fx_event_named "+text+"\n"+"Nonexistent event." + timer,true);
 		else
-			return newResponseEntity( "/fx_challenges_named " + text + "\n " + getStringFromList(challenges) + timer , true);
+			return newResponseEntity( "/fx_events_named " + text + "\n " + getStringFromList(events) + timer , true);
 
 	}
 
 
 	@RequestMapping(value = "/date", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getChallengesByDate(@RequestParam("text")  		  String text,
+	public ResponseEntity<JsonNode> getEventsByDate(@RequestParam("text")  		  String text,
 														@RequestParam("token") 		  String appVerificationToken,
 														@RequestParam("team_domain")  String slackTeam) {
 
@@ -133,12 +133,12 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 
 		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_challenges_by_date " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity( " /fx_events_by_date " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
 		DateMatcher dateMatcher = new DateMatcher();
 		
 		if (!dateMatcher.match(text.trim()))
-			return newResponseEntity(" /fx_challenges_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer ,true);
+			return newResponseEntity(" /fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer ,true);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -151,20 +151,20 @@ public class ChallengesWebService extends BaseWebService {
 		{
 		}
 		
-		List<Event> challenges = challengeRepository.getByCriterion("creationDate", wantedDate);
+		List<Event> events = eventRepository.getByCriterion("creationDate", wantedDate);
 		
 		timer.capture();
 		
-		if (challenges.isEmpty())
-			return newResponseEntity(" /fx_challenges_by_date " + text + " \n " + "There are no challenges on this date: " + text + timer ,true);
+		if (events.isEmpty())
+			return newResponseEntity(" /fx_events_by_date " + text + " \n " + "There are no events on this date: " + text + timer ,true);
 		else
-			return newResponseEntity(getStringFromList(challenges) + timer ,true);
+			return newResponseEntity(getStringFromList(events) + timer ,true);
 	}
 
 
 	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getAllChallenges(@RequestParam("token") 	  String appVerificationToken,
+	public ResponseEntity<JsonNode> getAllEvents(@RequestParam("token") 	  String appVerificationToken,
 													 @RequestParam("team_domain") String slackTeam) {
 		
 		Timer timer = new Timer();
@@ -175,18 +175,18 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_challenge_list " + " \n " + "There was a problem treating your request. Please try again." + timer, true);
+			return newResponseEntity(" /fx_event_list " + " \n " + "There was a problem treating your request. Please try again." + timer, true);
 		
 		timer.capture();
 		
-		List<Event> challenges = challengeRepository.getAll();
+		List<Event> events = eventRepository.getAll();
 		
 		timer.capture();
 		
-		if (challenges.isEmpty())
-			return newResponseEntity("/fx_challenge_list" + " \n " + "There no previous challenges! Come on create one!" + timer, true);
+		if (events.isEmpty())
+			return newResponseEntity("/fx_event_list" + " \n " + "There no previous events! Come on create one!" + timer, true);
 		else
-			return newResponseEntity(getStringFromList(challenges) + timer, true);
+			return newResponseEntity(getStringFromList(events) + timer, true);
 	}
 	
 
@@ -204,48 +204,48 @@ public class ChallengesWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_challenge_add " + text+ " \n " + "There was a problem treating your request. Please try again." + timer, true);
+			return newResponseEntity(" /fx_event_add " + text+ " \n " + "There was a problem treating your request. Please try again." + timer, true);
 
 
-		CreateChallengeMatcher createChallengeMatcher = new CreateChallengeMatcher();
+		CreateEventMatcher createEventMatcher = new CreateEventMatcher();
 		
 		timer.capture();
 		
-		if (!createChallengeMatcher.match(text.trim()))
-			return  newResponseEntity(" /fx_challenge_add "+text+" \n "+"Your request should have the following format: [challengeName],[group|individual],[descriptionText]" + timer ,true);
+		if (!createEventMatcher.match(text.trim()))
+			return  newResponseEntity(" /fx_event_add "+text+" \n "+"Your request should have the following format: [eventName],[group|individual],[descriptionText]" + timer ,true);
 		else 
 		{	
 			timer.capture();
 			
-			String[]  challengeInfo = text.trim().split(",");
-			Event challenge 	= new Event();
+			String[]  eventInfo = text.trim().split(",");
+			Event event 	= new Event();
 			
-			challenge.setName		(challengeInfo[0]);
-			challenge.setType		(challengeInfo[1]);
-			challenge.setDescription(challengeInfo[2]);
+			event.setName		(eventInfo[0]);
+			event.setType		(eventInfo[1]);
+			event.setDescription(eventInfo[2]);
 			
 			new Thread(new Runnable()
 			{
 				public void run()
 				{
-					challengeRepository.addEntity(challenge);
+					eventRepository.addEntity(event);
 					
 					Role role = new Role();
 					
-					role.setRole		  ("challenge_manager");
+					role.setRole		  ("event_manager");
 					role.setSlackUser(finaxysProfileRepository.findById(userId));
-					role.setEvent  (challenge);
+					role.setEvent  (event);
 					
 					roleRepository.addEntity(role);
 					
-					newResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement terminé" + timer , true);
+					newResponseEntity("/fx_event_add "+text+" \n "+"Traitement terminé" + timer , true);
 				}
 			}).start();
 
 			
 			timer.capture();
 			
-			return newResponseEntity("/fx_challenge_add "+text+" \n "+"Traitement en cours" + timer , true);
+			return newResponseEntity("/fx_event_add "+text+" \n "+"Traitement en cours" + timer , true);
 		}
 
 	}
@@ -265,41 +265,41 @@ public class ChallengesWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		String  		challengeName = text.trim();
-		List<Event> challenges 	  = challengeRepository.getByCriterion("name",challengeName);
+		String  		eventName = text.trim();
+		List<Event> events 	  = eventRepository.getByCriterion("name",eventName);
 		
 		timer.capture();
 		
-		if(challenges.size()==0)
-			return newResponseEntity("fx_challenge_del "+"\n"+"Non existent challenge." + timer ,true);
+		if(events.size()==0)
+			return newResponseEntity("fx_event_del "+"\n"+"Non existent event." + timer ,true);
 
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_challenge_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity(" /fx_event_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
-		if(!isChallengeManager(profileId,challengeName) && !isAdmin(profileId))
-			return newResponseEntity("fx_challenge_del "+"\n"+"You are neither an admin nor a challenge manager!" + timer ,true);
+		if(!isEventManager(profileId,eventName) && !isAdmin(profileId))
+			return newResponseEntity("fx_event_del "+"\n"+"You are neither an admin nor a event manager!" + timer ,true);
 		
 		timer.capture();
 		
-		Event  challenge =  challenges.get(0);
+		Event  event =  events.get(0);
 		
 		new Thread(new Runnable()
 		{
 			public void run()
 			{
-				List<Role> roles = roleRepository.getByCriterion("challengeId",challenges.get(0).getId());
+				List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getId());
 				
 				for(Role role : roles)
 				{
 					roleRepository.delete(role);
 				}
 				
-				challengeRepository.delete(challenge);
+				eventRepository.delete(event);
 			}
 		}).start();
 		
 		timer.capture();
 		
-		return newResponseEntity("fx_challenge_del "+text+" \n "+"Challenge successfully removed." + timer , true);
+		return newResponseEntity("fx_event_del "+text+" \n "+"Event successfully removed." + timer , true);
 	}
 }

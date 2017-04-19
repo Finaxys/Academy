@@ -2,7 +2,7 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
+import com.finaxys.slackbot.BUL.Matchers.EventScoreArgumentsMatcher;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Timer;
@@ -23,19 +23,19 @@ public class ScoreWebService extends BaseWebService {
 	Repository<SlackUser, String> finaxysProfileRepository;
 
 	@Autowired
-	Repository<Event, Integer> challengeRepository;
+	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileChallengeRepository;
+	Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> addChallengeScore(@RequestParam("token") String appVerificationToken,
+	public ResponseEntity<JsonNode> addEventScore(@RequestParam("token") String appVerificationToken,
 			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments,
-			@RequestParam("user_id") String challengeManagerId) {
+			@RequestParam("user_id") String eventManagerId) {
 
 		Timer timer = new Timer();
 
@@ -44,38 +44,39 @@ public class ScoreWebService extends BaseWebService {
 
 		timer.capture();
 
-		ChallengeScoreArgumentsMatcher challengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
+		EventScoreArgumentsMatcher eventScoreArgumentsMatcher = new EventScoreArgumentsMatcher();
 
-		if (!challengeScoreArgumentsMatcher.isCorrect(arguments))
-			return newResponseEntity("/fx_challenge_score_add " + arguments + " \n "
-					+ "Arguments should suit ' .... @Username ... 20 ..... <challengeName> challenge ..' Pattern !"
+		if (!eventScoreArgumentsMatcher.isCorrect(arguments))
+			return newResponseEntity("/fx_event_score_add " + arguments + " \n "
+					+ "Arguments should suit ' .... @Username ... 20 ..... <eventName> event ..' Pattern !"
 					+ timer, true);
 
-		String userId = challengeScoreArgumentsMatcher.getFinaxysProfileId(arguments);
-		String challengeName = challengeScoreArgumentsMatcher.getChallengeName(arguments);
+		String userId = eventScoreArgumentsMatcher.getFinaxysProfileId(arguments);
+		String eventName = eventScoreArgumentsMatcher.getEventName(arguments);
 
 		timer.capture();
 
-		List<Event> challenges = challengeRepository.getByCriterion("name", challengeName);
+		List<Event> events = eventRepository.getByCriterion("name", eventName);
 
 		timer.capture();
 
-		if (challenges.size() == 0)
-			return newResponseEntity("Nonexistent challenge" + timer, true);
+		if (events.size() == 0)
+			return newResponseEntity("Nonexistent event" + timer, true);
 
-		if (!isChallengeManager(challengeManagerId, challengeName) && !isAdmin(challengeManagerId))
-			return newResponseEntity("/fx_challenge_score_add " + arguments + "\n"
-					+ "You are neither admin nor a challenge manager !" + timer, true);
+		if (!isEventManager(eventManagerId, eventName) && !isAdmin(eventManagerId))
+			return newResponseEntity("/fx_event_score_add " + arguments + "\n"
+					+ "You are neither admin nor a event manager !" + timer, true);
 
-		int score = Integer.parseInt(challengeScoreArgumentsMatcher.getScore(arguments));
+		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
-		SlackUser_Event finaxysProfile_challenge = new SlackUser_Event(score,
-				challengeRepository.getByCriterion("name", challengeName).get(0).getId(), userId);
+		SlackUser_Event finaxysProfile_event = new SlackUser_Event(score,
+				eventRepository.getByCriterion("name", eventName).get(0).getId(), userId);
 
 		timer.capture();
 
-		finaxysProfile_challenge.setSlackUser(finaxysProfileRepository.findById(userId));
-		finaxysProfile_challenge.setEvent(challengeRepository.getByCriterion("name", challengeName).get(0));
+		finaxysProfile_event.setSlackUser(finaxysProfileRepository.findById(userId));
+		finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
+
 
 		timer.capture();
 
@@ -86,25 +87,25 @@ public class ScoreWebService extends BaseWebService {
 			{
 				public void run()
 				{
-					finaxysProfileChallengeRepository.saveOrUpdate(finaxysProfile_challenge);
+					finaxysProfileEventRepository.saveOrUpdate(finaxysProfile_event);
 				}
 			}).start();
 
 			timer.capture();
 		} catch (Exception e) {
 			return newResponseEntity(
-					"/fx_challenge_score_add " + arguments + " \n"
-							+ "A problem has occured! The user may have a score for this challenge already !" + timer,
+					"/fx_event_score_add " + arguments + " \n"
+							+ "A problem has occured! The user may have a score for this event already !" + timer,
 					true);
 		}
 
-		return newResponseEntity("/fx_challenge_score_add " + arguments + " \n" + "Score has been added !" + timer,
+		return newResponseEntity("/fx_event_score_add " + arguments + " \n" + "Score has been added !" + timer,
 				true);
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> listScoreForChallenge(@RequestParam("token") String appVerificationToken,
+	public ResponseEntity<JsonNode> listScoreForEvent(@RequestParam("token") String appVerificationToken,
 			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments) {
 
 		Timer timer = new Timer();
@@ -114,36 +115,37 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		String challengeName = arguments.trim();
-		List<Event> challenges = challengeRepository.getByCriterion("name", challengeName);
+		String eventName = arguments.trim();
+		List<Event> events = eventRepository.getByCriterion("name", eventName);
 
-		if (challenges.size() == 0)
+		if (events.size() == 0)
 			return newResponseEntity(
-					"/fx_challenge_score_list " + arguments + " \n" + "No such challenge ! Check the challenge name" +timer,
+					"/fx_event_score_list " + arguments + " \n" + "No such event ! Check the event name" +timer,
 					true);
 
-		Event challenge = challenges.get(0);
+		Event event = events.get(0);
 		
 		timer.capture();
 		
-		List<SlackUser_Event> listChallenges = finaxysProfileChallengeRepository.getByCriterion("challenge",
-				challenge);
+		List<SlackUser_Event> listEvents = finaxysProfileEventRepository.getByCriterion("event",
+				event);
 
-		if (listChallenges.size() == 0)
+		if (listEvents.size() == 0)
 			newResponseEntity(
-					"/fx_challenge_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer ,
+					"/fx_event_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer ,
 					true);
 
-		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
+		String textMessage = "List of scores of " + event.getName() + " :" + " \n ";
 
-		for (SlackUser_Event finaxysProfileChallenge : listChallenges) {
-			SlackUser finaxysProfile = finaxysProfileChallenge.getSlackUser();
+		for (SlackUser_Event finaxysProfileEvent: listEvents) {
+			SlackUser finaxysProfile = finaxysProfileEvent.getSlackUser();
+
 
 			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
-					+ finaxysProfileChallenge.getScore() + " \n";
+					+ finaxysProfileEvent.getScore() + " \n";
 		}
 
-		return newResponseEntity("/fx_challenge_score_list " + arguments + " \n" + textMessage + timer, true);
+		return newResponseEntity("/fx_event_score_list " + arguments + " \n" + textMessage + timer, true);
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
