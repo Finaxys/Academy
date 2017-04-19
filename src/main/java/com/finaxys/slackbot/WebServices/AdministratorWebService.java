@@ -52,8 +52,9 @@ public class AdministratorWebService extends BaseWebService {
         timer.capture();
         
         String userId 	= oneUsernameArgumentsMatcher.getUserIdArgument	 (arguments);
-        String userName = oneUsernameArgumentsMatcher.getUserNameArgument(arguments);
-        
+        String userName = slackApiAccessService.getUser(userId).getName();
+        		
+        System.out.println("Name : "  + userName);
         if (!isAdmin(userId)) 
         {
         	SlackUser slackUser = slackUserRepository.findById(userId);

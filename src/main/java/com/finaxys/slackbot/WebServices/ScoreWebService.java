@@ -22,6 +22,7 @@ public class ScoreWebService extends BaseWebService {
 	@Autowired
 	Repository<SlackUser, String> slackUserRepository;
 
+
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
@@ -58,27 +59,35 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 
 		List<Event> events = eventRepository.getByCriterion("name", eventName);
-
+		
 		timer.capture();
 
 		if (events.size() == 0)
 			return newResponseEntity("Nonexistent event" + timer, true);
 
+		//TODO
 		if (!isEventManager(eventManagerId, eventName) && !isAdmin(eventManagerId))
 			return newResponseEntity("/fx_event_score_add " + arguments + "\n"
 					+ "You are neither admin nor a event manager !" + timer, true);
 
 		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
-		SlackUser_Event slackUser_event = new SlackUser_Event(score,
-				eventRepository.getByCriterion("name", eventName).get(0).getEventId(), userId);
-
+		SlackUser user = slackUserRepository.findById(userId);
+		
+		if(user==null){
+			user = new SlackUser();
+			user.setName(slackApiAccessService.getUser(userId).getName());
+			user.setslackUserId(userId);
+			slackUserRepository.saveOrUpdate(user);
+		}
+		
+		SlackUser_Event slackUser_event = new SlackUser_Event(score, eventRepository.getByCriterion("name", eventName).get(0), user);
+		
 		timer.capture();
 
-		slackUser_event.setSlackUser(slackUserRepository.findById(userId));
-		slackUser_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
-
-
+		//finaxysProfile_event.setSlackUser(slackUsersRepository.findById(userId));
+		//finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
+		
 		timer.capture();
 
 		try {
