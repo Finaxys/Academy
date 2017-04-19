@@ -251,6 +251,7 @@ public class EventsWebService extends BaseWebService {
 					if(user == null){
 						String userName = slackApiAccessService.getUser(userId).getName();
 						user = new SlackUser(userId, userName);
+						slackUserRepository.addEntity(user);
 					}
 					
 					role.setRole		  ("event_manager");
