@@ -1,4 +1,4 @@
-import com.finaxys.slackbot.BUL.Matchers.CreateChallengeMatcher;
+import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,23 +8,23 @@ import static org.junit.Assert.assertNotEquals;
 /**
  * Created by inesnefoussi on 3/16/17.
  */
-public class CreateChallengeMatcherTest {
-    private CreateChallengeMatcher createChallengeMatcher;
+public class CreateEventMatcherTest {
+    private CreateEventMatcher createEventMatcher;
 
     @Before
     public void setFixture() {
-        createChallengeMatcher = new CreateChallengeMatcher();
+        createEventMatcher = new CreateEventMatcher();
     }
 
     @Test
     public void validString() {
         final String command = "Java EE,group,desc1";
-        assertEquals(true, createChallengeMatcher.match(command));
+        assertEquals(true, createEventMatcher.match(command));
     }
 
     @Test
     public void validStringWithInEnglish() {
         final String command = "ch1 individual blabla";
-        assertNotEquals(true, createChallengeMatcher.match(command));
+        assertNotEquals(true, createEventMatcher.match(command));
     }
 }

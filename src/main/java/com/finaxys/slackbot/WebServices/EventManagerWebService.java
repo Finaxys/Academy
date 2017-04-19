@@ -79,7 +79,7 @@ public class EventManagerWebService extends BaseWebService{
             roleRepository.saveOrUpdate(role);
             timer.capture();
             
-            return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getId()).getName() + "> has just became a event manager!" + timer ,true);
+            return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getSlackUserId()).getName() + "> has just became a event manager!" + timer ,true);
         }
         
         return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer ,true);
@@ -130,13 +130,13 @@ public class EventManagerWebService extends BaseWebService{
             else 
             {
                 Event  event = events.get(0);
-                List<Role> roles 	 = roleRepository.getByCriterion("eventId", event.getId());
+                List<Role> roles 	 = roleRepository.getByCriterion("eventId", event.getEventId());
                 
                 timer.capture();
                 
                 for (Role role : roles) 
                 {
-                    if (role.getSlackUser().getId().equals(finaxysProfileId)) 
+                    if (role.getSlackUser().getSlackUserId().equals(finaxysProfileId)) 
                     {
                         roleRepository.delete(role);
                         
@@ -191,12 +191,12 @@ public class EventManagerWebService extends BaseWebService{
             return newResponseEntity(message);
         }
         
-        List<Role> roles   = roleRepository.getByCriterion("eventId", events.get(0).getId());
+        List<Role> roles   = roleRepository.getByCriterion("eventId", events.get(0).getEventId());
         String messageText = "List of Event managers list:\n";
         
         for (Role role : roles) 
         {
-            messageText += "<@" + role.getSlackUser().getId() + "|" + slackApiAccessService.getUser(role.getSlackUser().getId()).getName() + "> \n";
+            messageText += "<@" + role.getSlackUser().getSlackUserId() + "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
             
             Message message = new Message("/fx_event_list " + "\n " + messageText);
             

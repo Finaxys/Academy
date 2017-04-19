@@ -27,12 +27,13 @@ public class Event implements Serializable {
     }
 
     @Id
+    @Column(name = "EVENTID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Integer getId() {
+    public Integer getEventId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setEventId(Integer id) {
         this.id = id;
     }
 

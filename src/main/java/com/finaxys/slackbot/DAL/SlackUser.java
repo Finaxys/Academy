@@ -10,7 +10,7 @@ public class SlackUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String 	id;
+	private String 	slackUserId;
     private String 	name;
     private int 	score;
 
@@ -24,23 +24,24 @@ public class SlackUser implements Serializable {
 
     public SlackUser(String userId, String userName) {
         this.score 	= 0;
-        this.id 	= userId;
+        this.slackUserId 	= userId;
         this.name 	= userName;
     }
 
     public SlackUser(String userId, String userName, boolean isChallengeManager, int score) {
-        this.id 	= userId;
+        this.slackUserId 	= userId;
         this.name 	= userName;
         this.score 	= score;
     }
 
     @Id
-    public String getId() {
-        return id;
+    @Column(name = "SLACKUSERID")
+    public String getSlackUserId() {
+        return slackUserId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setslackUserId(String id) {
+        this.slackUserId = id;
     }
 
     public String getName() {

@@ -15,7 +15,7 @@ public class ListScoresByEventsArgumentsPattern {
 
     public static Pattern getPattern() {
     	
-        if (pattern == null) new ListScoresByChallengsArgumentsPattern();
+        if (pattern == null) new ListScoresByEventsArgumentsPattern();
         return pattern;
     }
 }

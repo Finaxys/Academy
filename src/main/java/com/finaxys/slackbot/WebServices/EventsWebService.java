@@ -287,7 +287,7 @@ public class EventsWebService extends BaseWebService {
 		{
 			public void run()
 			{
-				List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getId());
+				List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getEventId());
 				
 				for(Role role : roles)
 				{

@@ -30,7 +30,7 @@ public class BaseWebService {
         List<Role> roles = roleRepository.getByCriterion("role", "admin");
         
         for (Role role : roles)
-            if (role.getSlackUser().getId().equals(userId))
+            if (role.getSlackUser().getSlackUserId().equals(userId))
                 return true;
         
         return false;
@@ -40,10 +40,10 @@ public class BaseWebService {
     public boolean isEventManager(String userId, String eventName) 
     {	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
-        int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getId();
+        int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getEventId();
         
         for (Role role : roles)
-            if (role.getSlackUser().getId().equals(userId) && role.getEvent().getId() == eventId)
+            if (role.getSlackUser().getSlackUserId().equals(userId) && role.getEvent().getEventId() == eventId)
                 return true;
         
         return false;

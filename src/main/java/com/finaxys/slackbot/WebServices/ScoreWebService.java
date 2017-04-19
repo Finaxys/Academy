@@ -70,7 +70,7 @@ public class ScoreWebService extends BaseWebService {
 		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
 		SlackUser_Event finaxysProfile_event = new SlackUser_Event(score,
-				eventRepository.getByCriterion("name", eventName).get(0).getId(), userId);
+				eventRepository.getByCriterion("name", eventName).get(0).getEventId(), userId);
 
 		timer.capture();
 
@@ -141,7 +141,7 @@ public class ScoreWebService extends BaseWebService {
 			SlackUser finaxysProfile = finaxysProfileEvent.getSlackUser();
 
 
-			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
+			textMessage += "<@" + finaxysProfile.getSlackUserId() + "|" + finaxysProfile.getName() + "> "
 					+ finaxysProfileEvent.getScore() + " \n";
 		}
 
@@ -170,7 +170,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		return newResponseEntity("<@" + finaxysProfile.getId() + "|"
+		return newResponseEntity("<@" + finaxysProfile.getSlackUserId() + "|"
 				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + finaxysProfile.getScore() + timer , true);
 	}
 }

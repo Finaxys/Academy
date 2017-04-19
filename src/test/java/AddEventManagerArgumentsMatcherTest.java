@@ -1,19 +1,19 @@
-import com.finaxys.slackbot.BUL.Matchers.ChallengeManagerArgumentsMatcher;
-import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import com.finaxys.slackbot.BUL.Matchers.EventManagerArgumentsMatcher;
 
 /**
  * Created by Sahar on 23/03/2017.
  */
-public class AddChallengeManagerArgumentsMatcherTest {
-    private ChallengeManagerArgumentsMatcher challengeManagerArgumentsMatcher;
+public class AddEventManagerArgumentsMatcherTest {
+    private EventManagerArgumentsMatcher challengeManagerArgumentsMatcher;
     @Before
     public void setup() {
-        challengeManagerArgumentsMatcher = new ChallengeManagerArgumentsMatcher();
+        challengeManagerArgumentsMatcher = new EventManagerArgumentsMatcher();
     }
 
     @Test
@@ -22,9 +22,9 @@ public class AddChallengeManagerArgumentsMatcherTest {
         assertEquals(true, challengeManagerArgumentsMatcher.isCorrect(message));
     }
     @Test
-    public void getChallengeTest() {
+    public void getEventTest() {
         final String message ="java ee <@U012ABCDF|ernie>";
-        String challengeName = challengeManagerArgumentsMatcher.getChallengeName(message);
+        String challengeName = challengeManagerArgumentsMatcher.getEventName(message);
         Assert.assertEquals("java ee",challengeName);
     }
     @Test

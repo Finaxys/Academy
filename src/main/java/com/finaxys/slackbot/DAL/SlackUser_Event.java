@@ -39,7 +39,7 @@ public class SlackUser_Event implements Serializable {
         this.score = score;
     }
 
-    @JoinColumn(name = "EVENT_ID" , insertable = true, updatable = false)
+    @JoinColumn(name = "EVENTID", insertable = true, updatable = false)
     @ManyToOne
     public Event getEvent() {
         return event;
@@ -49,7 +49,7 @@ public class SlackUser_Event implements Serializable {
         this.event = event;
     }
 
-    @JoinColumn(name = "SLACK_USER_ID", insertable = true, updatable = false)
+    @JoinColumn(name = "SLACKUSERID", insertable = true, updatable = false)
     @ManyToOne
     public SlackUser getSlackUser() {
         return slackUser;

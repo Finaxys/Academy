@@ -114,7 +114,7 @@ public class AdministratorWebService extends BaseWebService {
         
         for (Role role : roles) 
         {
-            if (role.getSlackUser().getId().equals(id)) 
+            if (role.getSlackUser().getSlackUserId().equals(id)) 
             {
                 roleRepository.delete(role);
                 return  newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
@@ -143,7 +143,7 @@ public class AdministratorWebService extends BaseWebService {
         timer.capture();
         
         for (Role role : roles)
-            messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getId()).getName() + "|" + slackApiAccessService.getUser(role.getSlackUser().getId()).getName() + "> \n";
+            messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
         
         messageText = (roles.size() > 0) ? messageText : "";
         

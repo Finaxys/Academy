@@ -1,4 +1,4 @@
-import com.finaxys.slackbot.BUL.Matchers.ChallengeScoreArgumentsMatcher;
+import com.finaxys.slackbot.BUL.Matchers.EventScoreArgumentsMatcher;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,60 +8,60 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Bannou on 16/03/2017.
  */
-public class AddChallengeScoreArgumentsMatcherTest {
-    private ChallengeScoreArgumentsMatcher addChallengeScoreArgumentsMatcher;
+public class AddEventScoreArgumentsMatcherTest {
+    private EventScoreArgumentsMatcher addEventScoreArgumentsMatcher;
 
     @Before
     public void setup() {
-        addChallengeScoreArgumentsMatcher = new ChallengeScoreArgumentsMatcher();
+        addEventScoreArgumentsMatcher = new EventScoreArgumentsMatcher();
     }
 
     @Test
     public void nonArgumentsTest() {
         final String message = "Lorem Ipsum";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
+        assertEquals(false, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     @Ignore
-    public void missingChallengeArgumentTest() {
+    public void missingEventArgumentTest() {
         final String message = "Yo Bot ! <@U012ABCEF|ernie> got 20 points in JavaEE ! :D";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
+        assertEquals(false, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsFirstTest() {
         final String message = "Yo Bot ! <@U012ABCDF|ernie> got 20 points in JavaEE challenge ! :D";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
+        assertEquals(true, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void threeCorrectArgumentsSecondTest() {
         final String message = "<@U012ABCDF|ernie> 130 points JavaEE challenge";
-        assertEquals(true, addChallengeScoreArgumentsMatcher.isCorrect(message));
+        assertEquals(true, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
     public void moreThanThreeArgumentsTest() {
         final String message = "*./+";
-        assertEquals(false, addChallengeScoreArgumentsMatcher.isCorrect(message));
+        assertEquals(false, addEventScoreArgumentsMatcher.isCorrect(message));
     }
 
     @Test
-    public void extractChallengeNameTest() {
+    public void extractEventNameTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals("JavaEE", addChallengeScoreArgumentsMatcher.getChallengeName(message));
+        assertEquals("JavaEE", addEventScoreArgumentsMatcher.getEventName(message));
     }
 
     @Test
     public void extractScoreTest() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals("130", addChallengeScoreArgumentsMatcher.getScore(message));
+        assertEquals("130", addEventScoreArgumentsMatcher.getScore(message));
     }
 
     @Test
     public void extractFinaxysProfileId() {
         final String message = "Yo Bot ! <@U012ABCDEF|ernie> got 130 points in JavaEE challenge ! Looool";
-        assertEquals("U012ABCDE", addChallengeScoreArgumentsMatcher.getFinaxysProfileId(message));
+        assertEquals("U012ABCDE", addEventScoreArgumentsMatcher.getFinaxysProfileId(message));
     }
 }
