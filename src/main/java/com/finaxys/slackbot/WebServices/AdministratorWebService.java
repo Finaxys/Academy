@@ -46,6 +46,8 @@ public class AdministratorWebService extends BaseWebService {
         
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
         
+        
+        
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
             return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username " + timer, true);
         timer.capture();
@@ -114,14 +116,7 @@ public class AdministratorWebService extends BaseWebService {
         {
             if (role.getSlackUser().getId().equals(id)) 
             {
-            	new Thread(new Runnable()
-    			{
-    				public void run()
-    				{
-    					roleRepository.delete(role);
-    				}
-    			}).start();
-                
+                roleRepository.delete(role);
                 return  newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
             }
         }
