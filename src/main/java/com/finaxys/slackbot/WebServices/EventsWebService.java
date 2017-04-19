@@ -29,7 +29,7 @@ public class EventsWebService extends BaseWebService {
 	private Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUser, String> finaxysProfileRepository;
+	Repository<SlackUser, String> slackUserRepository;
 	
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
@@ -247,7 +247,7 @@ public class EventsWebService extends BaseWebService {
 					
 					Role role = new Role();
 					
-					SlackUser user = finaxysProfileRepository.findById(userId);
+					SlackUser user = slackUserRepository.findById(userId);
 					if(user == null){
 						String userName = slackApiAccessService.getUser(userId).getName();
 						user = new SlackUser(userId, userName);
@@ -272,7 +272,7 @@ public class EventsWebService extends BaseWebService {
 	}
 
 	
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> remove(@RequestParam("token") 		String appVerificationToken,
 										   @RequestParam("team_domain") String slackTeam,
@@ -295,7 +295,7 @@ public class EventsWebService extends BaseWebService {
 			return newResponseEntity("fx_event_del "+"\n"+"Non existent event." + timer ,true);
 
 		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_event_del " + text+ " \n " + "There was a problem treating your request. Please try again." + timer , true);
+			return newResponseEntity(" /fx_event_del " + text+ " \n " + "There was a problem treanewting your request. Please try again." + timer , true);
 
 		if(!isEventManager(profileId,eventName) && !isAdmin(profileId))
 			return newResponseEntity("fx_event_del "+"\n"+"You are neither an admin nor a event manager!" + timer ,true);

@@ -15,7 +15,7 @@ import java.util.List;
 public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
 	@Autowired
-	private Repository<SlackUser, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> slackUserRepository;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -43,11 +43,11 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		String itemUserId			= jsonNode.get("item_user").asText();
 		String myUserId 			= jsonNode.get("user").asText();
 		String reaction 			= jsonNode.get("reaction").asText();
-		SlackUser userProfile 	= finaxysProfileRepository.findById(itemUserId);
+		SlackUser userProfile 	= slackUserRepository.findById(itemUserId);
 
 		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-			finaxysProfileRepository.updateEntity(userProfile);
+			slackUserRepository.updateEntity(userProfile);
 			Log.logReactionRemoved(slackApiAccessService.getUser(myUserId).getName(),
 					slackApiAccessService.getUser(itemUserId).getName());
 

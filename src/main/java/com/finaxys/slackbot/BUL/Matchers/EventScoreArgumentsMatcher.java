@@ -14,7 +14,7 @@ public class EventScoreArgumentsMatcher {
     private Pattern 		listEventScoreArgumentsPatterns;
     private Pattern 		eventNameArgument;
     private Pattern 		scoreArgument;
-    private Pattern 		finaxysProfileIdArgument;
+    private Pattern 		slackUserIdArgument;
 
     public EventScoreArgumentsMatcher() {
     	
@@ -23,7 +23,7 @@ public class EventScoreArgumentsMatcher {
         listEventScoreArgumentsPatterns = ListScoresByEventsArgumentsPattern.getPattern();
         eventNameArgument 				= EventNameArgumentPattern.getPattern();
         scoreArgument 						= ScoreArgumentPattern.getPattern();
-        finaxysProfileIdArgument 			= UserIdArgumentPattern.getPattern();
+        slackUserIdArgument 			= UserIdArgumentPattern.getPattern();
         
     }
 
@@ -54,7 +54,7 @@ public class EventScoreArgumentsMatcher {
 
     public String getFinaxysProfileId(String message) {
     	
-        matcher = finaxysProfileIdArgument.matcher(message);
+        matcher = slackUserIdArgument.matcher(message);
         return matcher.find() ? matcher.group().substring(1) : "";
     }
 

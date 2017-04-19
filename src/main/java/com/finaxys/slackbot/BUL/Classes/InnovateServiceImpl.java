@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class InnovateServiceImpl implements InnovateService {
 
 	@Autowired
-	private Repository<SlackUser, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> slackUserRepository;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -27,7 +27,7 @@ public class InnovateServiceImpl implements InnovateService {
 			return;
 
 		String userId = json.get("channel").get("creator").asText();
-		SlackUser userProfile = finaxysProfileRepository.findById(userId);
+		SlackUser userProfile = slackUserRepository.findById(userId);
 		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
@@ -39,7 +39,7 @@ public class InnovateServiceImpl implements InnovateService {
 	public void rewardFileShared(JsonNode json) {
 
 		String userId = json.get("user").asText();
-		SlackUser userProfile = finaxysProfileRepository.findById(userId);
+		SlackUser userProfile = slackUserRepository.findById(userId);
 		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
@@ -50,6 +50,6 @@ public class InnovateServiceImpl implements InnovateService {
 
 	private void addInnovateScore(SlackUser userProfile) {
 		userProfile.incrementScore(SCORE_GRID.IS_INNOVATIVE.value());
-		finaxysProfileRepository.saveOrUpdate(userProfile);
+		slackUserRepository.saveOrUpdate(userProfile);
 	}
 }

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/finaxysProfiles")
+@RequestMapping("/slackUsers")
 public class SlackUserWebService extends BaseWebService{
 
     @Autowired
-    private Repository<SlackUser, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> slackUserRepository;
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
@@ -35,7 +35,7 @@ public class SlackUserWebService extends BaseWebService{
         
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         
-        List<SlackUser> users = finaxysProfileRepository.getAllOrderedByAsList("score", false, size);
+        List<SlackUser> users = slackUserRepository.getAllOrderedByAsList("score", false, size);
         
         for (SlackUser profile : users)
         {

@@ -28,24 +28,24 @@ public class SupportWebService extends BaseWebService {
             return noAccessResponseEntity(appVerificationToken, slackTeam);
 
         String fxCommands =
-                		 "*/fx_event_list* \n List all the events. \n" +
-                         "*/fx_event_add* [event name],[group|individual],[description] \n Add a new event. \n" +
-                         "*/fx_manager_add* [event name] @username  \n Add a event manager. \n" +
-                         "*/fx_manager_list* [event name] \n List event managers . \n" +
-                         "*/fxadmin_list* \n List all administrators. \n" +
-                         "*/fx_event_named* [event name] \n Get a event details. \n" +
-                         "*/fx_events_by_date* [yyyy-mm-dd] \n Get events by date \n" +
-                         "*/fx_events_by_type* [group|individual] \n Get events by type \n" +
-                         "*/fx_event_score_list*  [eventName] event \n Gets the score list of a given event. \n" +
-                         "*/fx_leaderboard* [optional: count] \nGets the top scores. \n" +
-                         "*/fxmanager_event_score_add* @username [points] points [name] event \n Add a score to a event participant. \n" +
-                         "*/fxmanager_del @username* \n delete a event manager. \n" +
-                         "*/fx_event_add [event]* [points earned] \n add an event.";
+                		 "*/fx_event_list* 													  || List of all events. \n" +
+                         "*/fx_event_add* [event name],[group|individual],[description]       || Adds a new event. \n" +
+                         "*/fx_manager_add* [event name] @username  						  || Adds an event manager. \n" +
+                         "*/fx_manager_list* [event name] 									  || List of event managers . \n" +
+                         "*/fxadmin_list* 													  || List of all administrators. \n" +
+                         "*/fx_event_named* [event name] 								 	  || Gives an event details. \n" +
+                         "*/fx_events_by_date* [yyyy-mm-dd] 								  || List of events by date \n" +
+                         "*/fx_events_by_type* [group|individual] 							  || List of events by type \n" +
+                         "*/fx_event_score_list*  [eventName] event 				  		  || Gives the score list of a given event. \n" +
+                         "*/fx_leaderboard* [optional: count]							 	  || Gives the top scores. \n" +
+                         "*/fxmanager_event_score_add* @username [points] points [name] event || Adds a score to an event attendee. \n" +
+                         "*/fxmanager_del @username* 										  || Removes an event manager. \n" +
+                         "*/fx_contest_add [contest]* [points earned] 						  || Adds a contest.";
 
         String fxAdminCommands =
-        				 "*/fxadmin_add* @username \n Add an administrator. \n" +
-                         "*/fxadmin_del* @username \n Delete an administrator. \n" +
-                         "*/fxadmin_manager_event_del* \n Delete a event!";
+        				 "*/fxadmin_add* @username 											  || Adds an administrator. \n" +
+                         "*/fxadmin_del* @username 											  || Removes an administrator. \n" +
+                         "*/fxadmin_manager_event_del* 										  || Removes an event!";
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 

@@ -14,28 +14,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/score")
+@RequestMapping("/scores")
 public class ScoreWebService extends BaseWebService {
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	Repository<SlackUser, String> finaxysProfileRepository;
+	Repository<SlackUser, String> slackUserRepository;
 
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileEventRepository;
+	Repository<SlackUser_Event, SlackUser_Event_PK> slackUserEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
 
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> addEventScore(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments,
-			@RequestParam("user_id") String eventManagerId) {
+												  @RequestParam("team_domain") String slackTeam, 
+												  @RequestParam("text") String arguments,
+												  @RequestParam("user_id") String eventManagerId) {
 
 		Timer timer = new Timer();
 
@@ -69,13 +70,13 @@ public class ScoreWebService extends BaseWebService {
 
 		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
-		SlackUser_Event finaxysProfile_event = new SlackUser_Event(score,
+		SlackUser_Event slackUser_event = new SlackUser_Event(score,
 				eventRepository.getByCriterion("name", eventName).get(0).getEventId(), userId);
 
 		timer.capture();
 
-		finaxysProfile_event.setSlackUser(finaxysProfileRepository.findById(userId));
-		finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
+		slackUser_event.setSlackUser(slackUserRepository.findById(userId));
+		slackUser_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
 
 
 		timer.capture();
@@ -87,7 +88,7 @@ public class ScoreWebService extends BaseWebService {
 			{
 				public void run()
 				{
-					finaxysProfileEventRepository.saveOrUpdate(finaxysProfile_event);
+					slackUserEventRepository.saveOrUpdate(slackUser_event);
 				}
 			}).start();
 
@@ -103,10 +104,11 @@ public class ScoreWebService extends BaseWebService {
 				true);
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/listOne", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> listScoreForEvent(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments) {
+													  @RequestParam("team_domain") String slackTeam, 
+													  @RequestParam("text") String arguments) {
 
 		Timer timer = new Timer();
 
@@ -127,7 +129,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<SlackUser_Event> listEvents = finaxysProfileEventRepository.getByCriterion("event",
+		List<SlackUser_Event> listEvents = slackUserEventRepository.getByCriterion("event",
 				event);
 
 		if (listEvents.size() == 0)
@@ -137,21 +139,22 @@ public class ScoreWebService extends BaseWebService {
 
 		String textMessage = "List of scores of " + event.getName() + " :" + " \n ";
 
-		for (SlackUser_Event finaxysProfileEvent: listEvents) {
-			SlackUser finaxysProfile = finaxysProfileEvent.getSlackUser();
+		for (SlackUser_Event slackUserEvent: listEvents) {
+			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 
-			textMessage += "<@" + finaxysProfile.getSlackUserId() + "|" + finaxysProfile.getName() + "> "
-					+ finaxysProfileEvent.getScore() + " \n";
+			textMessage += "<@" + slackUser.getSlackUserId() + "|" + slackUser.getName() + "> "
+					+ slackUserEvent.getScore() + " \n";
 		}
 
 		return newResponseEntity("/fx_event_score_list " + arguments + " \n" + textMessage + timer, true);
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> scoreList(@RequestParam("token") String appVerificationToken,
-			@RequestParam("team_domain") String slackTeam, @RequestParam("text") String arguments) {
+											  @RequestParam("team_domain") String slackTeam, 
+											  @RequestParam("text") String arguments) {
 		
 		Timer timer = new Timer();
 		
@@ -166,12 +169,12 @@ public class ScoreWebService extends BaseWebService {
 			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
 		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
-		SlackUser finaxysProfile = finaxysProfileRepository.findById(profileId);
+		SlackUser slackUser = slackUserRepository.findById(profileId);
 		
 		timer.capture();
 		
-		return newResponseEntity("<@" + finaxysProfile.getSlackUserId() + "|"
-				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + finaxysProfile.getScore() + timer , true);
+		return newResponseEntity("<@" + slackUser.getSlackUserId() + "|"
+				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + slackUser.getScore() + timer , true);
 	}
 }
 

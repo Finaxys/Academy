@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/events")
 public class EventManagerWebService extends BaseWebService{
 	
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
 
     @Autowired
-    Repository<SlackUser, String> finaxysProfileRepository;
+    Repository<SlackUser, String> slackUserRepository;
     
     @Autowired
     Repository<Role, Integer> roleRepository;
@@ -29,7 +29,7 @@ public class EventManagerWebService extends BaseWebService{
     @Autowired
     Repository<Event, Integer> eventRepository;
 
-    @RequestMapping(value = "/event_manager/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/event_manager/create", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> create(@RequestParam("token") 		String appVerificationToken,
                                            @RequestParam("team_domain") String slackTeam,
@@ -58,14 +58,14 @@ public class EventManagerWebService extends BaseWebService{
         if (isEventManager(adminFinaxysProfileId, eventName) || isAdmin(adminFinaxysProfileId)) 
         {	
         	timer.capture();
-            SlackUser  finaxysProfile = finaxysProfileRepository.findById(profileId);
+            SlackUser  slackUser = slackUserRepository.findById(profileId);
             
             timer.capture();
             List<Event> events 	   = eventRepository.getByCriterion("name", eventName);
             
-            finaxysProfile = (finaxysProfile == null) ? new SlackUser(profileId, profileName) : finaxysProfile;
+            slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
             
-            finaxysProfileRepository.saveOrUpdate(finaxysProfile);
+            slackUserRepository.saveOrUpdate(slackUser);
             timer.capture();
             if (events.size() == 0)
                 return newResponseEntity("/fx_manager_add  :" + arguments + "\n " + "event does not exist" + timer ,true);
@@ -74,12 +74,12 @@ public class EventManagerWebService extends BaseWebService{
             
             role.setRole		  ("event_manager");
             role.setEvent	  (events.get(0));
-            role.setSlackUser(finaxysProfile);
+            role.setSlackUser(slackUser);
             
             roleRepository.saveOrUpdate(role);
             timer.capture();
             
-            return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(finaxysProfile.getSlackUserId()).getName() + "> has just became a event manager!" + timer ,true);
+            return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|" + slackApiAccessService.getUser(slackUser.getSlackUserId()).getName() + "> has just became a event manager!" + timer ,true);
         }
         
         return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer ,true);
@@ -110,7 +110,7 @@ public class EventManagerWebService extends BaseWebService{
         
         timer.capture();
         
-        String finaxysProfileId = eventManagerArgumentsMatcher.getUserIdArgument(arguments);
+        String slackUserId = eventManagerArgumentsMatcher.getUserIdArgument(arguments);
         String eventName 	= eventManagerArgumentsMatcher.getEventName	(arguments);
         
         List<Event> events = eventRepository.getByCriterion("name", eventName);
@@ -136,11 +136,11 @@ public class EventManagerWebService extends BaseWebService{
                 
                 for (Role role : roles) 
                 {
-                    if (role.getSlackUser().getSlackUserId().equals(finaxysProfileId)) 
+                    if (role.getSlackUser().getSlackUserId().equals(slackUserId)) 
                     {
                         roleRepository.delete(role);
                         
-                        Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + slackApiAccessService.getUser(finaxysProfileId).getName() + "> is no more a event manager!");
+                        Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId + "|" + slackApiAccessService.getUser(slackUserId).getName() + "> is no more a event manager!");
                         
                         Log.info(message.getText());
                         
@@ -150,7 +150,7 @@ public class EventManagerWebService extends BaseWebService{
                 
                 timer.capture();
                 
-                Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + finaxysProfileId + "|" + slackApiAccessService.getUser(finaxysProfileId).getName() + "> is already not a event manager!");
+                Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId + "|" + slackApiAccessService.getUser(slackUserId).getName() + "> is already not a event manager!");
                 
                 Log.info(message.getText());
                 
@@ -168,7 +168,7 @@ public class EventManagerWebService extends BaseWebService{
     }
 
     
-    @RequestMapping(value = "/event_manager/", method = RequestMethod.POST)
+    @RequestMapping(value = "/event_manager/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> getEventManagers(@RequestParam("token") 	  String appVerificationToken,
                                                          @RequestParam("team_domain") String slackTeam,

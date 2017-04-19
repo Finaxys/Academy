@@ -17,11 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 public class AdministratorWebService extends BaseWebService {
 
     @Autowired
-    Repository<SlackUser, String> finaxysProfileRepository;
+    Repository<SlackUser, String> slackUserRepository;
     
     @Autowired
     Repository<Event, Integer> eventRepository;
@@ -29,7 +29,7 @@ public class AdministratorWebService extends BaseWebService {
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
 
-    @RequestMapping(value = "/admins/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> create(@RequestParam("token") 		String appVerificationToken,
                                            @RequestParam("team_domain") String slackTeam,
@@ -46,10 +46,9 @@ public class AdministratorWebService extends BaseWebService {
         
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
         
-        
-        
         if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
             return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username " + timer, true);
+        
         timer.capture();
         
         String userId 	= oneUsernameArgumentsMatcher.getUserIdArgument	 (arguments);
@@ -57,14 +56,14 @@ public class AdministratorWebService extends BaseWebService {
         
         if (!isAdmin(userId)) 
         {
-        	SlackUser finaxysProfile = finaxysProfileRepository.findById(userId);
-            finaxysProfile = (finaxysProfile == null) ? new SlackUser(userId, userName) : finaxysProfile;
+        	SlackUser slackUser = slackUserRepository.findById(userId);
+            slackUser = (slackUser == null) ? new SlackUser(userId, userName) : slackUser;
             
-            finaxysProfileRepository.saveOrUpdate(finaxysProfile);
+            slackUserRepository.saveOrUpdate(slackUser);
             
             Role role = new Role("admin");
             
-            role.setSlackUser(finaxysProfile);
+            role.setSlackUser(slackUser);
             
             new Thread(new Runnable()
 			{
@@ -85,7 +84,7 @@ public class AdministratorWebService extends BaseWebService {
 
     
 
-    @RequestMapping(value = "/admins/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> remove(@RequestParam("token") 		String appVerificationToken,
                                            @RequestParam("team_domain") String slackTeam,
@@ -125,7 +124,7 @@ public class AdministratorWebService extends BaseWebService {
     
     
 
-    @RequestMapping(value = "/admins/", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> getAdministrators(@RequestParam("token") 		String appVerificationToken,
                                                       @RequestParam("team_domain")  String slackTeam) {

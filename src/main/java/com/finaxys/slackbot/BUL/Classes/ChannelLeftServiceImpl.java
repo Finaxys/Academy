@@ -18,7 +18,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 	public SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	private Repository<SlackUser, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> slackUserRepository;
 
 	@Transactional
 	@Override
@@ -32,13 +32,13 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 				return;
 
 			String userId = jsonNode.get("user").asText();
-			SlackUser profile = finaxysProfileRepository.findById(userId);
+			SlackUser profile = slackUserRepository.findById(userId);
 
 			if (profile.getScore() == 0)
 				return;
 
 			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
-			finaxysProfileRepository.updateEntity(profile);
+			slackUserRepository.updateEntity(profile);
 
 			Log.logMemberLeftChannel(profile.getName(), channel.getName());
 		}

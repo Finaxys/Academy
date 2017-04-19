@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
 	@Autowired
-	private Repository<SlackUser, String> finaxysProfileRepository;
+	private Repository<SlackUser, String> slackUserRepository;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -26,14 +26,14 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 		if (jsonIsValid(jsonNode)) {
 			String userId = jsonNode.get("user").asText();
 			String channelId = jsonNode.get("channel").asText();
-			SlackUser userProfile = finaxysProfileRepository.findById(userId);
+			SlackUser userProfile = slackUserRepository.findById(userId);
 
 			String name = slackApiAccessService.getUser(userId).getName();
 			userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
 			userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 
-			finaxysProfileRepository.saveOrUpdate(userProfile);
+			slackUserRepository.saveOrUpdate(userProfile);
 			Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
 		}
 	}

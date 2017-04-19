@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RealMessageRewardImpl implements RealMessageReward {
 
     @Autowired
-    private Repository<SlackUser, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> slackUserRepository;
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -48,13 +48,13 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     public void setFinaxysProfileAsAdministrator(JsonNode jsonNode) {
-        String finaxysProfileId = jsonNode.get("user").asText();
+        String slackUserId = jsonNode.get("user").asText();
 
-        String profileName = slackApiAccessService.getUser(finaxysProfileId).getName();
+        String profileName = slackApiAccessService.getUser(slackUserId).getName();
 
-        SlackUser finaxysProfile = new SlackUser(finaxysProfileId, profileName);
-        //TODO finaxysProfile.setAdministrator(true);
-        finaxysProfileRepository.addEntity(finaxysProfile);
+        SlackUser slackUser = new SlackUser(slackUserId, profileName);
+        //TODO slackUser.setAdministrator(true);
+        slackUserRepository.addEntity(slackUser);
     }
 
     public boolean noAdminsStored() {
@@ -63,13 +63,13 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     private void increaseSlackUserScore(String userId) {
-        SlackUser profile = finaxysProfileRepository.findById(userId);
+        SlackUser profile = slackUserRepository.findById(userId);
         if (profile == null) {
             String profileName = slackApiAccessService.getUser(userId).getName();
             profile = new SlackUser(userId, profileName);
         }
         profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
-        finaxysProfileRepository.saveOrUpdate(profile);
+        slackUserRepository.saveOrUpdate(profile);
     }
 
     private Channel getChannelById(String channelId) {

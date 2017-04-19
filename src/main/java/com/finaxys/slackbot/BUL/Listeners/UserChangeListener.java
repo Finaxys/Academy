@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class UserChangeListener {
 	
     @Autowired
-    private Repository<SlackUser, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> slackUserRepository;
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -23,17 +23,17 @@ public class UserChangeListener {
 
     public void handleMessage(JsonNode jsonNode) {
     	
-        String finaxysProfileId 		= jsonNode.get("user").get("user_id").asText();
-        SlackUser finaxysProfile 	= finaxysProfileRepository.findById(finaxysProfileId);
+        String slackUserId 		= jsonNode.get("user").get("user_id").asText();
+        SlackUser slackUser 	= slackUserRepository.findById(slackUserId);
         
-        if (finaxysProfile == null) {
+        if (slackUser == null) {
         	
             SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String finaxysProfileIName 			= slackApiAccessService.getUser(finaxysProfileId).getName();
-            finaxysProfile 						= new SlackUser(finaxysProfileId, finaxysProfileIName);
+            String slackUserIName 			= slackApiAccessService.getUser(slackUserId).getName();
+            slackUser 						= new SlackUser(slackUserId, slackUserIName);
         }
         
-        //TODO finaxysProfile.setAdministrator(true);
-        finaxysProfileRepository.saveOrUpdate(finaxysProfile);
+        //TODO slackUser.setAdministrator(true);
+        slackUserRepository.saveOrUpdate(slackUser);
     }
 }

@@ -15,7 +15,7 @@ import com.finaxys.slackbot.Utilities.SlackBot;
 public class UserChangedListener implements EventListener {
     
 	@Autowired
-    private Repository<SlackUser, String> finaxysProfileRepository;
+    private Repository<SlackUser, String> slackUserRepository;
 	
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -33,17 +33,17 @@ public class UserChangedListener implements EventListener {
             if (!jsonNode.get("type").asText().equals("user_change")) return;
             if ( jsonNode.get("type").asText().equals("user_change")) {
             	
-                String finaxysProfileId 	= jsonNode.get("user").get("id").asText();
-                String finaxysProfileIName 	= slackApiAccessService.getUser(finaxysProfileId)
+                String slackUserId 	= jsonNode.get("user").get("id").asText();
+                String slackUserIName 	= slackApiAccessService.getUser(slackUserId)
                                                       .getName();
-                SlackUser finaxysProfile = finaxysProfileRepository.findById(finaxysProfileId);
+                SlackUser slackUser = slackUserRepository.findById(slackUserId);
                 
-                if (finaxysProfile == null) {
-                    finaxysProfile = new SlackUser(finaxysProfileId, finaxysProfileIName);
+                if (slackUser == null) {
+                    slackUser = new SlackUser(slackUserId, slackUserIName);
                 }
                 
-                finaxysProfile.setName(finaxysProfileIName);
-                finaxysProfileRepository.saveOrUpdate(finaxysProfile);
+                slackUser.setName(slackUserIName);
+                slackUserRepository.saveOrUpdate(slackUser);
             }
         }
     }
