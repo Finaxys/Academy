@@ -10,7 +10,6 @@ public class Role implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	
 	private int id ;
     private String role ;
     
@@ -43,7 +42,7 @@ public class Role implements Serializable{
         this.role = role;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     public Event getEvent() {
         return event;
     }

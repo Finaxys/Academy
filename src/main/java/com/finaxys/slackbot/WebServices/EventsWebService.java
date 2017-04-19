@@ -253,6 +253,7 @@ public class EventsWebService extends BaseWebService {
 						user = new SlackUser(userId, userName);
 						finaxysProfileRepository.saveOrUpdate(user);
 					}
+					
 					role.setRole		  ("event_manager");
 					role.setSlackUser	  (user);
 					role.setEvent  		  (event);
