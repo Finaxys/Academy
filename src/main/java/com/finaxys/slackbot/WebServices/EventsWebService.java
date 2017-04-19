@@ -217,7 +217,7 @@ public class EventsWebService extends BaseWebService {
 		{	
 			timer.capture();
 			
-			String[]  eventInfo = text.trim().split(",");
+			String[]  eventInfo = text.trim().split(" ");
 			Event event 	= new Event();
 			
 			event.setName		(eventInfo[0]);
