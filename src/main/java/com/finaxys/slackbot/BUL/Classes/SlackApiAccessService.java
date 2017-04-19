@@ -29,6 +29,8 @@ public class SlackApiAccessService {
 
 		for (int i = 0; i < users.size(); i++) {
 			allUsers.put(users.get(i).getId(), users.get(i));
+			//TODO delete
+			System.out.println(users.get(i).getId() + " : " + users.get(i).getName());
 		}
 		for (int i = 0; i < channels.size(); i++) {
 			allChannels.put(channels.get(i).getId(), channels.get(i));

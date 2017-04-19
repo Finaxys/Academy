@@ -20,13 +20,13 @@ public class ScoreWebService extends BaseWebService {
 	private SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	Repository<SlackUser, String> finaxysProfileRepository;
+	Repository<SlackUser, String> slackUsersRepository;
 
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileEventRepository;
+	Repository<SlackUser_Event, SlackUser_Event_PK> slackUserEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
@@ -57,25 +57,35 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 
 		List<Event> events = eventRepository.getByCriterion("name", eventName);
-
+		
 		timer.capture();
 
 		if (events.size() == 0)
 			return newResponseEntity("Nonexistent event" + timer, true);
 
+		//TODO
 		if (!isEventManager(eventManagerId, eventName) && !isAdmin(eventManagerId))
 			return newResponseEntity("/fx_event_score_add " + arguments + "\n"
 					+ "You are neither admin nor a event manager !" + timer, true);
 
 		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
+		SlackUser user = slackUsersRepository.findById(userId);
+		
+		if(user==null){
+			user = new SlackUser();
+			user.setName(slackApiAccessService.getUser(userId).getName());
+			user.setslackUserId(userId);
+			slackUsersRepository.saveOrUpdate(user);
+		}
+		
 		SlackUser_Event finaxysProfile_event = new SlackUser_Event(score,
-				eventRepository.getByCriterion("name", eventName).get(0).getEventId(), userId);
-
+				eventRepository.getByCriterion("name", eventName).get(0), user);
+		
 		timer.capture();
 
-		finaxysProfile_event.setSlackUser(finaxysProfileRepository.findById(userId));
-		finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
+		//finaxysProfile_event.setSlackUser(slackUsersRepository.findById(userId));
+		//finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
 
 
 		timer.capture();
@@ -87,7 +97,7 @@ public class ScoreWebService extends BaseWebService {
 			{
 				public void run()
 				{
-					finaxysProfileEventRepository.saveOrUpdate(finaxysProfile_event);
+					slackUserEventRepository.saveOrUpdate(finaxysProfile_event);
 				}
 			}).start();
 
@@ -127,7 +137,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<SlackUser_Event> listEvents = finaxysProfileEventRepository.getByCriterion("event",
+		List<SlackUser_Event> listEvents = slackUserEventRepository.getByCriterion("event",
 				event);
 
 		if (listEvents.size() == 0)
@@ -166,7 +176,7 @@ public class ScoreWebService extends BaseWebService {
 			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
 		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
-		SlackUser finaxysProfile = finaxysProfileRepository.findById(profileId);
+		SlackUser finaxysProfile = slackUsersRepository.findById(profileId);
 		
 		timer.capture();
 		

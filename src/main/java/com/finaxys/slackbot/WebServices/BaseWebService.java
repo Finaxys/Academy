@@ -40,6 +40,8 @@ public class BaseWebService {
     public boolean isEventManager(String userId, String eventName) 
     {	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
+        //TODO
+        System.out.println("roles : " +  roles.size());
         int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getEventId();
         
         for (Role role : roles)

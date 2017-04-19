@@ -2,7 +2,6 @@ package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -13,22 +12,21 @@ import javax.persistence.Table;
 @Table(name = "SLACK_USER_EVENT")
 public class SlackUser_Event implements Serializable {
 
-    private int score;
+	private static final long serialVersionUID = 1L;
+	
+	private int score;
     private Event event;
     private SlackUser slackUser;
 
     public SlackUser_Event() {
     }
 
-    public SlackUser_Event(int score, Integer eventId, String slackUserId,Event event, SlackUser slackUser) {
+    public SlackUser_Event(int score, Event event, SlackUser slackUser) {
         this.score = score;
         this.event = event;
         this.slackUser=slackUser;
     }
     
-    public SlackUser_Event(int score, Integer eventId, String slackUserId) {
-        this.score = score;
-    }
 
     public int getScore() {
         return score;

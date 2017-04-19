@@ -40,43 +40,6 @@ public class TestController {
 	@RequestMapping("/test")
 	public void test() {
 
-		SlackUser user = users.findById("U4BCK26CU");
-
-		System.out.println(user);
 		
-		System.out.println(user.getSlackUserEvents().size());
-		System.out.println(user.getRoles()==null?"null":user.getRoles().size());
-		// user.setScore(90);
-		
-		Event finaxysChallenge = challenges.findById(15);
-		SlackUser_Event fpc = new SlackUser_Event(13, finaxysChallenge.getEventId(), user.getSlackUserId());
-		user.getSlackUserEvents().add(fpc);
-
-		
-		
-		finaxysChallenge = challenges.findById(11);
-		fpc = new SlackUser_Event(13, finaxysChallenge.getEventId(), user.getSlackUserId());
-		user.getSlackUserEvents().add(fpc);
-
-		finaxysChallenge = challenges.findById(12);
-		fpc = new SlackUser_Event(13, finaxysChallenge.getEventId(), user.getSlackUserId());
-		user.getSlackUserEvents().add(fpc);
-
-		finaxysChallenge = challenges.findById(13);
-		fpc = new SlackUser_Event(13, finaxysChallenge.getEventId(), user.getSlackUserId());
-
-		user.getSlackUserEvents().add(fpc);
-		
-		users.saveOrUpdate(user);
-		
-		
-		user = users.findById("U4BCK26CU");
-
-		System.out.println(user);
-		
-		System.out.println(user.getSlackUserEvents().size());
-		System.out.println(user.getRoles()==null?"null":user.getRoles().size());
-		
-
 	}
 }
