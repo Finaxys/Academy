@@ -35,7 +35,7 @@ public class SlackUser implements Serializable {
     }
 
     @Id
-    @Column(name = "SLACKUSERID")
+    @Column(name = "SLACK_USER_ID")
     public String getSlackUserId() {
         return slackUserId;
     }

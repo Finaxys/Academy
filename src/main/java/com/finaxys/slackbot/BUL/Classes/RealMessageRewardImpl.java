@@ -53,7 +53,9 @@ public class RealMessageRewardImpl implements RealMessageReward {
     }
 
     public boolean noAdminsStored() {
-        return finaxysProfileRepository.getByCriterion("administrator", true).isEmpty();
+    	//TODO corriger avec le role admin
+    	return true;
+        //return finaxysProfileRepository.getByCriterion("administrator", true).isEmpty();
     }
 
     private void increaseSlackUserScore(String userId) {

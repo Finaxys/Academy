@@ -2,8 +2,10 @@ package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -38,6 +40,7 @@ public class SlackUser_Event implements Serializable {
 
     @ManyToOne
     @Id
+    @JoinColumn(name = "EVENT_ID", nullable=false)
     public Event getEvent() {
         return event;
     }
@@ -48,6 +51,7 @@ public class SlackUser_Event implements Serializable {
 
     @ManyToOne
     @Id
+    @JoinColumn(name = "SLACK_USER_ID", nullable=false)
     public SlackUser getSlackUser() {
         return slackUser;
     }

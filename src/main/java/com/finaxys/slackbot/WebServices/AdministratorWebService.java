@@ -58,9 +58,6 @@ public class AdministratorWebService extends BaseWebService {
         if (!isAdmin(userId)) 
         {
         	SlackUser finaxysProfile = finaxysProfileRepository.findById(userId);
-        	System.out.println(finaxysProfile);
-        	System.out.println(userId);
-        	System.out.println(userName);
             finaxysProfile = (finaxysProfile == null) ? new SlackUser(userId, userName) : finaxysProfile;
             
             finaxysProfileRepository.saveOrUpdate(finaxysProfile);

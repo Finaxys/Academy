@@ -35,28 +35,28 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			System.out.println("Start");
 			ApplicationContext context = contextRefreshedEvent.getApplicationContext();
-
-			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
-
-			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
-					(UserChangedListener) context.getBean("userChangedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
-					(ChannelCreatedListener) context.getBean("channelCreatedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED,
-					(ReactionAddedListener) context.getBean("reactionAddedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
-					(ReactionRemovedListener) context.getBean("reactionRemovedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.MESSAGE,
-					(MessageListener) context.getBean("messageListener"));
-
-			slackRealTimeMessagingClient.connect();
-			SlackApiAccessService.init();
-			System.out.println("End");
-
+//
+//			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
+//
+//			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
+//					(UserChangedListener) context.getBean("userChangedListener"));
+//
+//			slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
+//					(ChannelCreatedListener) context.getBean("channelCreatedListener"));
+//
+//			slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED,
+//					(ReactionAddedListener) context.getBean("reactionAddedListener"));
+//
+//			slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
+//					(ReactionRemovedListener) context.getBean("reactionRemovedListener"));
+//
+//			slackRealTimeMessagingClient.addListener(Event.MESSAGE,
+//					(MessageListener) context.getBean("messageListener"));
+//
+//			slackRealTimeMessagingClient.connect();
+//			SlackApiAccessService.init();
+//			System.out.println("End");
+//
 		}
 
 	}

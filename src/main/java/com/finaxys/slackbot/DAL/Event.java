@@ -27,7 +27,7 @@ public class Event implements Serializable {
     }
 
     @Id
-    @Column(name = "EVENTID")
+    @Column(name = "EVENT_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getEventId() {
         return id;
