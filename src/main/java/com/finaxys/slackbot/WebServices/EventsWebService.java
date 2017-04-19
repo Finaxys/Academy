@@ -3,6 +3,7 @@ package com.finaxys.slackbot.WebServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.*;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,9 @@ public class EventsWebService extends BaseWebService {
 
 	@Autowired
 	Repository<SlackUser, String> finaxysProfileRepository;
+	
+	@Autowired
+	private SlackApiAccessService slackApiAccessService;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
@@ -217,14 +222,20 @@ public class EventsWebService extends BaseWebService {
 		{	
 			timer.capture();
 			
-			String[]  eventInfo = text.trim().split(" ");
+			List<String> eventInfo = Arrays.asList((text.trim().split(" ")));
 			Event event 	= new Event();
 			
-			event.setName		(eventInfo[0]);
-			event.setType		(eventInfo[1]);
-			event.setDescription(eventInfo[2]);
-			for(int i=3; i<eventInfo.length; i++){
-				event.setDescription(event.getDescription()+ " " + eventInfo[i]);
+			int indexOfType = eventInfo.lastIndexOf("group") > eventInfo.lastIndexOf("individual") ?  eventInfo.lastIndexOf("group") : eventInfo.lastIndexOf("individual");
+			
+			event.setName(eventInfo.get(0));
+			for(int i=1; i<indexOfType; i++){
+				event.setName(event.getName()+ " " + eventInfo.get(i));
+			}
+			event.setType(eventInfo.get(indexOfType));
+			event.setDescription(eventInfo.get(indexOfType+1));
+			
+			for(int i=indexOfType+2; i<eventInfo.size(); i++){
+				event.setDescription(event.getDescription()+ " " + eventInfo.get(i));
 			}
 			
 			
@@ -236,10 +247,15 @@ public class EventsWebService extends BaseWebService {
 					
 					Role role = new Role();
 					
+					SlackUser user = finaxysProfileRepository.findById(userId);
+					if(user == null){
+						String userName = slackApiAccessService.getUser(userId).getName();
+						user = new SlackUser(userId, userName);
+					}
+					
 					role.setRole		  ("event_manager");
-					//TODO : attention nuuuuuulll (comme Anaias)
-					role.setSlackUser(finaxysProfileRepository.findById(userId));
-					role.setEvent  (event);
+					role.setSlackUser	  (user);
+					role.setEvent  		  (event);
 					
 					roleRepository.addEntity(role);
 					
