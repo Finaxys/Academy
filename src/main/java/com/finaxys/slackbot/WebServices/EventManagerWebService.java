@@ -174,7 +174,7 @@ public class EventManagerWebService extends BaseWebService{
                                                          @RequestParam("team_domain") String slackTeam,
                                                          @RequestParam("text") 		  String arguments) {
     	
-        Log.info("/fx_event_list");
+        Log.info("/fx_manager_list");
 
         if (noAccess(appVerificationToken, slackTeam))
             return noAccessResponseEntity(appVerificationToken, slackTeam);
@@ -191,21 +191,21 @@ public class EventManagerWebService extends BaseWebService{
             return newResponseEntity(message);
         }
         
-        List<Role> roles   = roleRepository.getByCriterion("eventId", events.get(0).getEventId());
+        List<Role> roles   = roleRepository.getByCriterion("event_EVENT_ID", events.get(0).getEventId());
         String messageText = "List of Event managers list:\n";
         
         for (Role role : roles) 
         {
             messageText += "<@" + role.getSlackUser().getSlackUserId() + "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
             
-            Message message = new Message("/fx_event_list " + "\n " + messageText);
+            Message message = new Message("/fx_manager_list " + "\n " + messageText);
             
             Log.info(message.getText());
             
             return newResponseEntity(message);
         }
         
-        Message message = new Message("/fx_event_list :" + "\n " + messageText+" No event managers are found");
+        Message message = new Message("/fx_manager_list :" + "\n " + messageText+" No event managers are found");
         
         Log.info(message.getText());
         
