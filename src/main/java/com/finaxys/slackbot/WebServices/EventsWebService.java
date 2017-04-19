@@ -237,6 +237,7 @@ public class EventsWebService extends BaseWebService {
 					Role role = new Role();
 					
 					role.setRole		  ("event_manager");
+					//TODO : attention nuuuuuulll (comme Anaias)
 					role.setSlackUser(finaxysProfileRepository.findById(userId));
 					role.setEvent  (event);
 					
