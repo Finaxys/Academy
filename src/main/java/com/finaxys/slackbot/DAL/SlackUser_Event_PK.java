@@ -1,36 +1,33 @@
 package com.finaxys.slackbot.DAL;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Embeddable
+import javax.persistence.Id;
+
 public class SlackUser_Event_PK implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer event;
-	private String slackUser;
+	private Integer eventId;
+	private String slackUserId;
 
 	public SlackUser_Event_PK() {
 
 	}
 
-	@Column(name = "EVENT_ID")
 	public Integer getEvent() {
-		return event;
+		return eventId;
 	}
 
 	public void setEvent(Integer event) {
-		this.event = event;
+		this.eventId = event;
 	}
 
-	@Column(name = "SLACK_USER_ID")
 	public String getSlackUser() {
-		return slackUser;
+		return slackUserId;
 	}
 
 	public void setSlackUser(String slackUser) {
-		this.slackUser = slackUser;
+		this.slackUserId = slackUser;
 	}
 }

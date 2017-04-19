@@ -74,7 +74,7 @@ public class ScoreWebService extends BaseWebService {
 
 		timer.capture();
 
-		finaxysProfile_challenge.setProfile(finaxysProfileRepository.findById(userId));
+		finaxysProfile_challenge.setSlackUser(finaxysProfileRepository.findById(userId));
 		finaxysProfile_challenge.setEvent(challengeRepository.getByCriterion("name", challengeName).get(0));
 
 		timer.capture();
@@ -137,7 +137,7 @@ public class ScoreWebService extends BaseWebService {
 		String textMessage = "List of scores of " + challenge.getName() + " :" + " \n ";
 
 		for (SlackUser_Event finaxysProfileChallenge : listChallenges) {
-			SlackUser finaxysProfile = finaxysProfileChallenge.getProfile();
+			SlackUser finaxysProfile = finaxysProfileChallenge.getSlackUser();
 
 			textMessage += "<@" + finaxysProfile.getId() + "|" + finaxysProfile.getName() + "> "
 					+ finaxysProfileChallenge.getScore() + " \n";

@@ -59,7 +59,7 @@ public class SlackUser implements Serializable {
         this.score = score;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "slackUser", cascade = CascadeType.ALL)
     public Set<SlackUser_Event> getSlackUserEvents() {
         return slackUserEvents;
     }
