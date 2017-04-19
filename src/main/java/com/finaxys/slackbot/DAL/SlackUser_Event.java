@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SCORE")
+@Table(name = "SLACK_USER_EVENT")
 public class SlackUser_Event implements Serializable {
 
     private int score;
