@@ -27,7 +27,7 @@ public class ScoreWebService extends BaseWebService {
 	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUserEvent, SlackUser_Event_PK> slackUserEventRepository;
+	Repository<SlackUser_Event, SlackUser_Event_PK> slackUserEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
@@ -81,7 +81,7 @@ public class ScoreWebService extends BaseWebService {
 			slackUserRepository.saveOrUpdate(user);
 		}
 		
-		SlackUserEvent slackUser_event = new SlackUserEvent(score, eventRepository.getByCriterion("name", eventName).get(0), user);
+		SlackUser_Event slackUser_event = new SlackUser_Event(score, eventRepository.getByCriterion("name", eventName).get(0), user);
 		
 		timer.capture();
 
@@ -132,7 +132,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<SlackUserEvent> listEvents = slackUserEventRepository.getByCriterion("event",
+		List<SlackUser_Event> listEvents = slackUserEventRepository.getByCriterion("event",
 				event);
 
 		if (listEvents.size() == 0)
@@ -142,7 +142,7 @@ public class ScoreWebService extends BaseWebService {
 
 		String textMessage = "List of scores of " + event.getName() + " :" + " \n ";
 
-		for (SlackUserEvent slackUserEvent: listEvents) {
+		for (SlackUser_Event slackUserEvent: listEvents) {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 
