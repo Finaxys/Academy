@@ -29,7 +29,7 @@ public class AdministratorWebService extends BaseWebService {
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
     
-    //test commit
+    //test
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
@@ -68,14 +68,8 @@ public class AdministratorWebService extends BaseWebService {
             
             role.setSlackUser(slackUser);
             
-            new Thread(new Runnable()
-			{
-				public void run()
-				{
-		            roleRepository.saveOrUpdate(role);
-				}
-			}).start();
-            
+            new Thread(() -> { roleRepository.saveOrUpdate(role);; }).start();
+                     
             timer.capture();
             
             return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|" + SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> has just became an administrator! " + timer, true);

@@ -238,32 +238,28 @@ public class EventsWebService extends BaseWebService {
 				event.setDescription(event.getDescription()+ " " + eventInfo.get(i));
 			}
 			
-			
-			new Thread(new Runnable()
-			{
-				public void run()
-				{
-					eventRepository.addEntity(event);
-					
-					Role role = new Role();
-					
-					SlackUser user = slackUserRepository.findById(userId);
-					if(user == null){
-						String userName = slackApiAccessService.getUser(userId).getName();
-						user = new SlackUser(userId, userName);
-						slackUserRepository.addEntity(user);
-					}
-					
-					role.setRole		  ("event_manager");
-					role.setSlackUser	  (user);
-					role.setEvent  		  (event);
-					
-					roleRepository.addEntity(role);
-					
-					newResponseEntity("/fx_event_add "+text+" \n "+"Traitement terminé" + timer , true);
+			new Thread(() -> { 
+				
+				eventRepository.addEntity(event);
+				
+				Role role = new Role();
+				
+				SlackUser user = slackUserRepository.findById(userId);
+				if(user == null){
+					String userName = slackApiAccessService.getUser(userId).getName();
+					user = new SlackUser(userId, userName);
+					slackUserRepository.addEntity(user);
 				}
-			}).start();
-
+				
+				role.setRole		  ("event_manager");
+				role.setSlackUser	  (user);
+				role.setEvent  		  (event);
+				
+				roleRepository.addEntity(role);
+				
+				newResponseEntity("/fx_event_add "+text+" \n "+"Traitement terminé" + timer , true);
+		}
+		).start();
 			
 			timer.capture();
 			

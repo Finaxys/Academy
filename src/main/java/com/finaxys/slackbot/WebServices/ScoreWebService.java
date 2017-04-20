@@ -93,14 +93,8 @@ public class ScoreWebService extends BaseWebService {
 		try {
 			timer.capture();
 
-			new Thread(new Runnable()
-			{
-				public void run()
-				{
-					slackUserEventRepository.saveOrUpdate(slackUser_event);
-				}
-			}).start();
-
+			new Thread(()-> {slackUserEventRepository.saveOrUpdate(slackUser_event);}).start();
+			
 			timer.capture();
 		} catch (Exception e) {
 			return newResponseEntity(
