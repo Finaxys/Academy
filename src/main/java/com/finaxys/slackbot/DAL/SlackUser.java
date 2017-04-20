@@ -85,4 +85,8 @@ public class SlackUser implements Serializable {
     public void decrementScore(int score) {
         this.score -= score;
     }
+    
+    public boolean equals (SlackUser slackUser) {
+    	return this.slackUserId.equals(slackUser.getSlackUserId());
+    }
 }

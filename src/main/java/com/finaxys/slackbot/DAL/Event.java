@@ -24,9 +24,17 @@ public class Event implements Serializable {
     public Event() {
         creationDate = new Date();
         attendees = new HashSet<>();
-    }
+    }    
 
-    @Id
+    public Event(String name, String description, Date creationDate, String type) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.creationDate = creationDate;
+		this.type = type;
+	}
+
+	@Id
     @Column(name = "EVENT_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getEventId() {
