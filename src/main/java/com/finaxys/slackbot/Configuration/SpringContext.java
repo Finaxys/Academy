@@ -34,8 +34,6 @@ import com.finaxys.slackbot.DAL.EventScore;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUser_Event;
-import com.finaxys.slackbot.DAL.SlackUser_Event_PK;
 
 @Configuration
 @EnableTransactionManagement
@@ -129,11 +127,6 @@ public class SpringContext {
     @Bean
     public Repository<Event, Integer> challengeRepository() {
         return new Repository<>(Event.class);
-    }
-
-    @Bean
-    public Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileChallengeRepository() {
-        return new Repository<>(SlackUser_Event.class);
     }
 
     @Bean

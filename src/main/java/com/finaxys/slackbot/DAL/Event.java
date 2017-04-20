@@ -19,7 +19,7 @@ public class Event implements Serializable {
     private String 	description;
     private Date 	creationDate;
     private String 	type;
-    private Set<SlackUser_Event> attendees;
+    private Set<SlackUserEvent> attendees;
 
     public Event() {
         creationDate = new Date();
@@ -69,11 +69,11 @@ public class Event implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
-    public Set<SlackUser_Event> getAttendees() {
+    public Set<SlackUserEvent> getAttendees() {
         return attendees;
     }
 
-    public void setAttendees(Set<SlackUser_Event> attendees) {
+    public void setAttendees(Set<SlackUserEvent> attendees) {
         this.attendees = attendees;
     }
 }

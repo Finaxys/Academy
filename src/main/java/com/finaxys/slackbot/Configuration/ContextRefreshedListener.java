@@ -1,7 +1,10 @@
 package com.finaxys.slackbot.Configuration;
 
-import allbegray.slack.rtm.Event;
-import allbegray.slack.rtm.SlackRealTimeMessagingClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
@@ -10,11 +13,9 @@ import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
 import com.finaxys.slackbot.Utilities.SlackBot;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
-import org.springframework.context.event.ContextRefreshedEvent;
+
+import allbegray.slack.rtm.Event;
+import allbegray.slack.rtm.SlackRealTimeMessagingClient;
 
 @Component
 public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent> {

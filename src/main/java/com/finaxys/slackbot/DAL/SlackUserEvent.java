@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "SLACK_USER_EVENT")
-public class SlackUser_Event implements Serializable {
+public class SlackUserEvent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -18,10 +18,10 @@ public class SlackUser_Event implements Serializable {
     private Event event;
     private SlackUser slackUser;
 
-    public SlackUser_Event() {
+    public SlackUserEvent() {
     }
 
-    public SlackUser_Event(int score, Event event, SlackUser slackUser) {
+    public SlackUserEvent(int score, Event event, SlackUser slackUser) {
         this.score = score;
         this.event = event;
         this.slackUser=slackUser;

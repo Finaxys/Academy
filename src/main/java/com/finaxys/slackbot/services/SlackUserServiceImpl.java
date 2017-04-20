@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.services.SlackUserService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Service
 public class SlackUserServiceImpl implements SlackUserService {

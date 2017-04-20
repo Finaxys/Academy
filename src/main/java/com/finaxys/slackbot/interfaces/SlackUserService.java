@@ -1,4 +1,4 @@
-package com.finaxys.slackbot.services;
+package com.finaxys.slackbot.interfaces;
 
 import java.util.List;
 
