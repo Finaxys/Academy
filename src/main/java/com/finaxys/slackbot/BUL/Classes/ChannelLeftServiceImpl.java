@@ -38,8 +38,9 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 				return;
 
 			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
-			slackUserRepository.updateEntity(profile);
-
+			
+			new Thread(()->{slackUserRepository.updateEntity(profile);}).start();
+			
 			Log.logMemberLeftChannel(profile.getName(), channel.getName());
 		}
 	}
