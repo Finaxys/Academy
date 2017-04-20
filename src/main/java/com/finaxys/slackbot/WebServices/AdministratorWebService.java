@@ -116,7 +116,8 @@ public class AdministratorWebService extends BaseWebService {
         {
             if (role.getSlackUser().getSlackUserId().equals(id)) 
             {
-                roleRepository.delete(role);
+            	new Thread(()->{roleRepository.delete(role);}).start();
+                
                 return  newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
             }
         }

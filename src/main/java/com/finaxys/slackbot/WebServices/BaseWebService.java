@@ -36,7 +36,6 @@ public class BaseWebService {
         return false;
     }
     
-    
     public boolean isEventManager(String userId, String eventName) 
     {	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
