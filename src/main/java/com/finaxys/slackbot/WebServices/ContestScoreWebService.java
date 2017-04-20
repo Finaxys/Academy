@@ -19,7 +19,7 @@
 //import java.util.List;
 //
 //@RestController
-//@RequestMapping("/contest")
+//@RequestMapping("/contests")
 //public class ContestScoreWebService extends BaseWebService {
 //
 //    @Autowired
