@@ -1,17 +1,27 @@
 package com.finaxys.slackbot.WebServices;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.EventScoreArgumentsMatcher;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
-import com.finaxys.slackbot.DAL.*;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.Utilities.Timer;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.SlackUserEventService;
 
 @RestController
 @RequestMapping("/scores")
@@ -22,15 +32,20 @@ public class ScoreWebService extends BaseWebService {
 	@Autowired
 	Repository<SlackUser, String> slackUserRepository;
 
-
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUser_Event, SlackUser_Event_PK> slackUserEventRepository;
+	Repository<SlackUserEvent, String> slackUserEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;
+	
+	@Autowired
+	EventService eventService;
+	
+	@Autowired
+	SlackUserEventService slackUserEventService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
@@ -75,32 +90,29 @@ public class ScoreWebService extends BaseWebService {
 		SlackUser user = slackUserRepository.findById(userId);
 		
 		if(user==null){
-			user = new SlackUser();
-			user.setName(slackApiAccessService.getUser(userId).getName());
-			user.setslackUserId(userId);
+			user = new SlackUser(userId,slackApiAccessService.getUser(userId).getName());
 			slackUserRepository.saveOrUpdate(user);
 		}
+		Event event = eventService.getEventByName(eventName);
 		
-		SlackUser_Event slackUser_event = new SlackUser_Event(score, eventRepository.getByCriterion("name", eventName).get(0), user);
+		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 		
-		timer.capture();
+		if (slackUserEvent!=null) {
+			slackUserEvent.addScore(score);
+		}
+		else {
+			slackUserEvent = new SlackUserEvent(score, event, user);
+		}
 
-		//finaxysProfile_event.setSlackUser(slackUsersRepository.findById(userId));
-		//finaxysProfile_event.setEvent(eventRepository.getByCriterion("name", eventName).get(0));
+		SlackUserEvent slackUserEvent2 = slackUserEvent;
 		
 		timer.capture();
 
 		try {
 			timer.capture();
 
-			new Thread(new Runnable()
-			{
-				public void run()
-				{
-					slackUserEventRepository.saveOrUpdate(slackUser_event);
-				}
-			}).start();
-
+			new Thread(()-> {slackUserEventRepository.saveOrUpdate(slackUserEvent2);}).start();
+			
 			timer.capture();
 		} catch (Exception e) {
 			return newResponseEntity(
@@ -138,7 +150,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		List<SlackUser_Event> listEvents = slackUserEventRepository.getByCriterion("event",
+		List<SlackUserEvent> listEvents = slackUserEventRepository.getByCriterion("event",
 				event);
 
 		if (listEvents.size() == 0)
@@ -148,7 +160,7 @@ public class ScoreWebService extends BaseWebService {
 
 		String textMessage = "List of scores of " + event.getName() + " :" + " \n ";
 
-		for (SlackUser_Event slackUserEvent: listEvents) {
+		for (SlackUserEvent slackUserEvent: listEvents) {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 
@@ -183,7 +195,7 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 		
 		return newResponseEntity("<@" + slackUser.getSlackUserId() + "|"
-				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + slackUser.getScore() + timer , true);
+				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + eventService.getGlobalScore(slackUser) + timer , true);
 	}
 }
 

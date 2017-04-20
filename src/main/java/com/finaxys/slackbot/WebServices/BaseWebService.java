@@ -36,12 +36,11 @@ public class BaseWebService {
         return false;
     }
     
-    
     public boolean isEventManager(String userId, String eventName) 
     {	
         List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
         //TODO
-        System.out.println("roles : " +  roles.size());
+        System.out.println("eventRepository : " +  roles.size());
         int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getEventId();
         
         for (Role role : roles)
@@ -54,9 +53,9 @@ public class BaseWebService {
     //TODO: uncomment the following method when the DB is ready
 //    public boolean isAdminOrEventManager(String userId, String eventName)
 //    {
-//    	List<Role> roles = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
+//    	List<Role> eventRepository = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
 //    	
-//    	for (Role role : roles)
+//    	for (Role role : eventRepository)
 //    	{
 //    		if (role.getEventId() == 0 || role.getEvent().getName() == eventName)
 //    			return true;

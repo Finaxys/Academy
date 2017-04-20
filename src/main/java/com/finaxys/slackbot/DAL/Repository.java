@@ -27,7 +27,6 @@ public class Repository<T, K extends Serializable> {
     }
 
     public Repository(Class<T> persistentClass) {
-    	System.out.println(persistentClass);
         this.persistentClass = persistentClass;
     }
 
@@ -83,8 +82,11 @@ public class Repository<T, K extends Serializable> {
 
     public List<T> getByCriterion(Object ...objects)
     {
+    	System.out.println(persistentClass);
+    	System.out.println(sessionFactory);
+    	System.out.println(sessionFactory.getCurrentSession());
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(persistentClass);
-    	
+    	System.out.println(criteria);
     	for (int i = 0; i < objects.length - 1; i+=2)
     		criteria.add(Restrictions.eq(objects[i].toString(), objects[i+1]));
     		

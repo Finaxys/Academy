@@ -1,9 +1,8 @@
 package com.finaxys.slackbot.Configuration;
 
-import com.finaxys.slackbot.BUL.Classes.*;
-import com.finaxys.slackbot.BUL.Interfaces.*;
-import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.DAL.*;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,26 +11,34 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-import java.util.Properties;
+import com.finaxys.slackbot.BUL.Classes.ChannelLeftServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.NewTribeJoinedServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionAddedServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.ReactionRemovedServiceImpl;
+import com.finaxys.slackbot.BUL.Classes.RealMessageRewardImpl;
+import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
+import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
+import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
+import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
+import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
+import com.finaxys.slackbot.BUL.Listeners.MessageListener;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.EventScore;
+import com.finaxys.slackbot.DAL.Parameter;
+import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.DAL.SlackUserEvent;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages={"com.finaxys.slackbot.DAL"}, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
-
-
 @ComponentScan({"com.finaxys.slackbot.*"})
 @PropertySource(value = "file:${catalina.home}/dataSourceInformation.properties")
 public class SpringContext {
@@ -48,19 +55,6 @@ public class SpringContext {
         return properties;
     }
 
-    
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-       LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-       em.setDataSource(dataSource());
-       em.setPackagesToScan(new String[] { "com.finaxys.slackbot.DAL" });
-  
-       JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-       em.setJpaVendorAdapter(vendorAdapter);
-       em.setJpaProperties(hibernateProperties());
-  
-       return em;
-    }    
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -70,7 +64,7 @@ public class SpringContext {
         dataSource.setPassword			(environment.getRequiredProperty("jdbc.password"));
         return dataSource;
     }
-
+    
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -133,14 +127,15 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<Event, Integer> challengeRepository() {
+    public Repository<Event, Integer> eventRepository() {
         return new Repository<>(Event.class);
     }
-
+    
     @Bean
-    public Repository<SlackUser_Event, SlackUser_Event_PK> finaxysProfileChallengeRepository() {
-        return new Repository<>(SlackUser_Event.class);
+    public Repository<Parameter, String> parameterRepository() {
+        return new Repository<>(Parameter.class);
     }
+    
 
     @Bean
     public Repository<EventScore, Integer> eventScoreRepository() {
@@ -148,15 +143,19 @@ public class SpringContext {
     }
     
     @Bean
+    public Repository<SlackUserEvent, String> slackUserEventRepository() {
+        return new Repository<>(SlackUserEvent.class);
+    }
+    
+    @Bean
     public com.finaxys.slackbot.BUL.Listeners.UserChangedListener userChangedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.UserChangedListener();
     }
-
+    
     @Bean
     public com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener channelCreatedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener();
     }
-
 
     @Bean
     public com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener reactionRemovedListener() {

@@ -32,17 +32,12 @@ public class EventManagerWebService extends BaseWebService {
 
 	@RequestMapping(value = "/event_manager/create", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> create(@RequestParam("token") String appVerificationToken,
-										   @RequestParam("team_domain") String slackTeam, 
-										   @RequestParam("text") String arguments,
-										   @RequestParam("user_id") String adminSlackUserId) {
+	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
+			   								@RequestParam("user_id") String adminSlackUserId) {
 
 		Timer timer = new Timer();
 
 		Log.info("/fx_manager_add  ");
-
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		timer.capture();
 
@@ -92,17 +87,12 @@ public class EventManagerWebService extends BaseWebService {
 
 	@RequestMapping(value = "/event_manager/remove", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> remove(@RequestParam("token") String appVerificationToken,
-										   @RequestParam("team_domain") String slackTeam, 
-										   @RequestParam("user_id") String userId,
-										   @RequestParam("text") String arguments) {
-		
+	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") String userId,
+			   								@RequestParam("text") String arguments) {
+										   
 		Timer timer = new Timer();
 
 		Log.info("/fx_manager_del" + arguments);
-
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		EventManagerArgumentsMatcher eventManagerArgumentsMatcher = new EventManagerArgumentsMatcher();
 		

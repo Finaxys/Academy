@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.Utilities;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.finaxys.slackbot.DAL.LogEvent;
 import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.interfaces.ParameterService;
 
 @PropertySource(value = "file:${catalina.home}/credentials.properties")
 @Component
@@ -29,6 +29,17 @@ public class Settings {
 		Log.setLogRepository(logRepository);
 	}
 
+	private static ParameterService parameterService;
+
+	@Autowired
+	public void setParameterService(ParameterService parameterService) {
+		System.out.println("parameterService" + parameterService);
+		this.parameterService = parameterService;
+		System.out.println(getParameter("param01"));
+	}
+
+	
+	
 	public static String appVerificationToken;
 	public static String botUserOauthAccessToken;
 	public static String slackTeam;
@@ -42,4 +53,10 @@ public class Settings {
 		slackTeamId = environment.getRequiredProperty("slackTeamId");
 		debugChannelId = environment.getRequiredProperty("debugChannelId");
 	}
+	
+	
+	public static String getParameter(String parameterName){
+		return parameterService.get(parameterName).getValue();
+	}
+	
 }

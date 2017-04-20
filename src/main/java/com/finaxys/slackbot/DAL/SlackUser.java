@@ -16,7 +16,7 @@ public class SlackUser implements Serializable {
 
     private Set<Role> roles;
     
-    private Set<SlackUser_Event> slackUserEvents;
+    private Set<SlackUserEvent> slackUserEvents;
 
     public SlackUser() {
         this.score = 0;
@@ -61,11 +61,11 @@ public class SlackUser implements Serializable {
     }
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "slackUser", cascade = CascadeType.ALL)
-    public Set<SlackUser_Event> getSlackUserEvents() {
+    public Set<SlackUserEvent> getSlackUserEvents() {
         return slackUserEvents;
     }
 
-    public void setSlackUserEvents(Set<SlackUser_Event> slackUserEvents) {
+    public void setSlackUserEvents(Set<SlackUserEvent> slackUserEvents) {
         this.slackUserEvents = slackUserEvents;
     }
     
@@ -84,5 +84,9 @@ public class SlackUser implements Serializable {
 
     public void decrementScore(int score) {
         this.score -= score;
+    }
+    
+    public boolean equals (SlackUser slackUser) {
+    	return this.slackUserId.equals(slackUser.getSlackUserId());
     }
 }

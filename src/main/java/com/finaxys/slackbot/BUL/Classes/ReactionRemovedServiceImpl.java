@@ -47,7 +47,11 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
 		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-			slackUserRepository.updateEntity(userProfile);
+			
+			new Thread(()->{
+				slackUserRepository.updateEntity(userProfile);
+			}).start();
+			
 			Log.logReactionRemoved(slackApiAccessService.getUser(myUserId).getName(),
 					slackApiAccessService.getUser(itemUserId).getName());
 
