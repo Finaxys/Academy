@@ -32,21 +32,15 @@ public class AdministratorWebService extends BaseWebService {
     
     @Autowired
     private SlackUserService slackUserService;
-    
-    //test
-
+   
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonNode> create(@RequestParam("token") 		String appVerificationToken,
-                                           @RequestParam("team_domain") String slackTeam,
-                                           @RequestParam("user_id") 	String profileId,
-                                           @RequestParam("text") 		String arguments) {
+    public ResponseEntity<JsonNode> create(	@RequestParam("user_id") 	String profileId,
+            								@RequestParam("text") 		String arguments)
+                                         {
     	Timer timer = new Timer();
-		
-        if (noAccess(appVerificationToken, slackTeam))
-            return noAccessResponseEntity(appVerificationToken, slackTeam);
-        
-        timer.capture();
+
+    	timer.capture();
         
         if (!isAdmin(profileId) && roleRepository.getByCriterion("role", "admin").size() != 0)
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);

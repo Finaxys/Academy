@@ -20,19 +20,12 @@ public class SlackUserWebService extends BaseWebService{
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonNode> listScores(@RequestParam("token") 		String appVerificationToken,
-                                               @RequestParam("team_domain") String slackTeam,
-                                               @RequestParam("text") 		String text){
+    public ResponseEntity<JsonNode> listScores(@RequestParam("text") 	String text){
     	
     	Timer timer = new Timer();
     	
         String messageText = "/fx_LeaderBoard " + text + "\n";
 
-        if (noAccess(appVerificationToken, slackTeam))
-            return noAccessResponseEntity(appVerificationToken, slackTeam);
-        
-        timer.capture();
-        
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         
         List<SlackUser> users = slackUserRepository.getAllOrderedByAsList("score", false, size);

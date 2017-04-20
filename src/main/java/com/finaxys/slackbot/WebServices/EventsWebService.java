@@ -64,19 +64,9 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text") 		 String text,
-														@RequestParam("token") 		 String appVerificationToken,
-														@RequestParam("team_domain") String slackTeam) {
+	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String text) {
 
 		Timer timer = new Timer();
-		
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
-		timer.capture();
-
-		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_events_by_type " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 		
 		EventTypeMatcher eventTypeMatcher = new EventTypeMatcher();
 		
@@ -96,21 +86,10 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/name", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 		 String text,
-														@RequestParam("token") 		 String appVerificationToken,
-														@RequestParam("team_domain") String slackTeam) {
+	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 	String text) {
 		Timer timer = new Timer();
 		
 		Log.info("/fx_event_named " + text);
-		
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
-		timer.capture();
-		
-		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_event_named " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
-		
 		
 		List<Event> events = eventRepository.getByCriterion("name", text);
 		
@@ -126,19 +105,9 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/date", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByDate(@RequestParam("text")  		  String text,
-														@RequestParam("token") 		  String appVerificationToken,
-														@RequestParam("team_domain")  String slackTeam) {
+	public ResponseEntity<JsonNode> getEventsByDate(@RequestParam("text")  		  String text) {
 
 		Timer timer = new Timer();
-		
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
-		timer.capture();
-
-		if (!requestParametersAreValid(new String[]{text, appVerificationToken, slackTeam}))
-			return newResponseEntity( " /fx_events_by_date " + text + " \n " + "There was a problem treating your request. Please try again." + timer , true);
 
 		DateMatcher dateMatcher = new DateMatcher();
 		
@@ -197,20 +166,9 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> create(@RequestParam("token") 		String appVerificationToken,
-										   @RequestParam("team_domain") String slackTeam,
-										   @RequestParam("text") 		String text,
-										   @RequestParam("user_id") 	String userId) {
-		
+	public ResponseEntity<JsonNode> create( @RequestParam("text") 		String text,
+			   								@RequestParam("user_id") 	String userId) {
 		Timer timer = new Timer();
-
-		if(noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		timer.capture();
-		
-		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_event_add " + text+ " \n " + "There was a problem treating your request. Please try again." + timer, true);
-
 
 		CreateEventMatcher createEventMatcher = new CreateEventMatcher();
 		
@@ -265,23 +223,15 @@ public class EventsWebService extends BaseWebService {
 			
 			return newResponseEntity("/fx_event_add "+text+" \n "+"Traitement en cours" + timer , true);
 		}
-
 	}
 
 	
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> remove(@RequestParam("token") 		String appVerificationToken,
-										   @RequestParam("team_domain") String slackTeam,
-										   @RequestParam("user_id") 	String profileId,
-										   @RequestParam("text") 		String text) {
+	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") 	String profileId,
+			   								@RequestParam("text") 		String text) {
 		
 		Timer timer = new Timer();
-
-		if(noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
-		timer.capture();
 		
 		String  		eventName = text.trim();
 		List<Event> events 	  = eventRepository.getByCriterion("name",eventName);
@@ -290,9 +240,6 @@ public class EventsWebService extends BaseWebService {
 		
 		if(events.size()==0)
 			return newResponseEntity("fx_event_del "+"\n"+"Non existent event." + timer ,true);
-
-		if (!requestParametersAreValid(new String[]{text,appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_event_del " + text+ " \n " + "There was a problem treanewting your request. Please try again." + timer , true);
 
 		if(!isEventManager(profileId,eventName) && !isAdmin(profileId))
 			return newResponseEntity("fx_event_del "+"\n"+"You are neither an admin nor a event manager!" + timer ,true);
