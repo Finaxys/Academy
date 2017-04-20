@@ -3,10 +3,11 @@ package com.finaxys.slackbot.interfaces;
 import java.util.List;
 
 import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.SlackUser;
 
 public interface EventService {
 
-	Event get(String id);
+	Event get(int id);
 	
 	Event save(Event event);
 	
@@ -18,5 +19,13 @@ public interface EventService {
 	default void update(Event event){
 		
 	}
+
+	Event getEventByName(String eventName);
+
+	Event getFinaxysEvent();
+
+	int getGlobalScore(SlackUser user);
+
+
 
 }

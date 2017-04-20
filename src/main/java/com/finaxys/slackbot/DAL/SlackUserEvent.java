@@ -57,4 +57,8 @@ public class SlackUserEvent implements Serializable {
     public void setSlackUser(SlackUser slackUser) {
         this.slackUser = slackUser;
     }
+
+	public void addScore(int score) {
+		this.score+=score;
+	}
 }

@@ -126,7 +126,7 @@ public class SpringContext {
     }
 
     @Bean
-    public Repository<Event, Integer> challengeRepository() {
+    public Repository<Event, Integer> eventRepository() {
         return new Repository<>(Event.class);
     }
 

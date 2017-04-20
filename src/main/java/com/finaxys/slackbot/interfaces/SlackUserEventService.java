@@ -2,6 +2,8 @@ package com.finaxys.slackbot.interfaces;
 
 import java.util.List;
 
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
 
 public interface SlackUserEventService {
@@ -18,5 +20,7 @@ public interface SlackUserEventService {
 	default void update(SlackUserEvent slackUserEvent){
 		
 	}
+
+	SlackUserEvent getSlackUserEvent(Event event, SlackUser slackUser);
 
 }

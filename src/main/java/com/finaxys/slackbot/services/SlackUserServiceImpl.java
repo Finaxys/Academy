@@ -35,5 +35,4 @@ public class SlackUserServiceImpl implements SlackUserService {
 	public List<SlackUser> getAll() {
 		return users.getAll();
 	}
-
 }
