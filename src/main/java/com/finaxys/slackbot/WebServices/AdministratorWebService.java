@@ -18,11 +18,11 @@ import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.SlackUserService;
-import com.finaxys.slackbot.services.AppParameters;
 
 @RestController
 @RequestMapping("/admins")

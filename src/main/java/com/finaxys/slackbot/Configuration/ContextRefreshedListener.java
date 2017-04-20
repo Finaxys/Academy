@@ -15,9 +15,9 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
+import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
-import com.finaxys.slackbot.services.AppParameters;
 
 import allbegray.slack.rtm.Event;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;

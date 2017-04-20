@@ -1,7 +1,5 @@
 package com.finaxys.slackbot.Utilities;
 
-import com.finaxys.slackbot.services.AppParameters;
-
 public class SlackBotTimer extends Timer{
 	
 	
