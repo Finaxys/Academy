@@ -8,6 +8,7 @@ import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.Timer;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +19,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admins")
+
 public class AdministratorWebService extends BaseWebService {
 
-    @Autowired
-    Repository<SlackUser, String> slackUserRepository;
     
     @Autowired
     Repository<Event, Integer> eventRepository;
     
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
+    
+    
+    @Autowired
+    private SlackUserService slackUserService;
     
     //test
 
@@ -41,7 +45,9 @@ public class AdministratorWebService extends BaseWebService {
 		
         if (noAccess(appVerificationToken, slackTeam))
             return noAccessResponseEntity(appVerificationToken, slackTeam);
+        
         timer.capture();
+        
         if (!isAdmin(profileId) && roleRepository.getByCriterion("role", "admin").size() != 0)
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);
         timer.capture();
@@ -59,10 +65,9 @@ public class AdministratorWebService extends BaseWebService {
         System.out.println("Name : "  + userName);
         if (!isAdmin(userId)) 
         {
-        	SlackUser slackUser = slackUserRepository.findById(userId);
+        	SlackUser slackUser = slackUserService.get(userId);
             slackUser = (slackUser == null) ? new SlackUser(userId, userName) : slackUser;
-            
-            slackUserRepository.saveOrUpdate(slackUser);
+            slackUserService.save(slackUser);
             
             Role role = new Role("admin");
             

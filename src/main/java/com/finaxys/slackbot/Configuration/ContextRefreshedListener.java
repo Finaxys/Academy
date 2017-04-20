@@ -58,10 +58,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME,
 					(ChannelChangedListener) context.getBean("channelChangedListener"));
-
 			slackRealTimeMessagingClient.connect();
 			SlackApiAccessService.init();
-			System.out.println("End");
 
 		}
 

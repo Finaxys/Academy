@@ -46,6 +46,7 @@ public class SlackApiAccessService {
 	}
 
 	public Channel getChannel(String channelId) {
+		System.out.println(allChannels);
 		if (!allChannels.containsKey(channelId)) {
 			allChannels.put(channelId, SlackBot.getSlackWebApiClient().getChannelInfo(channelId));
 		}
