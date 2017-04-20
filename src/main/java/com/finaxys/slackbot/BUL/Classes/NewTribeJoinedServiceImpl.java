@@ -26,15 +26,17 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 		if (jsonIsValid(jsonNode)) {
 			String userId = jsonNode.get("user").asText();
 			String channelId = jsonNode.get("channel").asText();
-			SlackUser userProfile = slackUserRepository.findById(userId);
+			
 
-			String name = slackApiAccessService.getUser(userId).getName();
-			userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
+			new Thread(()->{ 	SlackUser userProfile = slackUserRepository.findById(userId);
+								String name = slackApiAccessService.getUser(userId).getName();
+								userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
-			userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
-
-			slackUserRepository.saveOrUpdate(userProfile);
-			Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
+								userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
+								slackUserRepository.saveOrUpdate(userProfile);
+								Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
+								
+							}).start();
 		}
 	}
 
