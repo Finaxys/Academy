@@ -55,7 +55,11 @@ public class EventsWebService extends BaseWebService {
 
 		for (Event event : events) 
 		{
-			result += "Event name: " + event.getName() + ", number of participants: " + event.getAttendees().size() + " \n ";
+			result += 	"Event name: "
+						+ event.getName() 
+						+ ", number of participants: " 
+						+ event.getAttendees().size() 
+						+ " \n ";
 		}
 
 		return result;
@@ -64,22 +68,35 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String text) {
+	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String text) 
+	{
 
 		Timer timer = new Timer();
 		
 		EventTypeMatcher eventTypeMatcher = new EventTypeMatcher();
 		
 		if (!eventTypeMatcher.match(text))
-			return newResponseEntity(" /fx_events_by_type " + text + " \n " + "type has to be:[group|individual]" + timer , true);
+			return newResponseEntity(	" /fx_events_by_type " 
+										+ text 
+										+ " \n " + "type has to be:[group|individual]" 
+										+ timer , true);
 		timer.capture();
 		
 		List<Event> events = eventRepository.getByCriterion("type", text);
 		
 		if (events.isEmpty())
-			return newResponseEntity(" /fx_events_by_type " + text + " \n " + "No events with type" + text + timer ,true);
+			return newResponseEntity(	" /fx_events_by_type " 
+										+ text 
+										+ " \n " 
+										+ "No events with type" 
+										+ text 
+										+ timer ,true);
 
-		return newResponseEntity(" /fx_events_by_type " + text + " \n " + getStringFromList(events) + timer , true);
+		return newResponseEntity(	" /fx_events_by_type " 
+									+ text 
+									+ " \n " 
+									+ getStringFromList(events) 
+									+ timer , true);
 
 	}
 
@@ -96,9 +113,17 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (events.isEmpty())
-			return newResponseEntity("/fx_event_named "+text+"\n"+"Nonexistent event." + timer,true);
+			return newResponseEntity(	"/fx_event_named "
+										+text
+										+"\n"
+										+"Nonexistent event." 
+										+ timer,true);
 		else
-			return newResponseEntity( "/fx_events_named " + text + "\n " + getStringFromList(events) + timer , true);
+			return newResponseEntity( 	"/fx_events_named " 
+										+ text 
+										+ "\n " 
+										+ getStringFromList(events) 
+										+ timer , true);
 
 	}
 
@@ -112,7 +137,11 @@ public class EventsWebService extends BaseWebService {
 		DateMatcher dateMatcher = new DateMatcher();
 		
 		if (!dateMatcher.match(text.trim()))
-			return newResponseEntity(" /fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer ,true);
+			return newResponseEntity(	" /fx_events_by_date " 
+										+ text 
+										+ " \n " 
+										+ "Date format: yyyy-MM-dd" 
+										+ timer ,true);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -130,7 +159,12 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (events.isEmpty())
-			return newResponseEntity(" /fx_events_by_date " + text + " \n " + "There are no events on this date: " + text + timer ,true);
+			return newResponseEntity(	" /fx_events_by_date " 
+										+ text 
+										+ " \n " 
+										+ "There are no events on this date: " 
+										+ text 
+										+ timer ,true);
 		else
 			return newResponseEntity(getStringFromList(events) + timer ,true);
 	}
@@ -138,8 +172,8 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getAllEvents(@RequestParam("token") 	  String appVerificationToken,
-													 @RequestParam("team_domain") String slackTeam) {
+	public ResponseEntity<JsonNode> getAllEvents(	@RequestParam("token") 	  		String appVerificationToken,
+													@RequestParam("team_domain") 	String slackTeam) {
 		
 		Timer timer = new Timer();
 
@@ -149,7 +183,10 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!requestParametersAreValid(new String[]{appVerificationToken, slackTeam}))
-			return newResponseEntity(" /fx_event_list " + " \n " + "There was a problem treating your request. Please try again." + timer, true);
+			return newResponseEntity(	" /fx_event_list " 
+										+ " \n " 
+										+ "There was a problem treating your request. Please try again." 
+										+ timer, true);
 		
 		timer.capture();
 		
@@ -158,7 +195,10 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (events.isEmpty())
-			return newResponseEntity("/fx_event_list" + " \n " + "There no previous events! Come on create one!" + timer, true);
+			return newResponseEntity(	"/fx_event_list" 
+										+ " \n " 
+										+ "There no previous events! Come on create one!" 
+										+ timer, true);
 		else
 			return newResponseEntity(getStringFromList(events) + timer, true);
 	}
@@ -175,7 +215,10 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if (!createEventMatcher.match(text.trim()))
-			return  newResponseEntity(" /fx_event_add "+text+" \n "+"Your request should have the following format: [eventName] [group|individual] [descriptionText]" + timer ,true);
+			return  newResponseEntity(	" /fx_event_add "
+										+text+" \n "
+										+"Your request should have the following format: [eventName] [group|individual] [descriptionText]" 
+										+ timer ,true);
 		else 
 		{	
 			timer.capture();
@@ -183,9 +226,11 @@ public class EventsWebService extends BaseWebService {
 			List<String> eventInfo = Arrays.asList((text.trim().split(" ")));
 			Event event 	= new Event();
 			
-			int indexOfType = eventInfo.lastIndexOf("group") > eventInfo.lastIndexOf("individual") ?  eventInfo.lastIndexOf("group") : eventInfo.lastIndexOf("individual");
+			int indexOfType = eventInfo.lastIndexOf("group") > eventInfo.lastIndexOf("individual") ?  
+								eventInfo.lastIndexOf("group") : eventInfo.lastIndexOf("individual");
 			
 			event.setName(eventInfo.get(0));
+			
 			for(int i=1; i<indexOfType; i++){
 				event.setName(event.getName()+ " " + eventInfo.get(i));
 			}
@@ -215,7 +260,8 @@ public class EventsWebService extends BaseWebService {
 				
 				roleRepository.addEntity(role);
 				
-				newResponseEntity("/fx_event_add "+text+" \n "+"Traitement terminé" + timer , true);
+				newResponseEntity(	"/fx_event_add "
+									+text+" \n "+"Traitement terminé" + timer , true);
 		}
 		).start();
 			
