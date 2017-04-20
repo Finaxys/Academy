@@ -301,19 +301,14 @@ public class EventsWebService extends BaseWebService {
 		
 		Event  event =  events.get(0);
 		
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getEventId());
-				
-				for(Role role : roles)
-				{
-					roleRepository.delete(role);
-				}
-				
-				eventRepository.delete(event);
+		new Thread(()->{
+			List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getEventId());
+			
+			for(Role role : roles) {
+				roleRepository.delete(role);
 			}
+			eventRepository.delete(event);
+			
 		}).start();
 		
 		timer.capture();

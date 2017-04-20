@@ -60,14 +60,15 @@ public class EventManagerWebService extends BaseWebService {
 
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
-			SlackUser slackUser = slackUserRepository.findById(profileId);
-
-			timer.capture();
+			
+			
+			new Thread(()->{
+				SlackUser slackUser = slackUserRepository.findById(profileId);
+				
+				slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
+				slackUserRepository.saveOrUpdate(slackUser);
+				}).start();
 			List<Event> events = eventRepository.getByCriterion("name", eventName);
-
-			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
-
-			slackUserRepository.saveOrUpdate(slackUser);
 			timer.capture();
 			if (events.size() == 0)
 				return newResponseEntity("/fx_manager_add  :" + arguments + "\n " + "event does not exist" + timer,
