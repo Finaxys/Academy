@@ -261,13 +261,19 @@ public class EventsWebService extends BaseWebService {
 				roleRepository.addEntity(role);
 				
 				newResponseEntity(	"/fx_event_add "
-									+text+" \n "+"Traitement terminé" + timer , true);
+									+text+" \n "
+									+"Traitement terminé" 
+									+ timer , true);
 		}
 		).start();
 			
 			timer.capture();
 			
-			return newResponseEntity("/fx_event_add "+text+" \n "+"Traitement en cours" + timer , true);
+			return newResponseEntity(	"/fx_event_add "
+										+text
+										+" \n "
+										+"Traitement en cours" 
+										+ timer , true);
 		}
 	}
 
@@ -285,10 +291,16 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 		
 		if(events.size()==0)
-			return newResponseEntity("fx_event_del "+"\n"+"Non existent event." + timer ,true);
+			return newResponseEntity(	"fx_event_del "
+										+"\n"
+										+"Non existent event." 
+										+ timer ,true);
 
 		if(!isEventManager(profileId,eventName) && !isAdmin(profileId))
-			return newResponseEntity("fx_event_del "+"\n"+"You are neither an admin nor a event manager!" + timer ,true);
+			return newResponseEntity(	"fx_event_del "
+										+"\n"
+										+"You are neither an admin nor a event manager!" 
+										+ timer ,true);
 		
 		timer.capture();
 		
@@ -306,6 +318,10 @@ public class EventsWebService extends BaseWebService {
 		
 		timer.capture();
 		
-		return newResponseEntity("fx_event_del "+text+" \n "+"Event successfully removed." + timer , true);
+		return newResponseEntity(	"fx_event_del "
+									+text
+									+" \n "
+									+"Event successfully removed." 
+									+ timer , true);
 	}
 }
