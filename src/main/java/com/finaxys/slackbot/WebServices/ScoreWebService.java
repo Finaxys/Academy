@@ -27,7 +27,7 @@ public class ScoreWebService extends BaseWebService {
 	Repository<Event, Integer> eventRepository;
 
 	@Autowired
-	Repository<SlackUserEvent, SlackUser_Event_PK> slackUserEventRepository;
+	Repository<SlackUserEvent, String> slackUserEventRepository;
 
 	@Autowired
 	Repository<Role, Integer> roleRepository;

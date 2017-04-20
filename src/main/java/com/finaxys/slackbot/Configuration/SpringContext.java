@@ -34,6 +34,7 @@ import com.finaxys.slackbot.DAL.EventScore;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.DAL.SlackUserEvent;
 
 @Configuration
 @EnableTransactionManagement
@@ -135,15 +136,19 @@ public class SpringContext {
     }
     
     @Bean
+    public Repository<SlackUserEvent, String> slackUserEventRepository() {
+        return new Repository<>(SlackUserEvent.class);
+    }
+    
+    @Bean
     public com.finaxys.slackbot.BUL.Listeners.UserChangedListener userChangedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.UserChangedListener();
     }
-
+    
     @Bean
     public com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener channelCreatedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener();
     }
-
 
     @Bean
     public com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener reactionRemovedListener() {
