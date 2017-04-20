@@ -62,14 +62,18 @@ public class RealMessageRewardImpl implements RealMessageReward {
 
     }
 
-    private void increaseSlackUserScore(String userId) {
-        SlackUser profile = slackUserRepository.findById(userId);
-        if (profile == null) {
-            String profileName = slackApiAccessService.getUser(userId).getName();
-            profile = new SlackUser(userId, profileName);
-        }
-        profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
-        slackUserRepository.saveOrUpdate(profile);
+    private void increaseSlackUserScore(String userId) { 
+        new Thread(()->{
+        				SlackUser profile = slackUserRepository.findById(userId);
+        				if (profile == null) {
+        					String profileName = slackApiAccessService.getUser(userId).getName();
+        					profile = new SlackUser(userId, profileName);
+        				}
+        				profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
+        				slackUserRepository.saveOrUpdate(profile);
+        				
+        				}).start();
+        
     }
 
     private Channel getChannelById(String channelId) {

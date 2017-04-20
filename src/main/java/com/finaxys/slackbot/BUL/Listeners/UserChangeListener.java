@@ -32,6 +32,7 @@ public class UserChangeListener {
             String slackUserIName 			= slackApiAccessService.getUser(slackUserId).getName();
             slackUser 						= new SlackUser(slackUserId, slackUserIName);
         }
+        // test
         
         //TODO slackUser.setAdministrator(true);
         slackUserRepository.saveOrUpdate(slackUser);

@@ -50,6 +50,6 @@ public class InnovateServiceImpl implements InnovateService {
 
 	private void addInnovateScore(SlackUser userProfile) {
 		userProfile.incrementScore(SCORE_GRID.IS_INNOVATIVE.value());
-		slackUserRepository.saveOrUpdate(userProfile);
+		new Thread(()->{slackUserRepository.saveOrUpdate(userProfile);}).start();
 	}
 }
