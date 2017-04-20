@@ -1,5 +1,7 @@
 package com.finaxys.slackbot.Configuration;
 
+import java.util.Timer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -60,7 +62,9 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 					(ChannelChangedListener) context.getBean("channelChangedListener"));
 			slackRealTimeMessagingClient.connect();
 			SlackApiAccessService.init();
-
+			Timer cacheScheduledTask = new Timer(true);
+			SlackApiAccessService slackApiAccessService = new SlackApiAccessService();
+			cacheScheduledTask.scheduleAtFixedRate(slackApiAccessService , 60*60*1000, 60*60*1000);//cacheScheduledTask.schedule(slackApiAccessService , 12*60*60*1000, 12*60*60*1000); //Toutes les 12h 
 		}
 
 	}
