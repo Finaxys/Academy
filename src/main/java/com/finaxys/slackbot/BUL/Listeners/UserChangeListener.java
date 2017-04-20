@@ -33,7 +33,6 @@ public class UserChangeListener {
             slackUser 						= new SlackUser(slackUserId, slackUserIName);
         }
         
-        // test
         
         //TODO slackUser.setAdministrator(true);
         slackUserRepository.saveOrUpdate(slackUser);
