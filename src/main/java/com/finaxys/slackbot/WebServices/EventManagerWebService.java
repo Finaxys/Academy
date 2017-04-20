@@ -122,21 +122,24 @@ public class EventManagerWebService extends BaseWebService {
 		List<Event> events = eventRepository.getByCriterion("name", eventName);
 
 		timer.capture();
+		
+		if (events.size() == 0) {
+			Message message = new Message("event doesn't exist");
 
+			Log.info(message.getText());
+
+			return newResponseEntity(message);
+		}
+		
 		if (isEventManager(userId, eventName) || isAdmin(userId)) {
-			if (events.size() == 0) {
-				Message message = new Message("event doesn't exist");
-
-				Log.info(message.getText());
-
-				return newResponseEntity(message);
-			} else {
-				Event event = events.get(0);
-				List<Role> roles = roleRepository.getByCriterion("eventId", event.getEventId());
-
+				
+				Object[] roles = roleRepository.getAll().stream()
+						.filter(e -> e.getEvent() != null && e.getEvent().getEventId().equals(events.get(0).getEventId()))
+						.toArray();
 				timer.capture();
 
-				for (Role role : roles) {
+				for (Object r : roles) {
+					Role role = (Role)r;
 					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
 						roleRepository.delete(role);
 
@@ -159,7 +162,6 @@ public class EventManagerWebService extends BaseWebService {
 				Log.info(message.getText());
 
 				return newResponseEntity(message);
-			}
 		}
 
 		Message message = new Message(
