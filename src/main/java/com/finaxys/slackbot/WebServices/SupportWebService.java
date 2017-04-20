@@ -45,7 +45,9 @@ public class SupportWebService extends BaseWebService {
         String fxAdminCommands =
         				 "*/fxadmin_add* @username                                            || Adds an administrator. \n" +
                          "*/fxadmin_del* @username                                            || Removes an administrator. \n" +
-                         "*/fxadmin_manager_event_del*                                        || Removes an event!";
+                         "*/fxadmin_manager_event_del*                                        || Removes an event!" +
+                         "*/fxadmin_param* [parameter_name] [parameter_value]				  || Set the value of a parameter \n"+
+                         "*/fxadmin_list_params												  || List all parameters \n";
 
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 

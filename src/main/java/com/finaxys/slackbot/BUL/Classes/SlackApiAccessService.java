@@ -11,29 +11,13 @@ import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
 
 @Service
-public class SlackApiAccessService extends TimerTask{
+public class SlackApiAccessService{
 
 	private static Map<String, User> allUsers;
 
 	private static Map<String, Channel> allChannels;
-
-	public static void init() {
-		System.out.println("Init SlackApiAccessService" + Settings.appVerificationToken);
-
-		SlackBot.getSlackRealTimeMessagingClient().connect();
-
-		refreshCache();
-
-	}
-
-	@Override
-	public void run() {
-		System.out.println("Repeated Slack Api Access Service init after delay");
-		
-		refreshCache();
-	}
 	
-	private static void refreshCache() {
+	public static void refreshCache() {
 		List<Channel> channels = SlackBot.getSlackWebApiClient().getChannelList();
 		List<User> users = SlackBot.getSlackWebApiClient().getUserList();
 

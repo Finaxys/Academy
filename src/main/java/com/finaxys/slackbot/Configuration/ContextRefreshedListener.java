@@ -15,6 +15,7 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
+import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
 
 import allbegray.slack.rtm.Event;
@@ -61,10 +62,19 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME,
 					(ChannelChangedListener) context.getBean("channelChangedListener"));
 			slackRealTimeMessagingClient.connect();
-			SlackApiAccessService.init();
-			Timer cacheScheduledTask = new Timer(true);
-			SlackApiAccessService slackApiAccessService = new SlackApiAccessService();
-			cacheScheduledTask.scheduleAtFixedRate(slackApiAccessService , 60*60*1000, 60*60*1000);//cacheScheduledTask.schedule(slackApiAccessService , 12*60*60*1000, 12*60*60*1000); //Toutes les 12h 
+
+			new Thread(()->{
+				while(true){
+					try {
+						SlackApiAccessService.refreshCache();
+						Thread.sleep(Long.parseLong(Settings.getParameter("CACHE_DELAY"))*1000*60);
+						
+					} catch (NumberFormatException | InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+			
 		}
 
 	}
