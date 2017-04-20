@@ -31,6 +31,7 @@ import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.EventScore;
+import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -129,6 +130,12 @@ public class SpringContext {
     public Repository<Event, Integer> challengeRepository() {
         return new Repository<>(Event.class);
     }
+    
+    @Bean
+    public Repository<Parameter, String> parameterRepository() {
+        return new Repository<>(Parameter.class);
+    }
+    
 
     @Bean
     public Repository<EventScore, Integer> eventScoreRepository() {
