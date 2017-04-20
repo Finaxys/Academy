@@ -19,7 +19,7 @@ import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.Utilities.Timer;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
 
@@ -49,15 +49,10 @@ public class ScoreWebService extends BaseWebService {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> addEventScore(@RequestParam("token") String appVerificationToken,
-												  @RequestParam("team_domain") String slackTeam, 
-												  @RequestParam("text") String arguments,
+	public ResponseEntity<JsonNode> addEventScore(@RequestParam("text") String arguments,
 												  @RequestParam("user_id") String eventManagerId) {
 
-		Timer timer = new Timer();
-
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
+		SlackBotTimer timer = new SlackBotTimer();
 
 		timer.capture();
 
@@ -127,15 +122,10 @@ public class ScoreWebService extends BaseWebService {
 
 	@RequestMapping(value = "/listOne", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> listScoreForEvent(@RequestParam("token") String appVerificationToken,
-													  @RequestParam("team_domain") String slackTeam, 
-													  @RequestParam("text") String arguments) {
+	public ResponseEntity<JsonNode> listScoreForEvent(@RequestParam("text") String arguments) {
 
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
 		timer.capture();
 		
 		String eventName = arguments.trim();
@@ -173,14 +163,10 @@ public class ScoreWebService extends BaseWebService {
 
 	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> scoreList(@RequestParam("token") String appVerificationToken,
-											  @RequestParam("team_domain") String slackTeam, 
-											  @RequestParam("text") String arguments) {
+	public ResponseEntity<JsonNode> scoreList(@RequestParam("text") String arguments) {
 		
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 		
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
 		

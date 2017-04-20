@@ -50,29 +50,6 @@ public class BaseWebService {
         return false;
     }
     
-    //TODO: uncomment the following method when the DB is ready
-//    public boolean isAdminOrEventManager(String userId, String eventName)
-//    {
-//    	List<Role> eventRepository = roleRepository.getByCriterion("FINAXYSPROFILE_ID", userId);
-//    	
-//    	for (Role role : eventRepository)
-//    	{
-//    		if (role.getEventId() == 0 || role.getEvent().getName() == eventName)
-//    			return true;
-//    	}
-//    			
-//    	return false;
-//    }
-
-    
-    public boolean noAccess(String appVerificationToken, String slackTeam) 
-    {
-        if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
-            return false;
-        
-        return true;
-    }
-
     
     public ResponseEntity<JsonNode> noAccessResponseEntity(String appVerificationToken, String slackTeam) 
     {

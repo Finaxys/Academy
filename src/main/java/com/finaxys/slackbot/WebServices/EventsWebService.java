@@ -1,25 +1,29 @@
 package com.finaxys.slackbot.WebServices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
-import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
-import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
-import com.finaxys.slackbot.DAL.*;
-import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.Utilities.Timer;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
+import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
+import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
+import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
 @RestController
 @RequestMapping("/events")
@@ -37,16 +41,7 @@ public class EventsWebService extends BaseWebService {
 	@Autowired
 	Repository<Role, Integer> roleRepository;
 
-	private boolean requestParametersAreValid(String... parameters) 
-	{
-		for (String parameter : parameters) 
-		{
-			if (parameter == null || parameter.isEmpty())
-				return false;
-		}
-
-		return true;
-	}
+	
 
 
 	private String getStringFromList(List<Event> events) 
@@ -71,7 +66,7 @@ public class EventsWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String text) 
 	{
 
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 		
 		EventTypeMatcher eventTypeMatcher = new EventTypeMatcher();
 		
@@ -104,7 +99,7 @@ public class EventsWebService extends BaseWebService {
 	@RequestMapping(value = "/name", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 	String text) {
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 		
 		Log.info("/fx_event_named " + text);
 		
@@ -132,7 +127,7 @@ public class EventsWebService extends BaseWebService {
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByDate(@RequestParam("text")  		  String text) {
 
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
 		DateMatcher dateMatcher = new DateMatcher();
 		
@@ -175,19 +170,8 @@ public class EventsWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> getAllEvents(	@RequestParam("token") 	  		String appVerificationToken,
 													@RequestParam("team_domain") 	String slackTeam) {
 		
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
-		
-		timer.capture();
-		
-		if (!requestParametersAreValid(new String[]{appVerificationToken, slackTeam}))
-			return newResponseEntity(	" /fx_event_list " 
-										+ " \n " 
-										+ "There was a problem treating your request. Please try again." 
-										+ timer, true);
-		
 		timer.capture();
 		
 		List<Event> events = eventRepository.getAll();
@@ -199,6 +183,7 @@ public class EventsWebService extends BaseWebService {
 										+ " \n " 
 										+ "There no previous events! Come on create one!" 
 										+ timer, true);
+		
 		else
 			return newResponseEntity(getStringFromList(events) + timer, true);
 	}
@@ -208,7 +193,7 @@ public class EventsWebService extends BaseWebService {
 	@ResponseBody
 	public ResponseEntity<JsonNode> create( @RequestParam("text") 		String text,
 			   								@RequestParam("user_id") 	String userId) {
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
 		CreateEventMatcher createEventMatcher = new CreateEventMatcher();
 		
@@ -283,7 +268,7 @@ public class EventsWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") 	String profileId,
 			   								@RequestParam("text") 		String text) {
 		
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 		
 		String  		eventName = text.trim();
 		List<Event> events 	  = eventRepository.getByCriterion("name",eventName);

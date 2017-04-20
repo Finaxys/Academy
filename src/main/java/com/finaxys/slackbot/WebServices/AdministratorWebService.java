@@ -1,22 +1,28 @@
 package com.finaxys.slackbot.WebServices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
-import com.finaxys.slackbot.DAL.*;
-import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.Utilities.SlackBot;
-import com.finaxys.slackbot.Utilities.Timer;
-import com.finaxys.slackbot.interfaces.ParameterService;
-import com.finaxys.slackbot.interfaces.SlackUserService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
+import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Parameter;
+import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.SlackUserService;
+import com.finaxys.slackbot.services.AppParameters;
 
 @RestController
 @RequestMapping("/admins")
@@ -31,7 +37,7 @@ public class AdministratorWebService extends BaseWebService {
 	public SlackApiAccessService slackApiAccessService;
     
     @Autowired
-    private ParameterService parameterService;
+    private AppParameters parameters;
     
     @Autowired
     private SlackUserService slackUserService;
@@ -41,7 +47,7 @@ public class AdministratorWebService extends BaseWebService {
     public ResponseEntity<JsonNode> create(	@RequestParam("user_id") 	String profileId,
             								@RequestParam("text") 		String arguments)
                                          {
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
 
     	timer.capture();
         
@@ -87,7 +93,7 @@ public class AdministratorWebService extends BaseWebService {
     @ResponseBody
     public ResponseEntity<JsonNode> remove(@RequestParam("user_id") 	String userId,
                                            @RequestParam("text") 		String arguments) {
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
 		
         timer.capture();
         if (!isAdmin(userId))
@@ -124,7 +130,7 @@ public class AdministratorWebService extends BaseWebService {
     @ResponseBody
     public ResponseEntity<JsonNode> getAdministrators(@RequestParam("token") 		String appVerificationToken,
                                                       @RequestParam("team_domain")  String slackTeam) {
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
 		
         Log.info("/fxadmin_list");
         timer.capture();
@@ -148,14 +154,14 @@ public class AdministratorWebService extends BaseWebService {
     public ResponseEntity<JsonNode> param(	@RequestParam("user_id") 	String userId,
             								@RequestParam("text") 		String arguments)
                                          {
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
 
     	if (!isAdmin(userId))
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
         timer.capture();
-    	Parameter param = parameterService.get(arguments.split(" ")[0]);
+    	Parameter param = parameters.get(arguments.split(" ")[0]);
     	param.setValue(arguments.split(" ")[1]);
-    	parameterService.save(param);
+    	parameters.save(param);
     	
     	timer.capture();
       
@@ -167,11 +173,11 @@ public class AdministratorWebService extends BaseWebService {
     @ResponseBody
     public ResponseEntity<JsonNode> listParams(	@RequestParam("user_id") 	String userId)
                                          {
-    	Timer timer = new Timer();
+    	SlackBotTimer  timer = new SlackBotTimer();
     	
     	if (!isAdmin(userId))
             return newResponseEntity("/fxadmin_del : You are not an admin!" + timer);
-    	
-    	return newResponseEntity("/fxadmin_param :" + " \n" + parameterService.getAllAsLines() + timer,true);	//TODO change OK!!
+    	timer.capture();
+    	return newResponseEntity("/fxadmin_param :" + " \n" + parameters.getAllAsLines() + timer,true);	//TODO change OK!!
     }
 }
