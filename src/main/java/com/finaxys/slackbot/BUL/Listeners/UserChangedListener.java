@@ -34,6 +34,9 @@ public class UserChangedListener implements EventListener {
             if ( jsonNode.get("type").asText().equals("user_change")) {
             	
                 String slackUserId 	= jsonNode.get("user").get("id").asText();
+                
+                slackApiAccessService.updateUser(slackUserId);
+                
                 String slackUserIName 	= slackApiAccessService.getUser(slackUserId)
                                                       .getName();
                 SlackUser slackUser = slackUserRepository.findById(slackUserId);

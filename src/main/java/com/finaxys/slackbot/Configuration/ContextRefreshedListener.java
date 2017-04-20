@@ -7,6 +7,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
+import com.finaxys.slackbot.BUL.Listeners.ChannelChangedListener;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
@@ -54,6 +55,9 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			slackRealTimeMessagingClient.addListener(Event.MESSAGE,
 					(MessageListener) context.getBean("messageListener"));
+
+			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME,
+					(ChannelChangedListener) context.getBean("channelChangedListener"));
 
 			slackRealTimeMessagingClient.connect();
 			SlackApiAccessService.init();

@@ -51,4 +51,12 @@ public class SlackApiAccessService {
 		}
 		return allChannels.get(channelId);
 	}
+	
+	public void updateUser(String userId){
+		allUsers.put(userId, SlackBot.getSlackWebApiClient().getUserInfo(userId));
+	}
+	
+	public void updateChannel(String channelId){
+		allChannels.put(channelId, SlackBot.getSlackWebApiClient().getChannelInfo(channelId));
+	}
 }
