@@ -68,13 +68,8 @@ public class AdministratorWebService extends BaseWebService {
         if (!isAdmin(userId)) 
         {
         	SlackUser slackUser = slackUserService.get(userId);
-            slackUser = (slackUser == null) ? new SlackUser(userId, userName) : slackUser;
-            slackUserService.save(slackUser);
             
-            Role role = new Role("admin");
-            
-            role.setSlackUser(slackUser);
-            
+            Role role = new Role("admin", slackUser, null);
             new Thread(() -> { roleService.save(role);; }).start();
                      
             timer.capture();

@@ -23,7 +23,13 @@ public class Role implements Serializable{
     public Role(String role){
     	this.role = role;
     }
-    @Id
+    public Role(String role, SlackUser user, Event event) {
+    	this.role = role;
+    	this.slackUser = user;
+    	this.event = event;
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROLE_ID")
     public int getId() {

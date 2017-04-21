@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -20,10 +21,18 @@ public class SlackUserServiceImpl implements SlackUserService {
 
 	@Autowired
 	RoleService roles;
+	
+	@Autowired
+	SlackApiAccessService slackApiAccessService;
 
 	@Override
 	public SlackUser get(String id) {
-		return users.findById(id);
+		SlackUser user = users.findById(id);
+		if (user==null) {
+			user = new SlackUser(slackApiAccessService.getUser(id));	
+			this.save(user);
+		}
+		return user;
 	}
 
 	@Override

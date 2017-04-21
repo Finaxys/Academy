@@ -213,17 +213,9 @@ public class EventsWebService extends BaseWebService {
 			new Thread(() -> { 
 				
 				eventService.save(event);
-				
-				Role role = new Role();
-				
+								
 				SlackUser user = slackUserService.get(userId);
-				if(user == null){
-					String userName = slackApiAccessService.getUser(userId).getName();
-					user = new SlackUser(userId, userName);
-
-					slackUserService.save(user);
-				}
-				
+				Role role = new Role("event_manager", user, event);
 				role.setRole		  ("event_manager");
 				role.setSlackUser	  (user);
 				role.setEvent  		  (event);
