@@ -130,7 +130,10 @@ public class EventManagerWebService extends BaseWebService {
 				for (Object r : roles) {
 					Role role = (Role)r;
 					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
-						roleService.remove(role);
+						
+						Role role2 = role;
+						
+						new Thread(() -> {	roleService.remove(role2);	}).start();	
 
 						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
 								+ "|" + slackApiAccessService.getUser(slackUserId).getName()
