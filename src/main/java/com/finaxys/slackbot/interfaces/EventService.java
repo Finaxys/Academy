@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.interfaces;
 
+import java.util.Date;
 import java.util.List;
 
 import com.finaxys.slackbot.DAL.Event;
@@ -22,6 +23,10 @@ public interface EventService {
 	Event getFinaxysEvent();
 
 	int getGlobalScore(SlackUser user);
+
+	String getStringFromList(List<Event> events);
+
+	List<Event> getEventByDate(Date wantedDate);
 
 
 

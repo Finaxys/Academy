@@ -2,6 +2,7 @@ package com.finaxys.slackbot.interfaces;
 
 import java.util.List;
 
+import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Role;
 
 public interface RoleService {
@@ -17,6 +18,9 @@ public interface RoleService {
 	
 	List<Role> getAllAdmins();
 
+
 	List<Role> getAllManagers();
+
+	List<Role> getAllByEvent(Event event);
 
 }
