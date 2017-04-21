@@ -17,6 +17,7 @@ import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
+import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
@@ -45,17 +46,14 @@ public class ScoreWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		timer.capture();
-
-		EventScoreArgumentsMatcher eventScoreArgumentsMatcher = new EventScoreArgumentsMatcher();
-
-		if (!eventScoreArgumentsMatcher.isCorrect(arguments))
-			return newResponseEntity("/fx_event_score_add " + arguments + " \n "
-					+ "Arguments should suit ' .... @Username ... 20 ..... <eventName> event ..' Pattern !"
-					+ timer, true);
-
-		String userId = eventScoreArgumentsMatcher.getFinaxysProfileId(arguments);
-		String eventName = eventScoreArgumentsMatcher.getEventName(arguments);
-
+		
+		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_event_score_add");
+		
+		String userId = argumentsSplitter.getUserId();
+		String eventName = argumentsSplitter.getString(0);
+		
+		int score = Integer.parseInt(argumentsSplitter.getNbOfPts());
+		
 		timer.capture();
 
 		Event event = eventService.getEventByName(eventName);
@@ -70,7 +68,6 @@ public class ScoreWebService extends BaseWebService {
 			return newResponseEntity("/fx_event_score_add " + arguments + "\n"
 					+ "You are neither admin nor a event manager !" + timer, true);
 
-		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
 		SlackUser user = slackUserService.get(userId);
 		
@@ -148,15 +145,10 @@ public class ScoreWebService extends BaseWebService {
 		
 		SlackBotTimer timer = new SlackBotTimer();
 		
-
-		OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
+		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_score");
 		
-		timer.capture();
-		
-		if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
+		String userSlackId = argumentsSplitter.getUserId();
 
-		String userSlackId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
 		SlackUser slackUser = slackUserService.get(userSlackId);
 		
 		timer.capture();
