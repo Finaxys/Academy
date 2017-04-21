@@ -80,6 +80,6 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public List<Event> getEventByType(String type) {
-		return eventRepository.getByCriterion("type", type);;
+		return eventRepository.getByCriterion("type", type);
 	}
 }
