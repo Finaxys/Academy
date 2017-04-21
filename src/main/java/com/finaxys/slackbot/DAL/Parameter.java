@@ -14,6 +14,20 @@ public class Parameter implements Serializable {
 	private String name;
 	private String value;
 
+	public Parameter() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+	public Parameter(String name, String value) {
+		super();
+		setName(name);
+		setValue(value);
+	}
+
+
+
 	public String getName() {
 		return name;
 	}

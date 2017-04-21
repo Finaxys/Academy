@@ -178,10 +178,10 @@ public class EventsWebService extends BaseWebService {
 		timer.capture();
 
 		if (event == null)
-			return newResponseEntity("fx_event_del " + "\n" + "Non existent event." + timer, true);
+			return newResponseEntity("/fx_event_del \nNon existent event named "  + eventName + "!" + timer, true);
 
 		if (!isEventManager(profileId, eventName) && !isAdmin(profileId))
-			return newResponseEntity("fx_event_del " + "\n" + "You are neither an admin nor a event manager!" + timer,
+			return newResponseEntity("/fx_event_del " + "\n" + "You are neither an admin nor a event manager!" + timer,
 					true);
 
 		timer.capture();

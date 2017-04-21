@@ -22,24 +22,34 @@ public class AppParameters {
 	public void setParametersRepository(Repository<Parameter, String> parametersRepository) {
 		this.parametersRepository = parametersRepository;
 		AppParameters.parameters = new HashMap<>();
+
 		for (Parameter param : parametersRepository.getAll()) {
 			parameters.put(param.getName(), param);
 		}
+
+		if (parameters.get("CACHE_DELAY") == null)
+			save(new Parameter("CACHE_DELAY", "60"));
+		
+		if (parameters.get("TIMER") == null)
+			save(new Parameter("TIMER", "OFF"));
+		
+		if (parameters.get("DB_LOG") == null)
+			save(new Parameter("DB_LOG", "OFF"));
+
 	}
 
 	public Parameter get(String id) {
 		Parameter param = parameters.get(id.toUpperCase());
-		
-		if(param != null)
+
+		if (param != null)
 			return param;
-		
-		
+
 		param = new Parameter();
 		param.setName(id);
-		
+
 		parametersRepository.saveOrUpdate(param);
 		parameters.put(param.getName(), param);
-		
+
 		return param;
 	}
 
@@ -73,7 +83,7 @@ public class AppParameters {
 
 	public static String getValue(String paramName) {
 		Parameter param = parameters.get(paramName.toUpperCase());
-		if(param == null)
+		if (param == null)
 			return "";
 		return parameters.get(paramName.toUpperCase()).getValue();
 	}
