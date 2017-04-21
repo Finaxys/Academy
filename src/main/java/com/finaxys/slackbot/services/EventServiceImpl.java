@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.services;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class EventServiceImpl implements EventService {
 			return events.get(0);
 		}
 		else {
-			Event event = new Event("FINAXYS","Global event", new Date(), "individual");
+			Event event = new Event("FINAXYS","Global event", "individual");
 			this.save(event);
 			return event;
 			
@@ -77,5 +76,10 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List<Event> getEventByType(String type) {
+		return eventRepository.getByCriterion("type", type);;
 	}
 }

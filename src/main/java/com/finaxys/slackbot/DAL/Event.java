@@ -26,11 +26,12 @@ public class Event implements Serializable {
         attendees = new HashSet<>();
     }    
 
-    public Event(String name, String description, Date creationDate, String type) {
+    public Event(String name, String description, String type) {
 		super();
+		attendees = new HashSet<>();
 		this.name = name;
 		this.description = description;
-		this.creationDate = creationDate;
+		this.creationDate = new Date();
 		this.type = type;
 	}
 

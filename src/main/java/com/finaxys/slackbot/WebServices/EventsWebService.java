@@ -19,30 +19,26 @@ import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @RestController
 @RequestMapping("/events")
 public class EventsWebService extends BaseWebService {
-
+	
+	
 	@Autowired
-	private Repository<Event, Integer> eventRepository;
-
+	private SlackUserService slackUserService;
+	
 	@Autowired
-	Repository<SlackUser, String> slackUserRepository;
+	private EventService eventService;
 	
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
-
-	@Autowired
-	Repository<Role, Integer> roleRepository;
-
-	
-
 
 	private String getStringFromList(List<Event> events) 
 	{
@@ -195,6 +191,7 @@ public class EventsWebService extends BaseWebService {
 			   								@RequestParam("user_id") 	String userId) {
 		SlackBotTimer timer = new SlackBotTimer();
 
+		
 		CreateEventMatcher createEventMatcher = new CreateEventMatcher();
 		
 		timer.capture();
@@ -232,11 +229,12 @@ public class EventsWebService extends BaseWebService {
 				
 				Role role = new Role();
 				
-				SlackUser user = slackUserRepository.findById(userId);
+				SlackUser user = slackUserService.get(userId);
 				if(user == null){
 					String userName = slackApiAccessService.getUser(userId).getName();
 					user = new SlackUser(userId, userName);
-					slackUserRepository.addEntity(user);
+
+					slackUserService.save(user);
 				}
 				
 				role.setRole		  ("event_manager");
