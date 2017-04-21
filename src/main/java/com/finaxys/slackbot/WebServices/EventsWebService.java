@@ -53,7 +53,7 @@ public class EventsWebService extends BaseWebService {
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_events_by_type");
 
 		String eventType = argumentsSplitter.getEventType();
-
+		System.out.println(eventType + "-------------");
 		List<Event> events = eventService.getEventByType(eventType);
 
 		if (events.isEmpty())
