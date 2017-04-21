@@ -41,7 +41,7 @@ public class AdministratorWebService extends BaseWebService {
     @Autowired
     private SlackUserService slackUserService;
    
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/fxadmin_add", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> create(	@RequestParam("user_id") 	String profileId,
             								@RequestParam("text") 		String arguments)
@@ -83,7 +83,7 @@ public class AdministratorWebService extends BaseWebService {
 
     
 
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "/fxadmin_del", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> remove(@RequestParam("user_id") 	String userId,
                                            @RequestParam("text") 		String arguments) {
@@ -120,7 +120,7 @@ public class AdministratorWebService extends BaseWebService {
     
     
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/fxadmin_list", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> getAdministrators(@RequestParam("token") 		String appVerificationToken,
                                                       @RequestParam("team_domain")  String slackTeam) {
@@ -143,7 +143,7 @@ public class AdministratorWebService extends BaseWebService {
         return newResponseEntity("/fxadmin_list :" + " \n" + messageText + timer,true);
     }
     
-    @RequestMapping(value = "/param", method = RequestMethod.POST)
+    @RequestMapping(value = "/fxadmin_param", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> param(	@RequestParam("user_id") 	String userId,
             								@RequestParam("text") 		String arguments)
@@ -151,7 +151,7 @@ public class AdministratorWebService extends BaseWebService {
     	SlackBotTimer timer = new SlackBotTimer();
 
     	if (!isAdmin(userId))
-            return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
+            return newResponseEntity("/fxadmin_param " + arguments + " \n " + "You are not an admin!" + timer);
         timer.capture();
     	Parameter param = parameters.get(arguments.split(" ")[0]);
     	param.setValue(arguments.split(" ")[1]);
@@ -163,15 +163,15 @@ public class AdministratorWebService extends BaseWebService {
     	return newResponseEntity("/fxadmin_param :" + " \n" + "OK!" + timer,true);	//TODO change OK!!
     }
     
-    @RequestMapping(value = "/listParams", method = RequestMethod.POST)
+    @RequestMapping(value = "/fxadmin_list_params", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> listParams(	@RequestParam("user_id") 	String userId)
                                          {
     	SlackBotTimer  timer = new SlackBotTimer();
     	
     	if (!isAdmin(userId))
-            return newResponseEntity("/fxadmin_del : You are not an admin!" + timer);
+            return newResponseEntity("/fxadmin_list_params : You are not an admin!" + timer);
     	timer.capture();
-    	return newResponseEntity("/fxadmin_param :" + " \n" + parameters.getAllAsLines() + timer,true);	//TODO change OK!!
+    	return newResponseEntity("/fxadmin_list_params :" + " \n" + parameters.getAllAsLines() + timer,true);	//TODO change OK!!
     }
 }
