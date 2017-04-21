@@ -15,13 +15,12 @@ import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.EventScoreArgumentsMatcher;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @RestController
 @RequestMapping("/scores")
@@ -30,19 +29,10 @@ public class ScoreWebService extends BaseWebService {
 	private SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	Repository<SlackUser, String> slackUserRepository;
-
-	@Autowired
-	Repository<Event, Integer> eventRepository;
-
-	@Autowired
-	Repository<SlackUserEvent, String> slackUserEventRepository;
-
-	@Autowired
-	Repository<Role, Integer> roleRepository;
-	
-	@Autowired
 	EventService eventService;
+
+	@Autowired
+	SlackUserService slackUserService;
 	
 	@Autowired
 	SlackUserEventService slackUserEventService;
@@ -68,11 +58,11 @@ public class ScoreWebService extends BaseWebService {
 
 		timer.capture();
 
-		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		Event event = eventService.getEventByName(eventName);
 		
 		timer.capture();
 
-		if (events.size() == 0)
+		if (event==null)
 			return newResponseEntity("Nonexistent event" + timer, true);
 
 		//TODO
@@ -82,13 +72,12 @@ public class ScoreWebService extends BaseWebService {
 
 		int score = Integer.parseInt(eventScoreArgumentsMatcher.getScore(arguments));
 
-		SlackUser user = slackUserRepository.findById(userId);
+		SlackUser user = slackUserService.get(userId);
 		
 		if(user==null){
 			user = new SlackUser(userId,slackApiAccessService.getUser(userId).getName());
-			slackUserRepository.saveOrUpdate(user);
+			slackUserService.save(user);
 		}
-		Event event = eventService.getEventByName(eventName);
 		
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 		
@@ -106,7 +95,7 @@ public class ScoreWebService extends BaseWebService {
 		try {
 			timer.capture();
 
-			new Thread(()-> {slackUserEventRepository.saveOrUpdate(slackUserEvent2);}).start();
+			new Thread(()-> {slackUserEventService.save(slackUserEvent2);}).start();
 			
 			timer.capture();
 		} catch (Exception e) {
@@ -129,26 +118,23 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 		
 		String eventName = arguments.trim();
-		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		Event event = eventService.getEventByName(eventName);
 
-		if (events.size() == 0)
+		if (event == null)
 			return newResponseEntity(
 					"/fx_event_score_list " + arguments + " \n" + "No such event ! Check the event name" +timer,
 					true);
-
-		Event event = events.get(0);
 		
 		timer.capture();
 		
-		List<SlackUserEvent> listEvents = slackUserEventRepository.getByCriterion("event",
-				event);
+		List<SlackUserEvent> listEvents = slackUserEventService.getAllByEvent(event);
 
-		if (listEvents.size() == 0)
-			newResponseEntity(
+		if (listEvents ==null)
+			return newResponseEntity(
 					"/fx_event_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer ,
 					true);
 
-		String textMessage = "List of scores of " + event.getName() + " :" + " \n ";
+		String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
 
 		for (SlackUserEvent slackUserEvent: listEvents) {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
@@ -175,13 +161,13 @@ public class ScoreWebService extends BaseWebService {
 		if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
 			return newResponseEntity("/fx_score  : " + arguments + " \n " + "Arguments should be :@Username" + timer , true);
 
-		String profileId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
-		SlackUser slackUser = slackUserRepository.findById(profileId);
+		String userSlackId = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
+		SlackUser slackUser = slackUserService.get(userSlackId);
 		
 		timer.capture();
 		
 		return newResponseEntity("<@" + slackUser.getSlackUserId() + "|"
-				+ slackApiAccessService.getUser(profileId).getName() + "> score :" + eventService.getGlobalScore(slackUser) + timer , true);
+				+ slackApiAccessService.getUser(userSlackId).getName() + "> score :" + eventService.getGlobalScore(slackUser) + timer , true);
 	}
 }
 

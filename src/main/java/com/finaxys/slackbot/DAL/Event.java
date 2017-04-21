@@ -26,11 +26,12 @@ public class Event implements Serializable {
         attendees = new HashSet<>();
     }    
 
-    public Event(String name, String description, Date creationDate, String type) {
+    public Event(String name, String description, String type) {
 		super();
+		attendees = new HashSet<>();
 		this.name = name;
 		this.description = description;
-		this.creationDate = creationDate;
+		this.creationDate = new Date();
 		this.type = type;
 	}
 
@@ -61,7 +62,6 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @Temporal(TemporalType.TIME)
     public Date getCreationDate() {
         return creationDate;
     }
@@ -83,5 +83,13 @@ public class Event implements Serializable {
 
     public void setAttendees(Set<SlackUserEvent> attendees) {
         this.attendees = attendees;
+    }
+    
+    public String toString() {
+    	return "Event name: "
+				+ this.getName() 
+				+ ", number of participants: " 
+				+ this.getAttendees().size() 
+				+ " \n ";
     }
 }

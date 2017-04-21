@@ -38,17 +38,19 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 		if (jsonNode.get("item_user")== null)
 			return;
 
-		String itemUserId 			= jsonNode.get("item_user").asText();
-		String myUserId 			= jsonNode.get("user").asText();
-		String reaction 			= jsonNode.get("reaction").asText();
+		String itemUserId 		= jsonNode.get("item_user").asText();
+		String myUserId 		= jsonNode.get("user").asText();
+		String reaction 		= jsonNode.get("reaction").asText();
 		SlackUser userProfile 	= slackUserRepository.findById(itemUserId);
 
-		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
+		if (	listEmojis.contains(reaction) 
+				&& itemUserId 	!= null 
+				&& itemUserId 	!= myUserId 
+				&& userProfile 	!= null) {
+			
 			userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			slackUserRepository.updateEntity(userProfile);
-			Log.logReactionAdded(userProfile.getName(),
-					slackApiAccessService.getUser(itemUserId).getName());
+			Log.logReactionAdded(userProfile.getName(), slackApiAccessService.getUser(itemUserId).getName());
 		}
-
 	}
 }

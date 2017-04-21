@@ -12,11 +12,10 @@ public interface SlackUserService {
 	
 	void remove(SlackUser user);
 	
-	
 	List<SlackUser> getAll();
-	
-	default void update(SlackUser user){
-		
-	}
+
+	boolean isAdmin(String id);
+
+	List<SlackUser> getAllOrderedByScore(int size);
 
 }

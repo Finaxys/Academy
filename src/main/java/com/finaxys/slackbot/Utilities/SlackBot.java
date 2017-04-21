@@ -10,7 +10,7 @@ public class SlackBot {
 	
 	private static SlackWebApiClient slackWebApiClient;
 	private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
-
+	
 	public static SlackWebApiClient getSlackWebApiClient() {
 		return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(Settings.botUserOauthAccessToken)
 				: slackWebApiClient;
@@ -21,7 +21,7 @@ public class SlackBot {
 				? SlackClientFactory.createSlackRealTimeMessagingClient(Settings.botUserOauthAccessToken)
 				: slackRealTimeMessagingClient;
 	}
-
+	
 	public static void postMessageAsync(String channelId, String message) {
 		new Thread(() -> {
 			getSlackWebApiClient().postMessage(channelId, message);

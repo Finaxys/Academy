@@ -24,6 +24,7 @@ public class Settings {
 
 	@Autowired
 	public void setLogRepository(Repository<LogEvent, Integer> logRepository) {
+		System.out.println("setLogRepository : " + logRepository);
 		Settings.logRepository = logRepository;
 		Log.setLogRepository(logRepository);
 	}

@@ -44,6 +44,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
 
+			startCacheRefreshThread();
+
 			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
 					(UserChangedListener) context.getBean("userChangedListener"));
 
@@ -64,19 +66,23 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 					(ChannelChangedListener) context.getBean("channelChangedListener"));
 			slackRealTimeMessagingClient.connect();
 
-			new Thread(()->{
-				while(true){
-					try {
-						SlackApiAccessService.refreshCache();
-						Thread.sleep(Long.parseLong(AppParameters.getValue("CACHE_DELAY"))*1000*60);
-						
-					} catch (NumberFormatException | InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
+			
 			
 		}
 
+	}
+	
+	public void startCacheRefreshThread(){
+		new Thread(()->{
+			while(true){
+				try {
+					SlackApiAccessService.refreshCache();
+					Thread.sleep(Long.parseLong(AppParameters.getValue("CACHE_DELAY"))*1000*60);
+					
+				} catch (NumberFormatException | InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 }

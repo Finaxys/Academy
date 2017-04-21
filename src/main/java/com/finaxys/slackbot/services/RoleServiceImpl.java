@@ -5,18 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.interfaces.RoleService;
-import com.finaxys.slackbot.DAL.Repository;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
 	@Autowired
-	Repository<Role, String> roles;
+	Repository<Role, Integer> roles;
+	
+	@Autowired
+	Repository<Event, Integer> eventRepository;
 
 	@Override
-	public Role get(String id) {
+	public Role get(Integer id) {
 		return roles.findById(id);
 	}
 
@@ -36,4 +40,19 @@ public class RoleServiceImpl implements RoleService {
 		return roles.getAll();
 	}
 
+	@Override
+	public List<Role> getAllAdmins() {
+		return roles.getByCriterion("role", "admin");
+	}
+	
+	@Override
+	public List<Role> getAllByEvent(Event event) {
+		return roles.getByCriterion("eventId", event);
+		 	
+	}
+
+	@Override
+	public List<Role> getAllManagers() {
+		return roles.getByCriterion("role","event_manager");
+	}
 }

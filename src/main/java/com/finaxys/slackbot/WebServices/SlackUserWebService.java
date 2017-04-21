@@ -2,8 +2,8 @@ package com.finaxys.slackbot.WebServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 public class SlackUserWebService extends BaseWebService{
 
     @Autowired
-    private Repository<SlackUser, String> slackUserRepository;
+    private SlackUserService slackUserService;
 
     @RequestMapping(value = "/scores", method = RequestMethod.POST)
     @ResponseBody
@@ -28,7 +28,7 @@ public class SlackUserWebService extends BaseWebService{
 
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         
-        List<SlackUser> users = slackUserRepository.getAllOrderedByAsList("score", false, size);
+        List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
         
         for (SlackUser profile : users)
         {

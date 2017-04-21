@@ -13,15 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
-import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Parameter;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @RestController
@@ -29,10 +28,10 @@ import com.finaxys.slackbot.interfaces.SlackUserService;
 
 public class AdministratorWebService extends BaseWebService {
 
-    
-    @Autowired
-    Repository<Event, Integer> eventRepository;
-    
+
+	@Autowired
+	private RoleService roleService;
+	
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
     
@@ -51,7 +50,7 @@ public class AdministratorWebService extends BaseWebService {
 
     	timer.capture();
         
-        if (!isAdmin(profileId) && roleRepository.getByCriterion("role", "admin").size() != 0)
+        if (!isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);
         timer.capture();
         
@@ -76,7 +75,7 @@ public class AdministratorWebService extends BaseWebService {
             
             role.setSlackUser(slackUser);
             
-            new Thread(() -> { roleRepository.saveOrUpdate(role);; }).start();
+            new Thread(() -> { roleService.save(role);; }).start();
                      
             timer.capture();
             
@@ -109,13 +108,13 @@ public class AdministratorWebService extends BaseWebService {
         if (!isAdmin(id))
             return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!" + timer,true);
         timer.capture();
-        List<Role> roles = roleRepository.getByCriterion("role", "admin");
+        List<Role> roles = roleService.getAllAdmins();
         
         for (Role role : roles) 
         {
             if (role.getSlackUser().getSlackUserId().equals(id)) 
             {
-            	new Thread(()->{roleRepository.delete(role);}).start();
+            	new Thread(()->{roleService.remove(role);}).start();
                 
                 return  newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!" + timer,true);
             }
@@ -134,7 +133,7 @@ public class AdministratorWebService extends BaseWebService {
 		
         Log.info("/fxadmin_list");
         timer.capture();
-        List<Role> roles 	   = roleRepository.getByCriterion("role", "admin");
+        List<Role> roles 	   = roleService.getAllAdmins();
         String 	   messageText = "List of Admins: \n";
         
         timer.capture();

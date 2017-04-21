@@ -8,6 +8,9 @@ import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.RoleService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +21,14 @@ import java.util.List;
 public class BaseWebService {
 	
     @Autowired
+    RoleService roleService;
+    
+    @Autowired
     public Repository<Role, Integer> roleRepository;
     
+    @Autowired
+    EventService eventService;
+
     @Autowired
     Repository<Event, Integer> eventRepository;
 
@@ -27,7 +36,7 @@ public class BaseWebService {
     
     public boolean isAdmin(String userId)
     {	
-        List<Role> roles = roleRepository.getByCriterion("role", "admin");
+        List<Role> roles = roleService.getAllAdmins();
         
         for (Role role : roles)
             if (role.getSlackUser().getSlackUserId().equals(userId))
@@ -38,10 +47,10 @@ public class BaseWebService {
     
     public boolean isEventManager(String userId, String eventName) 
     {	
-        List<Role> roles 	   = roleRepository.getByCriterion("role", "event_manager");
+        List<Role> roles 	   = roleService.getAllManagers();
         //TODO
         System.out.println("eventRepository : " +  roles.size());
-        int 	   eventId = eventRepository.getByCriterion("name", eventName).get(0).getEventId();
+        int 	   eventId = eventService.getEventByName(eventName).getEventId();
         
         for (Role role : roles)
             if (role.getSlackUser().getSlackUserId().equals(userId) && role.getEvent().getEventId() == eventId)

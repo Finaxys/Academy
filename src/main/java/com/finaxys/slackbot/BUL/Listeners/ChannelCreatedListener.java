@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 
 @Component
-public class ChannelCreatedListener implements EventListener {
-
+public class ChannelCreatedListener implements EventListener 
+{
     @Autowired
     private InnovateService innovateService;
 
     @Override
-    public void handleMessage(JsonNode jsonNode) {
-
+    public void handleMessage(JsonNode jsonNode) 
+    {
         innovateService.rewardChannelCreated(jsonNode);
     }
 }

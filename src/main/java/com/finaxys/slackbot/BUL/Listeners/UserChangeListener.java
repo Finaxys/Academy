@@ -10,31 +10,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserChangeListener {
-	
+public class UserChangeListener 
+{
     @Autowired
     private Repository<SlackUser, String> slackUserRepository;
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
 	
-    public UserChangeListener() {
-    }
+    public UserChangeListener() {}
 
-    public void handleMessage(JsonNode jsonNode) {
-    	
-        String slackUserId 		= jsonNode.get("user").get("user_id").asText();
-        SlackUser slackUser 	= slackUserRepository.findById(slackUserId);
+    public void handleMessage(JsonNode jsonNode) 
+    {
         
-        if (slackUser == null) {
-        	
-            SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
-            String slackUserIName 			= slackApiAccessService.getUser(slackUserId).getName();
-            slackUser 						= new SlackUser(slackUserId, slackUserIName);
-        }
-        // test
-        
-        //TODO slackUser.setAdministrator(true);
-        slackUserRepository.saveOrUpdate(slackUser);
+    	new Thread(()->
+    	{
+    		String slackUserId 		= jsonNode.get("user").get("user_id").asText();
+            SlackUser slackUser 	= slackUserRepository.findById(slackUserId);
+            
+            if (slackUser == null) 
+            {
+                SlackWebApiClient slackWebApiClient = SlackBot.getSlackWebApiClient();
+                String 		slackUserIName 			= slackApiAccessService.getUser(slackUserId).getName();
+                slackUser 							= new SlackUser(slackUserId, slackUserIName);
+            }
+            
+            slackUserRepository.saveOrUpdate(slackUser);
+    		
+    	}).start();
     }
 }

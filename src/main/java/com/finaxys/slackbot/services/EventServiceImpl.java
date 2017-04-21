@@ -56,7 +56,7 @@ public class EventServiceImpl implements EventService {
 			return events.get(0);
 		}
 		else {
-			Event event = new Event("FINAXYS","Global event", new Date(), "individual");
+			Event event = new Event("FINAXYS","Global event", "individual");
 			this.save(event);
 			return event;
 			
@@ -77,5 +77,28 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List<Event> getEventByType(String type) {
+		return eventRepository.getByCriterion("type", type);
+	}
+	
+	@Override
+	public String getStringFromList(List<Event> events) 
+	{
+		String result = "";
+
+		for (Event event : events) 
+		{
+			result += event;
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<Event> getEventByDate(Date wantedDate) {
+		return eventRepository.getByCriterion("creationDate", wantedDate);
 	}
 }

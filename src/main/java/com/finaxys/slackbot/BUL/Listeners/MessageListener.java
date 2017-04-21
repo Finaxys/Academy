@@ -10,7 +10,8 @@ import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 
 @Component
-public class MessageListener implements EventListener {
+public class MessageListener implements EventListener 
+{
 
 	@Autowired
 	private NewTribeJoinedService newTribeJoinedService;
@@ -24,24 +25,25 @@ public class MessageListener implements EventListener {
 	@Autowired
 	private ChannelLeftService channelLeftService;
 
-	public MessageListener() {
-	}
+	public MessageListener() {}
 
-	public void handleMessage(JsonNode jsonNode) {
+	public void handleMessage(JsonNode jsonNode) 
+	{
 		if (!jsonNode.has("subtype"))
-		realMessageReward.rewardReadMessage(jsonNode);
-		else {
+			realMessageReward.rewardReadMessage(jsonNode);
+		
+		else 
+		{
 			String messageSubtype = jsonNode.get("subtype").asText();
 
 			if (messageSubtype.equals("channel_join"))
-			newTribeJoinedService.onNewTribeJoined(jsonNode);
+				newTribeJoinedService.onNewTribeJoined(jsonNode);
 			
 			else if (messageSubtype.equals("file_share"))
-			innovateService.rewardFileShared(jsonNode);
+				innovateService.rewardFileShared(jsonNode);
 			
 			else if (messageSubtype.equals("channel_leave"))
-			channelLeftService.onChannelLeaveMessage(jsonNode);
+				channelLeftService.onChannelLeaveMessage(jsonNode);
 		}
-
 	}
 }

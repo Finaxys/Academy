@@ -1,7 +1,6 @@
 package com.finaxys.slackbot.Utilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Parameter;
+import com.finaxys.slackbot.DAL.Repository;
 
 @Service
 public class AppParameters {
@@ -21,7 +20,6 @@ public class AppParameters {
 
 	@Autowired
 	public void setParametersRepository(Repository<Parameter, String> parametersRepository) {
-
 		this.parametersRepository = parametersRepository;
 		AppParameters.parameters = new HashMap<>();
 		for (Parameter param : parametersRepository.getAll()) {
@@ -74,6 +72,9 @@ public class AppParameters {
 	}
 
 	public static String getValue(String paramName) {
+		Parameter param = parameters.get(paramName.toUpperCase());
+		if(param == null)
+			return "";
 		return parameters.get(paramName.toUpperCase()).getValue();
 	}
 
