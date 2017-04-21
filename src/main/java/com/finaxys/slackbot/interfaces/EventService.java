@@ -13,12 +13,7 @@ public interface EventService {
 	
 	void remove(Event event);
 	
-	
 	List<Event> getAll();
-	
-	default void update(Event event){
-		
-	}
 
 	Event getEventByName(String eventName);
 

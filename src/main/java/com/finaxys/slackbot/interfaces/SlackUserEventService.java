@@ -14,13 +14,12 @@ public interface SlackUserEventService {
 	
 	void remove(SlackUserEvent slackUserEvent);
 	
-	
 	List<SlackUserEvent> getAll();
 	
-	default void update(SlackUserEvent slackUserEvent){
-		
-	}
+	void update(SlackUserEvent slackUserEvent);
 
 	SlackUserEvent getSlackUserEvent(Event event, SlackUser slackUser);
+	
+	List<SlackUserEvent> getAllByEvent(Event event);
 
 }

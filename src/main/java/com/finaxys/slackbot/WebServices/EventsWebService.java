@@ -215,7 +215,7 @@ public class EventsWebService extends BaseWebService {
 								eventInfo.lastIndexOf("group") : eventInfo.lastIndexOf("individual");
 			
 			event.setName(eventInfo.get(0));
-			
+			event.setCreationDate(new Date());
 			for(int i=1; i<indexOfType; i++){
 				event.setName(event.getName()+ " " + eventInfo.get(i));
 			}

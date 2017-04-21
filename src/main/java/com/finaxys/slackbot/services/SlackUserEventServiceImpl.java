@@ -1,7 +1,9 @@
 package com.finaxys.slackbot.services;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,22 +40,28 @@ public class SlackUserEventServiceImpl implements SlackUserEventService {
 	public List<SlackUserEvent> getAll() {
 		return slackUserEvents.getAll();
 	}
-	
+
 	@Override
 	public SlackUserEvent getSlackUserEvent(Event event, SlackUser slackUser) {
-Iterator<SlackUserEvent> slackUserEventIterator = event.getAttendees().iterator();
-		
+		Iterator<SlackUserEvent> slackUserEventIterator = event.getAttendees().iterator();
 		while (slackUserEventIterator.hasNext()) {
-			
 			SlackUserEvent slackUserEvent = slackUserEventIterator.next();
-			System.out.println(slackUserEvent.getSlackUser().getSlackUserId());
-			System.out.println(slackUser.getSlackUserId());
 			if (slackUserEvent.getSlackUser().equals(slackUser)) {
-				System.out.println("aaaaaaaaaaaaa");
 				return slackUserEvent;
 			}
 		}
 		return null;
+	}
+	@Override
+	public List<SlackUserEvent> getAllByEvent(Event event) {
+		Set<SlackUserEvent> set = event.getAttendees();
+		return set.isEmpty() ? null : new ArrayList<SlackUserEvent>(event.getAttendees());
+	}
+
+	@Override
+	public void update(SlackUserEvent slackUserEvent) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

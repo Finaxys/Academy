@@ -61,7 +61,6 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @Temporal(TemporalType.TIME)
     public Date getCreationDate() {
         return creationDate;
     }
