@@ -50,22 +50,21 @@ public class AdministratorWebService extends BaseWebService {
 
     	timer.capture();
         
-        if (!isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
+        if (!slackUserService.isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
             return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer,true);
+        
         timer.capture();
         
         ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
         
         String userId = argumentsSplitter.getUserId();
-        String userName = argumentsSplitter.getUserName();
         		
-        System.out.println("Name : "  + userName);
-        if (!isAdmin(userId)) 
+        if (!slackUserService.isAdmin(userId)) 
         {
         	SlackUser slackUser = slackUserService.get(userId);
             
             Role role = new Role("admin", slackUser, null);
-            new Thread(() -> { roleService.save(role);; }).start();
+            new Thread(() -> { roleService.save(role); }).start();
                      
             timer.capture();
             

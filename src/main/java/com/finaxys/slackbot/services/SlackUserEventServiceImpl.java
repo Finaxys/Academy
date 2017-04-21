@@ -44,6 +44,7 @@ public class SlackUserEventServiceImpl implements SlackUserEventService {
 	@Override
 	public SlackUserEvent getSlackUserEvent(Event event, SlackUser slackUser) {
 		Iterator<SlackUserEvent> slackUserEventIterator = event.getAttendees().iterator();
+		
 		while (slackUserEventIterator.hasNext()) {
 			SlackUserEvent slackUserEvent = slackUserEventIterator.next();
 			if (slackUserEvent.getSlackUser().equals(slackUser)) {
