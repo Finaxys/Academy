@@ -13,6 +13,9 @@ public class ArgumentsReader
 	
 	public List<Token> parse(String arguments)
 	{
+		if (arguments == null)
+			return null;
+		
 		List<Token> argsParsed = new ArrayList<Token>();
 		
 		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");

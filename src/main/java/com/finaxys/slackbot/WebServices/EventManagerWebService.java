@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.EventManagerArgumentsMatcher;
 import com.finaxys.slackbot.DAL.*;
+import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
@@ -20,7 +21,7 @@ public class EventManagerWebService extends BaseWebService {
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
-
+	
 	@Autowired
 	Repository<SlackUser, String> slackUserRepository;
 
@@ -30,7 +31,7 @@ public class EventManagerWebService extends BaseWebService {
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
-	@RequestMapping(value = "/event_manager/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/event_manager/fx_manager_add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
 			   								@RequestParam("user_id") String adminSlackUserId) {
@@ -38,35 +39,29 @@ public class EventManagerWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_add  ");
-
-		timer.capture();
-
-		EventManagerArgumentsMatcher eventManagerArgumentsMatcher = new EventManagerArgumentsMatcher();
-
-		if (!eventManagerArgumentsMatcher.isCorrect(arguments))
-			return newResponseEntity(
-					"/fx_manager_add  :" + arguments + "\n " + "Arguments should be :[event name] @Username" + timer,
-					true);
-		timer.capture();
-
-		String profileId = eventManagerArgumentsMatcher.getUserIdArgument(arguments);
-		String profileName = eventManagerArgumentsMatcher.getUserNameArgument(arguments);
-		String eventName = eventManagerArgumentsMatcher.getEventName(arguments);
-
+		
+		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
+		
+		String profileId   = argumentsSplitter.getUserId();
+		String profileName = argumentsSplitter.getUserName();
+		String eventName   = argumentsSplitter.getString(0);
+		
+		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		
+		if (events.isEmpty())
+		{
+			return newResponseEntity("/fx_manager_add : " + arguments + " event does not exist " + timer, true);
+		}
+		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
 			SlackUser slackUser = slackUserRepository.findById(profileId);
 
 			timer.capture();
-			List<Event> events = eventRepository.getByCriterion("name", eventName);
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
 
 			slackUserRepository.saveOrUpdate(slackUser);
-			timer.capture();
-			if (events.size() == 0)
-				return newResponseEntity("/fx_manager_add  :" + arguments + "\n " + "event does not exist" + timer,
-						true);
 
 			Role role = new Role();
 
@@ -85,7 +80,7 @@ public class EventManagerWebService extends BaseWebService {
 		return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer, true);
 	}
 
-	@RequestMapping(value = "/event_manager/remove", method = RequestMethod.POST)
+	@RequestMapping(value = "/event_manager/fx_manager_del", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") String userId,
 			   								@RequestParam("text") String arguments) {
@@ -93,21 +88,11 @@ public class EventManagerWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_del" + arguments);
-
-		EventManagerArgumentsMatcher eventManagerArgumentsMatcher = new EventManagerArgumentsMatcher();
 		
-		timer.capture();
-		if (!eventManagerArgumentsMatcher.isCorrect(arguments)) {
-			Message message = new Message(
-					"/fx_manager_del :" + arguments + "\n " + "Arguments should be :[event name] @Username");
-			Log.info(message.getText().toString());
-			return newResponseEntity(message);
-		}
-
-		timer.capture();
-
-		String slackUserId = eventManagerArgumentsMatcher.getUserIdArgument(arguments);
-		String eventName = eventManagerArgumentsMatcher.getEventName(arguments);
+		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_del");
+		
+		String slackUserId = argumentsSplitter.getUserId();
+		String eventName   = argumentsSplitter.getString(0);
 
 		List<Event> events = eventRepository.getByCriterion("name", eventName);
 
@@ -162,7 +147,7 @@ public class EventManagerWebService extends BaseWebService {
 		return newResponseEntity(message);
 	}
 
-	@RequestMapping(value = "/event_manager/list", method = RequestMethod.POST)
+	@RequestMapping(value = "/event_manager/fx_manager_list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("text") String arguments) {
 

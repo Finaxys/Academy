@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.finaxys.slackbot.interceptors.ArgumentsVerificationInterceptor;
 import com.finaxys.slackbot.interceptors.TokenVerificationInterceptor;
 
 @EnableWebMvc
@@ -20,5 +22,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	public void addInterceptors(InterceptorRegistry registry) {
 		super.addInterceptors(registry);
 		registry.addInterceptor(new TokenVerificationInterceptor());
+		registry.addInterceptor(new ArgumentsVerificationInterceptor());
 		}
 }
