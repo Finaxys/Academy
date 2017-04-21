@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RealMessageRewardImpl implements RealMessageReward {
-
+public class RealMessageRewardImpl implements RealMessageReward 
+{
     @Autowired
     private Repository<SlackUser, String> slackUserRepository;
 
@@ -27,8 +27,9 @@ public class RealMessageRewardImpl implements RealMessageReward {
     
     @Override
     @Transactional
-    public void rewardReadMessage(JsonNode jsonNode) {
-        if (noAdminsStored())
+    public void rewardReadMessage(JsonNode jsonNode) 
+    {
+    	if (noAdminsStored())
             setFinaxysProfileAsAdministrator(jsonNode);
         
         String 	channelId 	= jsonNode.get("channel").asText();
@@ -38,45 +39,56 @@ public class RealMessageRewardImpl implements RealMessageReward {
         if (tribeChannelMatcher.isNotTribe(channel.getName())) 
         	return;
         
-        RealMessageMatcher realMessageMatcher = new RealMessageMatcher();
-        String message = jsonNode.get("text").asText();
+        RealMessageMatcher 	realMessageMatcher = new RealMessageMatcher();
         
-        if (realMessageMatcher.isRealMessage(message)) {
+        String 	message = jsonNode.get("text").asText();
+        
+        if (realMessageMatcher.isRealMessage(message)) 
+        {
             String userId = jsonNode.get("user").asText();
             increaseSlackUserScore(userId);
         }
     }
 
-    public void setFinaxysProfileAsAdministrator(JsonNode jsonNode) {
-        String slackUserId = jsonNode.get("user").asText();
+    public void setFinaxysProfileAsAdministrator(JsonNode jsonNode) 
+    {
+        String 		slackUserId 	= jsonNode.get("user").asText();
 
-        String profileName = slackApiAccessService.getUser(slackUserId).getName();
+        String 		profileName 	= slackApiAccessService.getUser(slackUserId).getName();
 
-        SlackUser slackUser = new SlackUser(slackUserId, profileName);
-        //TODO slackUser.setAdministrator(true);
+        SlackUser 	slackUser 		= new SlackUser(slackUserId, profileName);
+        
         slackUserRepository.addEntity(slackUser);
     }
 
-    public boolean noAdminsStored() {
+    public boolean noAdminsStored() 
+    {
+    	
         return roleRepository.getByCriterion("role", "admin").size()==0;
 
     }
 
-    private void increaseSlackUserScore(String userId) { 
-        new Thread(()->{
-        				SlackUser profile = slackUserRepository.findById(userId);
-        				if (profile == null) {
-        					String profileName = slackApiAccessService.getUser(userId).getName();
-        					profile = new SlackUser(userId, profileName);
-        				}
-        				profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
-        				slackUserRepository.saveOrUpdate(profile);
+    private void increaseSlackUserScore(String userId) {
+    	
+        new Thread(()->
+        {
+        	SlackUser profile = slackUserRepository.findById(userId);
+        	
+        	if (profile == null) 
+        	{
+        		String profileName = slackApiAccessService.getUser(userId).getName();
+        		profile = new SlackUser(userId, profileName);
+        	}
+        	
+        	profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
+        	slackUserRepository.saveOrUpdate(profile);
         				
-        				}).start();
+        }).start();
         
     }
 
-    private Channel getChannelById(String channelId) {
+    private Channel getChannelById(String channelId) 
+    {
         return slackApiAccessService.getChannel(channelId);
     }
 }
