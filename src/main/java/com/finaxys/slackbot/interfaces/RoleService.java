@@ -17,4 +17,6 @@ public interface RoleService {
 	
 	List<Role> getAllAdmins();
 
+	List<Role> getAllManagers();
+
 }
