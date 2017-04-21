@@ -16,8 +16,13 @@ import com.finaxys.slackbot.interfaces.SlackUserService;
 @Service
 public class SlackUserServiceImpl implements SlackUserService {
 
-	@Autowired
 	Repository<SlackUser, String> users;
+
+	@Autowired
+	public void setUsers(Repository<SlackUser, String> users) {
+		users.getAll();
+		this.users = users;
+	}
 
 	@Autowired
 	RoleService roles;
@@ -54,7 +59,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public boolean isAdmin(String id) {
 		Iterator<Role> it = users.findById(id).getRoles().iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			Role r = it.next();
 			if (r.getRole().equals("admin"))
 				return true;
@@ -65,5 +70,5 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public List<SlackUser> getAllOrderedByScore(int size) {
 		return users.getAllOrderedByAsList("score", false, size);
-	}	
+	}
 }

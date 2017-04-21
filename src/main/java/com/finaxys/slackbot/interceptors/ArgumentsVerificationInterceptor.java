@@ -8,25 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.Utilities.ArgumentsVerifier;
 
-public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
+public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		String token = request.getParameter("token");
-		String slackTeam = request.getParameter("team_domain");
-		
-		if (token == null || !token.equals(Settings.appVerificationToken)) {
-			response.getWriter().write(new ResponseEntity("Wrong app verification token !", HttpStatus.BAD_REQUEST).toString());
-			return false;
-		}
+		ArgumentsVerifier verifier = new ArgumentsVerifier();
 
-		if (slackTeam == null || !slackTeam.equals(Settings.slackTeam)) {
-			response.getWriter().write(new ResponseEntity("Only for Finaxys members !", HttpStatus.BAD_REQUEST).toString());
+		String arguments = request.getParameter("text");
+		String URL = request.getRequestURI();
+		String command = "/" + URL.split("/")[URL.split("/").length - 1];
+
+		System.out.println("==================================================================================");
+		System.out.println(arguments);
+		System.out.println(URL);
+		System.out.println(command);
+
+		if (!verifier.Verify(arguments, command)) {
+			response.getWriter()
+					.write(new ResponseEntity("The arguments didn't match the pattern : \n" + "It should have been : "
+							+ verifier.commandPatternMap.get(command).toString(), HttpStatus.BAD_REQUEST).toString());
 			return false;
 		}
 
@@ -44,5 +47,4 @@ public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 	}
-
 }

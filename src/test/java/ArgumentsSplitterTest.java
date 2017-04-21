@@ -57,4 +57,22 @@ public class ArgumentsSplitterTest {
 		assertEquals(false, splitter.verifier.Verify(arguments, command));
 	}
 	
+	@Test
+	public void fx_manager_add_right_Test() {
+		
+		String arguments = "eventName <@U4ULGNAAE|arnaudb>";
+		String command = "/fx_manager_add";
+		
+		splitter = new ArgumentsSplitter(arguments, command);
+		
+		String profileId   = splitter.getUserId();
+		String profileName = splitter.getUserName();
+		String eventName   = splitter.getString(0);
+		
+		assertEquals(true, splitter.verifier.Verify(arguments, command));
+		assertEquals("U4ULGNAAE", profileId);
+		assertEquals("arnaudb", profileName);
+		assertEquals("eventName", eventName);
+	}
+	
 }

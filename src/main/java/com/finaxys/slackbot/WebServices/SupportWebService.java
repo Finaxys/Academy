@@ -31,7 +31,7 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_event_score_list*  [eventName] event \n Gives the score list of a given event. \n \n" +
                          "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n" +
                          "*/fx_event_score_add* @username [points] points [name] event \n Adds a score to an event attendee. \n \n" +
-                         "*/fx_manager_del* @username \n Removes an event manager. \n \n" +
+                         "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n" +
                          "*/fx_contest_add* [contest] [points earned] \n Adds a contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n";
 
