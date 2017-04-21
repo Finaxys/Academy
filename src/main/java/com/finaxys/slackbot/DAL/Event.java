@@ -92,4 +92,8 @@ public class Event implements Serializable {
 				+ this.getAttendees().size() 
 				+ " \n ";
     }
+    
+    public boolean equals (Event event) {
+    	return event.getEventId()==this.getEventId();
+    }
 }

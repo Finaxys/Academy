@@ -24,13 +24,7 @@ public class BaseWebService {
     RoleService roleService;
     
     @Autowired
-    public Repository<Role, Integer> roleRepository;
-    
-    @Autowired
     EventService eventService;
-
-    @Autowired
-    Repository<Event, Integer> eventRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
     

@@ -182,30 +182,15 @@ public class EventsWebService extends BaseWebService {
 
 		timer.capture();
 
-		Event event 	= new Event();
-
-		event.setName(eventName);
-		event.setCreationDate(new Date());
-		event.setType(eventType);
-		event.setDescription(eventDescription);
+		Event event = new Event(eventName, eventDescription, eventType);
 
 		new Thread(() -> { 
 
 			eventService.save(event);
-
-			Role role = new Role();
-
+			
 			SlackUser user = slackUserService.get(userId);
-			if(user == null){
-				String userName = slackApiAccessService.getUser(userId).getName();
-				user = new SlackUser(userId, userName);
 
-				slackUserService.save(user);
-			}
-
-			role.setRole		  ("event_manager");
-			role.setSlackUser	  (user);
-			role.setEvent  		  (event);
+			Role role = new Role("event_manager", user, event);
 
 			roleService.save(role);
 
@@ -222,7 +207,6 @@ public class EventsWebService extends BaseWebService {
 				+" \n "
 				+"Traitement en cours" 
 				+ timer , true);
-
 	}
 
 

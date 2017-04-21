@@ -1,6 +1,9 @@
 package com.finaxys.slackbot.DAL;
 
 import javax.persistence.*;
+
+import allbegray.slack.type.User;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -34,7 +37,12 @@ public class SlackUser implements Serializable {
         this.score 	= score;
     }
 
-    @Id
+    public SlackUser(User user) {
+    	slackUserId=user.getId();
+    	slackUserId=user.getName();
+	}
+
+	@Id
     @Column(name = "SLACK_USER_ID")
     public String getSlackUserId() {
         return slackUserId;

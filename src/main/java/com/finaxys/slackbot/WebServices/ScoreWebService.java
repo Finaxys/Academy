@@ -71,11 +71,6 @@ public class ScoreWebService extends BaseWebService {
 
 		SlackUser user = slackUserService.get(userId);
 		
-		if(user==null){
-			user = new SlackUser(userId,slackApiAccessService.getUser(userId).getName());
-			slackUserService.save(user);
-		}
-		
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 		
 		if (slackUserEvent!=null) {
