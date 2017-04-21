@@ -86,6 +86,7 @@ public class AdministratorWebService extends BaseWebService {
         timer.capture();
         if (!isAdmin(userId))
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
+        
         timer.capture();
         
         ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_del");

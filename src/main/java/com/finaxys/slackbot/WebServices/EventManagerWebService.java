@@ -1,18 +1,24 @@
 package com.finaxys.slackbot.WebServices;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.DAL.*;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Message;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
-import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -22,9 +28,6 @@ public class EventManagerWebService extends BaseWebService {
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
-	
-	@Autowired
-	private SlackUserEventService slackUserEventService;
 	
 	@Autowired
 	private EventService eventService;
@@ -38,7 +41,7 @@ public class EventManagerWebService extends BaseWebService {
 			   								@RequestParam("user_id") String adminSlackUserId) {
 		SlackBotTimer timer = new SlackBotTimer();
 
-		Log.info("/fx_manager_add  ");
+		Log.info("/fx_manager_add ");
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
 		
@@ -95,7 +98,7 @@ public class EventManagerWebService extends BaseWebService {
 										   
 		SlackBotTimer timer = new SlackBotTimer();
 
-		Log.info("/fx_manager_del" + arguments);
+		Log.info("/fx_manager_del " + arguments);
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_del");
 		

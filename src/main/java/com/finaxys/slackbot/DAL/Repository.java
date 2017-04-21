@@ -1,7 +1,11 @@
 package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -89,7 +93,7 @@ public class Repository<T, K extends Serializable> {
     	System.out.println(criteria);
     	for (int i = 0; i < objects.length - 1; i+=2)
     		criteria.add(Restrictions.eq(objects[i].toString(), objects[i+1]));
-    		
-    	return criteria.list();
+    	
+    	return new ArrayList<T>(new HashSet<T>(criteria.list()));
     }
 }
