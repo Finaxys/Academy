@@ -5,6 +5,8 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.interfaces.SlackUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,7 @@ import java.util.List;
 public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 
 	@Autowired
-	private Repository<SlackUser, String> slackUserRepository;
+	private SlackUserService slackUserService;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -43,7 +45,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		String itemUserId			= jsonNode.get("item_user").asText();
 		String myUserId 			= jsonNode.get("user").asText();
 		String reaction 			= jsonNode.get("reaction").asText();
-		SlackUser userProfile 	= slackUserRepository.findById(itemUserId);
+		SlackUser userProfile 	= slackUserService.get(itemUserId);
 
 		if (	listEmojis.contains(reaction) 
 				&& itemUserId != null 
@@ -52,7 +54,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		{
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			
-			new Thread(()->{	slackUserRepository.updateEntity(userProfile);	}).start();
+			new Thread(()->{	slackUserService.save(userProfile);	}).start();
 			
 			Log.logReactionRemoved(	slackApiAccessService.getUser(myUserId).getName(),
 									slackApiAccessService.getUser(itemUserId).getName());

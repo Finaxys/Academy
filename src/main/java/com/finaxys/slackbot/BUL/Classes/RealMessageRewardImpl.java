@@ -6,6 +6,8 @@ import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Matchers.RealMessageMatcher;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.interfaces.RoleService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 
@@ -17,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class RealMessageRewardImpl implements RealMessageReward 
 {
     @Autowired
-    private Repository<SlackUser, String> slackUserRepository;
+    private SlackUserService slackUserService;
 
     @Autowired
 	public SlackApiAccessService slackApiAccessService;
     
     @Autowired
-    private Repository<Role, Integer> roleRepository;
+    private RoleService roleService;
     
     @Override
     @Transactional
@@ -58,13 +60,13 @@ public class RealMessageRewardImpl implements RealMessageReward
 
         SlackUser 	slackUser 		= new SlackUser(slackUserId, profileName);
         
-        slackUserRepository.addEntity(slackUser);
+        slackUserService.save(slackUser);
     }
 
     public boolean noAdminsStored() 
     {
     	
-        return roleRepository.getByCriterion("role", "admin").size()==0;
+        return roleService.getAllAdmins().size()==0;
 
     }
 
@@ -72,7 +74,7 @@ public class RealMessageRewardImpl implements RealMessageReward
     	
         new Thread(()->
         {
-        	SlackUser profile = slackUserRepository.findById(userId);
+        	SlackUser profile = slackUserService.get(userId);
         	
         	if (profile == null) 
         	{
@@ -81,7 +83,7 @@ public class RealMessageRewardImpl implements RealMessageReward
         	}
         	
         	profile.incrementScore(SCORE_GRID.SENT_A_REAL_MESSAGE.value());
-        	slackUserRepository.saveOrUpdate(profile);
+        	slackUserService.save(profile);
         				
         }).start();
         

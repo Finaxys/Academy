@@ -7,6 +7,8 @@ import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.interfaces.SlackUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 
 	@Autowired
-	private Repository<SlackUser, String> slackUserRepository;
+	private SlackUserService slackUserService;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -28,12 +30,12 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 			String channelId = jsonNode.get("channel").asText();
 			
 
-			new Thread(()->{ 	SlackUser userProfile = slackUserRepository.findById(userId);
+			new Thread(()->{ 	SlackUser userProfile = slackUserService.get(userId);
 								String name = slackApiAccessService.getUser(userId).getName();
 								userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
 								userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
-								slackUserRepository.saveOrUpdate(userProfile);
+								slackUserService.save(userProfile);
 								Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
 								
 							}).start();

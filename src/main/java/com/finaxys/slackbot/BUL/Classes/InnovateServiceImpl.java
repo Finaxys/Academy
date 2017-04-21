@@ -7,6 +7,7 @@ import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.interfaces.ActionService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class InnovateServiceImpl implements InnovateService {
 
 	@Autowired
-	private Repository<SlackUser, String> slackUserRepository;
+	SlackUserService slackUserService;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -29,7 +30,7 @@ public class InnovateServiceImpl implements InnovateService {
 			return;
 
 		String userId = json.get("channel").get("creator").asText();
-		SlackUser userProfile = slackUserRepository.findById(userId);
+		SlackUser userProfile = slackUserService.get(userId);
 		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
@@ -41,7 +42,7 @@ public class InnovateServiceImpl implements InnovateService {
 	public void rewardFileShared(JsonNode json) {
 
 		String userId = json.get("user").asText();
-		SlackUser userProfile = slackUserRepository.findById(userId);
+		SlackUser userProfile = slackUserService.get(userId);
 		String name = slackApiAccessService.getUser(userId).getName();
 		userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
@@ -52,6 +53,6 @@ public class InnovateServiceImpl implements InnovateService {
 
 	private void addInnovateScore(SlackUser userProfile) {
 		userProfile.incrementScore(SCORE_GRID.IS_INNOVATIVE.value());
-		new Thread(()->{slackUserRepository.saveOrUpdate(userProfile);}).start();
+		new Thread(()->{slackUserService.save(userProfile);}).start();
 	}
 }

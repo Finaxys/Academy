@@ -11,12 +11,13 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Service
 public class ReactionAddedServiceImpl implements ReactionAddedService {
 
 	@Autowired
-	Repository<SlackUser, String> slackUserRepository;
+	SlackUserService slackUserService;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -41,7 +42,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 		String itemUserId 		= jsonNode.get("item_user").asText();
 		String myUserId 		= jsonNode.get("user").asText();
 		String reaction 		= jsonNode.get("reaction").asText();
-		SlackUser userProfile 	= slackUserRepository.findById(itemUserId);
+		SlackUser userProfile 	= slackUserService.get(itemUserId);
 
 		if (	listEmojis.contains(reaction) 
 				&& itemUserId 	!= null 
@@ -49,7 +50,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 				&& userProfile 	!= null) {
 			
 			userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
-			slackUserRepository.updateEntity(userProfile);
+			slackUserService.save(userProfile);
 			Log.logReactionAdded(userProfile.getName(), slackApiAccessService.getUser(itemUserId).getName());
 		}
 	}
