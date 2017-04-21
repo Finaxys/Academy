@@ -14,13 +14,13 @@ import com.finaxys.slackbot.interfaces.RoleService;
 public class RoleServiceImpl implements RoleService {
 
 	@Autowired
-	Repository<Role, String> roles;
+	Repository<Role, Integer> roles;
 	
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
 	@Override
-	public Role get(String id) {
+	public Role get(Integer id) {
 		return roles.findById(id);
 	}
 

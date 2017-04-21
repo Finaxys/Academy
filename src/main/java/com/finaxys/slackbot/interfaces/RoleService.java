@@ -7,7 +7,7 @@ import com.finaxys.slackbot.DAL.Role;
 
 public interface RoleService {
 
-	Role get(String id);
+	Role get(Integer id);
 	
 	Role save(Role role);
 	
