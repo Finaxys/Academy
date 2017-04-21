@@ -3,6 +3,7 @@ package com.finaxys.slackbot.interfaces;
 import java.util.Date;
 import java.util.List;
 
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.SlackUser;
 
@@ -27,6 +28,10 @@ public interface EventService {
 	String getStringFromList(List<Event> events);
 
 	List<Event> getEventByDate(Date wantedDate);
+	
+	void addAction(Event event, int code);
+
+	void addScore(Event event, String userId, Action action);
 
 
 

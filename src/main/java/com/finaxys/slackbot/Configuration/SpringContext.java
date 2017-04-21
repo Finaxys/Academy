@@ -136,15 +136,14 @@ public class SpringContext {
         return new Repository<>(Parameter.class);
     }
     
-
-    @Bean
-    public Repository<Action, Integer> eventScoreRepository() {
-        return new Repository<>(Action.class);
-    }
-    
     @Bean
     public Repository<SlackUserEvent, String> slackUserEventRepository() {
         return new Repository<>(SlackUserEvent.class);
+    }
+    
+    @Bean
+    public Repository<Action, Integer> actionRepository() {
+        return new Repository<>(Action.class);
     }
     
     @Bean

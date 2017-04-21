@@ -7,17 +7,30 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
+import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.SlackUserEventService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Service
 public class EventServiceImpl implements EventService {
 
-	
+	@Autowired
 	Repository<Event, Integer> eventRepository;
+	
+	@Autowired
+	ActionService actionService;
+	
+	@Autowired
+	SlackUserService slackUserService;
+	
+	@Autowired
+	SlackUserEventService slackUserEventService;
 
 	
 	@Autowired
@@ -108,5 +121,46 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public List<Event> getEventByDate(Date wantedDate) {
 		return eventRepository.getByCriterion("creationDate", wantedDate);
+	}
+
+	@Override
+	public void addAction(Event event, int code) {
+		Action action = actionService.get(code);
+		
+		System.out.println("trsr");
+		
+		if (action == null)
+		{
+			System.out.println("upgodhl");
+			return;
+		}
+		
+		event.getEventScores().add(action);
+		
+		System.out.println(event.getEventScores().iterator().next().getCode());
+		
+		new Thread(()->{eventRepository.saveOrUpdate(event);}).start();
+		
+	}
+
+	@Override
+	public void addScore(Event event, String userId, Action action) {
+		
+		
+		SlackUser user = slackUserService.get(userId);
+		
+		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
+		
+		if (slackUserEvent!=null) {
+			slackUserEvent.addScore(action.getPoints());
+		}
+		else {
+			slackUserEvent = new SlackUserEvent(action.getPoints(), event, user);
+		}
+		
+		SlackUserEvent slackUserEvent2 = slackUserEvent;
+		
+		new Thread(()->{slackUserEventService.save(slackUserEvent2);}).start();
+		
 	}
 }

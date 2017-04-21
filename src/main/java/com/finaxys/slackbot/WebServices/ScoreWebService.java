@@ -52,7 +52,7 @@ public class ScoreWebService extends BaseWebService {
 		String userId = argumentsSplitter.getUserId();
 		String eventName = argumentsSplitter.getString(0);
 		
-		int score = Integer.parseInt(argumentsSplitter.getNbOfPts());
+		int score = Integer.parseInt(argumentsSplitter.getIntegers(0));
 		
 		timer.capture();
 
@@ -156,5 +156,6 @@ public class ScoreWebService extends BaseWebService {
 		return newResponseEntity("<@" + slackUser.getSlackUserId() + "|"
 				+ slackApiAccessService.getUser(userSlackId).getName() + "> score :" + eventService.getGlobalScore(slackUser) + timer , true);
 	}
+
 }
 

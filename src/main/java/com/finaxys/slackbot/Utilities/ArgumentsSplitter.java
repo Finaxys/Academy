@@ -7,9 +7,9 @@ public class ArgumentsSplitter
 {
 	private String userName;
 	private String userId;
-	private String nbOfPts;
 	private String eventType;
 	
+	private List<String> integers;
 	private List<String> otherStrings;
 
 	private String eventDate;
@@ -19,9 +19,9 @@ public class ArgumentsSplitter
 	public ArgumentsSplitter(String arguments, String command)
 	{
 		otherStrings = new ArrayList<String>();
+		integers = new ArrayList<String>();
 		
 		verifier = new ArgumentsVerifier();
-		
 		ArgumentsReader reader = new ArgumentsReader();
 		
 		if (verifier.Verify(arguments, command))
@@ -33,14 +33,16 @@ public class ArgumentsSplitter
 			
 			for (Token token : reader.parse(arguments))
 			{
+				System.out.println(token.type);
+				
 				if (token.type.equals("UserId"))
 				{					
 					userId   = token.value.split("\\|")[0].split("<@")[1];
 					userName = token.value.split("\\|")[1].split(">")[0];
 				}
 				else if (token.type.equals("Integer"))
-				{					
-					nbOfPts = token.value;
+				{	
+					integers.add(token.value);
 				}
 				else if (token.type.equals("Type"))
 				{					
@@ -64,9 +66,9 @@ public class ArgumentsSplitter
 		return userId;
 	}
 	
-	public String getNbOfPts()
+	public String getIntegers(int position)
 	{
-		return nbOfPts;
+		return integers.get(position);
 	}
 	
 	public String getEventType()

@@ -32,6 +32,9 @@ public class ArgumentsVerifier
 		commandPatternMap.put("/fx_event_del",        "String");
 		commandPatternMap.put("/fx_score",            "UserId");
 		commandPatternMap.put("/fx_help",             "");
+		commandPatternMap.put("/fx_action_add",       "Integer String Integer");
+		commandPatternMap.put("/fx_event_action_add", "String Integer");
+		commandPatternMap.put("/fx_action_score_add", "String UserId Integer");
 	}
 	
 	public boolean Verify(String arguments, String command)
@@ -53,7 +56,6 @@ public class ArgumentsVerifier
 				return false;
 			}
 		}
-		
 		return true;
 	}
 }

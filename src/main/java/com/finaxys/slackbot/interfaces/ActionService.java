@@ -6,7 +6,7 @@ import com.finaxys.slackbot.DAL.Action;
 
 public interface ActionService {
 
-	Action get(String id);
+	Action get(int id);
 	
 	Action save(Action action);
 	

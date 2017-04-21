@@ -28,12 +28,17 @@ public class Action implements Serializable {
 		points=score;
 	}
 
+	public Action(int code, String actionName, int points) {
+		action=actionName;
+		this.points=points;
+		this.code=code;
+	}
+
 	public void setCode(Integer code) {
 		this.code = code;
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ACTION_ID")
 	public Integer getCode() {
 		return code;

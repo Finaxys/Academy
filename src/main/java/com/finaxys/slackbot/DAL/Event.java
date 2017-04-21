@@ -96,7 +96,7 @@ public class Event implements Serializable {
         this.attendees = attendees;
     }
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
     	      name="EVENT_ACTION",
     	      joinColumns=@JoinColumn(name="EVENT_ID", referencedColumnName="EVENT_ID"),
