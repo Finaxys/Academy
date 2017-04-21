@@ -72,6 +72,9 @@ public class AppParameters {
 	}
 
 	public static String getValue(String paramName) {
+		Parameter param = parameters.get(paramName.toUpperCase());
+		if(param == null)
+			return "";
 		return parameters.get(paramName.toUpperCase()).getValue();
 	}
 
