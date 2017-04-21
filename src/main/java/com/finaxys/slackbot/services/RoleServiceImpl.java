@@ -56,7 +56,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<Role> getAllByEvent(Event event) {
-		return roles.getByCriterion("eventId", event);
+		return roles.getByCriterion("event", event);
 
 	}
 

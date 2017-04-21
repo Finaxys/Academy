@@ -38,8 +38,9 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public void remove(Event user) {
-		eventRepository.delete(user);
+	public void remove(Event event) {
+		System.out.println("delete : " + event);
+		eventRepository.delete(event);
 	}
 
 	@Override
