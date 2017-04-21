@@ -9,7 +9,7 @@
 //import com.finaxys.slackbot.DAL.Repository;
 //import com.finaxys.slackbot.Utilities.Log;
 //import com.finaxys.slackbot.Utilities.Settings;
-//import com.finaxys.slackbot.Utilities.Timer;
+//import com.finaxys.slackbot.Utilities.SlackBotTimer;
 //
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@
 //                                               @RequestParam("team_domain") String slackTeam,
 //                                               @RequestParam("text") 		String text) {
 //    	
-//    	Timer timer = new Timer();
+//    	SlackBotTimer timer = new SlackBotTimer();
 //
 //        if (noAccess(appVerificationToken, slackTeam))
 //            return noAccessResponseEntity(appVerificationToken, slackTeam);

@@ -3,7 +3,7 @@ package com.finaxys.slackbot.WebServices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Utilities.Timer;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class SlackUserWebService extends BaseWebService{
     @ResponseBody
     public ResponseEntity<JsonNode> listScores(@RequestParam("text") 	String text){
     	
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
     	
         String messageText = "/fx_LeaderBoard " + text + "\n";
 

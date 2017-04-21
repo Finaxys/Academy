@@ -1,17 +1,16 @@
 package com.finaxys.slackbot.WebServices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
-import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
-import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
-import com.finaxys.slackbot.DAL.Message;
-import com.finaxys.slackbot.Utilities.Settings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finaxys.slackbot.Utilities.Settings;
 
 
 @RestController
@@ -24,11 +23,19 @@ public class EventApiWebService extends BaseWebService{
     public ResponseEntity<String> initializeEventApi(@RequestBody JsonNode jsonNode) {
     	
         if (jsonNode.has("challenge"))
-            return new ResponseEntity(jsonNode.get("challenge").asText(), HttpStatus.OK);
+            return new ResponseEntity<String>(jsonNode.get("challenge").asText(), HttpStatus.OK);
 
         if (noAccess(jsonNode.get("token").asText(), jsonNode.get("team_id").asText()))
             return noAccessStringResponseEntity(jsonNode.get("token").toString(),jsonNode.get("team_id").asText());
         
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
+    public boolean noAccess(String appVerificationToken, String slackTeam) 
+    {
+        if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
+            return false;
+        
+        return true;
     }
 }

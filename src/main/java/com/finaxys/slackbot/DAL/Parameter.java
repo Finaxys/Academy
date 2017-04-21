@@ -19,7 +19,7 @@ public class Parameter implements Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.toUpperCase();
 	}
 
 	public String getValue() {
@@ -27,7 +27,7 @@ public class Parameter implements Serializable {
 	}
 
 	public void setValue(String value) {
-		this.value = value;
+		this.value = value.toUpperCase();
 	}
 
 }

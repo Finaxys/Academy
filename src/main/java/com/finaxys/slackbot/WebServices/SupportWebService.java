@@ -1,16 +1,13 @@
 package com.finaxys.slackbot.WebServices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.finaxys.slackbot.DAL.Message;
-import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.Utilities.Timer;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
 @RestController
 @RequestMapping("/fx_help")
@@ -20,7 +17,7 @@ public class SupportWebService extends BaseWebService {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<JsonNode> fx_help(@RequestParam("user_id") String userId) {
     	
-    	Timer timer = new Timer();
+    	SlackBotTimer timer = new SlackBotTimer();
     	
         String fxCommands =
                 		 "*/fx_event_list* \n List all the events. \n \n" +

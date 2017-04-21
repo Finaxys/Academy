@@ -15,6 +15,7 @@ import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
+import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
 
@@ -67,7 +68,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 				while(true){
 					try {
 						SlackApiAccessService.refreshCache();
-						Thread.sleep(Long.parseLong(Settings.getParameter("CACHE_DELAY"))*1000*60);
+						Thread.sleep(Long.parseLong(AppParameters.getValue("CACHE_DELAY"))*1000*60);
 						
 					} catch (NumberFormatException | InterruptedException e) {
 						e.printStackTrace();

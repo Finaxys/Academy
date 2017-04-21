@@ -5,7 +5,7 @@ import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.EventManagerArgumentsMatcher;
 import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.Timer;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class EventManagerWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
 			   								@RequestParam("user_id") String adminSlackUserId) {
 
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_add  ");
 
@@ -90,7 +90,7 @@ public class EventManagerWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") String userId,
 			   								@RequestParam("text") String arguments) {
 										   
-		Timer timer = new Timer();
+		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_del" + arguments);
 
@@ -164,14 +164,9 @@ public class EventManagerWebService extends BaseWebService {
 
 	@RequestMapping(value = "/event_manager/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("token") String appVerificationToken,
-													 @RequestParam("team_domain") String slackTeam, 
-													 @RequestParam("text") String arguments) {
+	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("text") String arguments) {
 
 		Log.info("/fx_manager_list");
-
-		if (noAccess(appVerificationToken, slackTeam))
-			return noAccessResponseEntity(appVerificationToken, slackTeam);
 
 		String eventName = arguments.trim();
 		List<Event> events = eventRepository.getByCriterion("name", eventName);
