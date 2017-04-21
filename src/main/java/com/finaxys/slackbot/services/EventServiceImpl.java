@@ -16,9 +16,16 @@ import com.finaxys.slackbot.interfaces.EventService;
 @Service
 public class EventServiceImpl implements EventService {
 
-	@Autowired
+	
 	Repository<Event, Integer> eventRepository;
 
+	
+	@Autowired
+	public void SetEventRepository(Repository<Event, Integer> eventRepository){
+		this.eventRepository = eventRepository;
+		eventRepository.getAll();
+	}
+	
 	@Override
 	public Event get(int id) {
 		return eventRepository.findById(id);

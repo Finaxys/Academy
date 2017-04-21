@@ -51,7 +51,7 @@ public class AdministratorWebService extends BaseWebService {
     	timer.capture();
         
         if (!isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
-            return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer,true);
+            return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer,true);
         timer.capture();
         
         OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
