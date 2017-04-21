@@ -36,4 +36,8 @@ public class RoleServiceImpl implements RoleService {
 		return roles.getAll();
 	}
 
+	@Override
+	public List<Role> getAllAdmins() {
+		return roles.getByCriterion("role","admin");
+	}
 }

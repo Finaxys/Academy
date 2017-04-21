@@ -14,4 +14,6 @@ public interface SlackUserService {
 	
 	List<SlackUser> getAll();
 
+	boolean isAdmin(String id);
+
 }

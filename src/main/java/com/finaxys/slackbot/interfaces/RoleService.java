@@ -15,8 +15,6 @@ public interface RoleService {
 	
 	List<Role> getAll();
 	
-	default void update(Role role){
-		
-	}
+	List<Role> getAllAdmins();
 
 }
