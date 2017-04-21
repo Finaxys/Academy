@@ -38,7 +38,5 @@ public class UserChangeListener
             slackUserRepository.saveOrUpdate(slackUser);
     		
     	}).start();
-    	
-    	
     }
 }
