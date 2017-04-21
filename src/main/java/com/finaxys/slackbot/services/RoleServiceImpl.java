@@ -13,11 +13,20 @@ import com.finaxys.slackbot.interfaces.RoleService;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-	@Autowired
 	Repository<Role, Integer> roles;
-	
-	@Autowired
+
 	Repository<Event, Integer> eventRepository;
+
+	@Autowired
+	public void setEventRepository(Repository<Event, Integer> eventRepository) {
+		this.eventRepository = eventRepository;
+	}
+
+	@Autowired
+	public void setRoles(Repository<Role, Integer> roles) {
+		roles.getAll();
+		this.roles = roles;
+	}
 
 	@Override
 	public Role get(Integer id) {
@@ -44,15 +53,15 @@ public class RoleServiceImpl implements RoleService {
 	public List<Role> getAllAdmins() {
 		return roles.getByCriterion("role", "admin");
 	}
-	
+
 	@Override
 	public List<Role> getAllByEvent(Event event) {
 		return roles.getByCriterion("eventId", event);
-		 	
+
 	}
 
 	@Override
 	public List<Role> getAllManagers() {
-		return roles.getByCriterion("role","event_manager");
+		return roles.getByCriterion("role", "event_manager");
 	}
 }
