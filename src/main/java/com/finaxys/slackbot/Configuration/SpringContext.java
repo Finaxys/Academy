@@ -30,7 +30,7 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.EventScore;
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
@@ -138,8 +138,8 @@ public class SpringContext {
     
 
     @Bean
-    public Repository<EventScore, Integer> eventScoreRepository() {
-        return new Repository<>(EventScore.class);
+    public Repository<Action, Integer> eventScoreRepository() {
+        return new Repository<>(Action.class);
     }
     
     @Bean

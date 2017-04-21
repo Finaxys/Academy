@@ -4,19 +4,13 @@ import java.util.List;
 
 import com.finaxys.slackbot.DAL.Action;
 
-public interface EventScoreService {
+public interface ActionService {
 
 	Action get(String id);
 	
-	Action save(Action eventScore);
+	Action save(Action action);
 	
-	void remove(Action eventScore);
-	
+	void remove(Action action);
 	
 	List<Action> getAll();
-	
-	default void update(Action eventScore){
-		
-	}
-
 }

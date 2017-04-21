@@ -6,6 +6,8 @@ import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.interfaces.ActionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

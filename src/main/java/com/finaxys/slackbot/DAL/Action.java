@@ -2,6 +2,7 @@ package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "EVENT_SCORE")
-public class EventScore implements Serializable {
+@Table(name = "ACTION")
+public class Action implements Serializable {
 	/**
 	 * 
 	 */
@@ -19,10 +20,10 @@ public class EventScore implements Serializable {
 	private String 	action;
 	private int 	points;
 
-	public EventScore() {
+	public Action() {
 	}
 
-	public EventScore(String event, int score) {
+	public Action(String event, int score) {
 		action=event;
 		points=score;
 	}
@@ -33,6 +34,7 @@ public class EventScore implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="ACTION_ID")
 	public Integer getCode() {
 		return code;
 	}

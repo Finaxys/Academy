@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finaxys.slackbot.DAL.EventScore;
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Repository;
 
 @Service
@@ -15,7 +15,7 @@ public class ScoreService
 	private static Map<String, Integer> scores;
 	
 	@Autowired
-	Repository<EventScore, Integer> scoreRepository;
+	Repository<Action, Integer> scoreRepository;
 	
 	public ScoreService() 
 	{		
@@ -24,7 +24,7 @@ public class ScoreService
 
 	public void init() 
 	{		
-		for (EventScore es : scoreRepository.getAll()) 
+		for (Action es : scoreRepository.getAll()) 
 		{
 			scores.put(es.getAction(), es.getPoints());
 		}

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finaxys.slackbot.DAL.EventScore;
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.interfaces.EventScoreService;
 
@@ -13,26 +13,26 @@ import com.finaxys.slackbot.interfaces.EventScoreService;
 public class EventScoreServiceImpl implements EventScoreService {
 
 	@Autowired
-	Repository<EventScore, String> eventScores;
+	Repository<Action, String> eventScores;
 
 	@Override
-	public EventScore get(String id) {
+	public Action get(String id) {
 		return eventScores.findById(id);
 	}
 
 	@Override
-	public EventScore save(EventScore eventScore) {
+	public Action save(Action eventScore) {
 		eventScores.saveOrUpdate(eventScore);
 		return eventScore;
 	}
 
 	@Override
-	public void remove(EventScore eventScore) {
+	public void remove(Action eventScore) {
 		eventScores.delete(eventScore);
 	}
 
 	@Override
-	public List<EventScore> getAll() {
+	public List<Action> getAll() {
 		return eventScores.getAll();
 	}
 
