@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
+import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -23,18 +24,26 @@ public class SlackUserServiceImpl implements SlackUserService {
 		users.getAll();
 		this.users = users;
 	}
+	
+	Repository<Event, Integer> events;
+
+	@Autowired
+	public void setEvents(Repository<Event, Integer> events) {
+		this.events = events;
+	}
+
 
 	@Autowired
 	RoleService roles;
-	
+
 	@Autowired
 	SlackApiAccessService slackApiAccessService;
 
 	@Override
 	public SlackUser get(String id) {
 		SlackUser user = users.findById(id);
-		if (user==null) {
-			user = new SlackUser(slackApiAccessService.getUser(id));	
+		if (user == null) {
+			user = new SlackUser(slackApiAccessService.getUser(id));
 			this.save(user);
 		}
 		return user;
@@ -58,10 +67,37 @@ public class SlackUserServiceImpl implements SlackUserService {
 
 	@Override
 	public boolean isAdmin(String id) {
-		Iterator<Role> it = users.findById(id).getRoles().iterator();
+		SlackUser user = users.findById(id);
+
+		if (user == null)
+			return false;
+
+		Iterator<Role> it = user.getRoles().iterator();
 		while (it.hasNext()) {
 			Role r = it.next();
 			if (r.getRole().equals("admin"))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isEventManager(String id, String eventName) {
+		SlackUser user = users.findById(id);
+
+		if (user == null)
+			return false;
+		List<Event> list = events.getByCriterion("name", eventName);
+		
+		if(list.size() <= 0)
+			return false;
+		
+		Integer eventId = list.get(0).getEventId();
+		
+		Iterator<Role> it = user.getRoles().iterator();
+		while (it.hasNext()) {
+			Role r = it.next();
+			if (r.getRole().equals("event_manager") && r.getEvent().getEventId().equals(eventId))
 				return true;
 		}
 		return false;

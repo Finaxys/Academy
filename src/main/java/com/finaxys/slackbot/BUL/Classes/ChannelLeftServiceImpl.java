@@ -9,6 +9,7 @@ import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,10 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 	public SlackApiAccessService slackApiAccessService;
 
 	@Autowired
-	private Repository<SlackUser, String> slackUserRepository;
+	private SlackUserService slackUserService;
 	
 	@Autowired
-	Repository<SlackUserEvent, String> slackUserEventRepository;
-	
-	@Autowired
-	SlackUserEventService slackUserEventService;
+	private SlackUserEventService slackUserEventService;
 
 	@Transactional
 	@Override
@@ -44,14 +42,14 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 
 			String userId = jsonNode.get("user").asText();
 			
-			SlackUser profile = slackUserRepository.findById(userId);
+			SlackUser profile = slackUserService.get(userId);
 
 			if (profile.getScore() == 0)
 				return;
 		
 			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 			
-			new Thread(()->{	slackUserRepository.updateEntity(profile);	}).start();
+			new Thread(()->{	slackUserService.save(profile);	}).start();
 			
 			Log.logMemberLeftChannel(profile.getName(), channel.getName());
 		}

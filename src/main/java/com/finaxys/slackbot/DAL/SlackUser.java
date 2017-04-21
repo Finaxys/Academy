@@ -5,6 +5,7 @@ import javax.persistence.*;
 import allbegray.slack.type.User;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,7 +18,7 @@ public class SlackUser implements Serializable {
     private String 	name;
     private int 	score;
 
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
     
     private Set<SlackUserEvent> slackUserEvents;
 
@@ -39,7 +40,7 @@ public class SlackUser implements Serializable {
 
     public SlackUser(User user) {
     	slackUserId=user.getId();
-    	slackUserId=user.getName();
+    	name=user.getName();
 	}
 
 	@Id
@@ -48,7 +49,7 @@ public class SlackUser implements Serializable {
         return slackUserId;
     }
 
-    public void setslackUserId(String id) {
+    public void setSlackUserId(String id) {
         this.slackUserId = id;
     }
 
@@ -77,7 +78,7 @@ public class SlackUser implements Serializable {
         this.slackUserEvents = slackUserEvents;
     }
     
-    @OneToMany(mappedBy = "slackUser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "slackUser", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     public Set<Role> getRoles() {
         return roles;
     }
@@ -95,6 +96,7 @@ public class SlackUser implements Serializable {
     }
     
     public boolean equals (SlackUser slackUser) {
+    	System.out.println(slackUser.getSlackUserId() + "  Compare to  " + this.getSlackUserId());
     	return this.slackUserId.equals(slackUser.getSlackUserId());
     }
 }

@@ -6,6 +6,8 @@ import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,12 @@ public class EventManagerWebService extends BaseWebService {
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
+	
+	@Autowired
+	private SlackUserEventService slackUserEventService;
+	
+	@Autowired
+	private EventService eventService;
 	
 	@Autowired
 	private SlackUserService slackUserService;
@@ -47,17 +55,29 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
+			
+			
+			
+			
+			
 			SlackUser slackUser = slackUserService.get(profileId);
 
 			timer.capture();
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
-
-			slackUserService.save(slackUser);
-
+			
+			if(slackUserService.isEventManager(profileId, eventName))
+				return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
+						+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
+						+ "> is already a manager!" + timer, true);
+			
+			
 			Role role = new Role("event_manager",slackUser,event);
-
-			roleService.save(role);
+			
+			slackUser.getRoles().add(role);
+			
+			slackUserService.save(slackUser);
+			
 			timer.capture();
 
 			return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
