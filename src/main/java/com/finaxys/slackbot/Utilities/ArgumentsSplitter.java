@@ -11,9 +11,7 @@ public class ArgumentsSplitter
 	private String eventType;
 	
 	private List<String> otherStrings;
-	
-	private String eventName;
-	private String eventDescription;
+
 	private String eventDate;
 	
 	public ArgumentsVerifier verifier;
@@ -71,19 +69,9 @@ public class ArgumentsSplitter
 		return nbOfPts;
 	}
 	
-	public String getEventName()
-	{
-		return eventName;
-	}
-	
 	public String getEventType()
 	{
 		return eventType;
-	}
-	
-	public String getEventDescription()
-	{
-		return eventDescription;
 	}
 	
 	public String getEventDate()

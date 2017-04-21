@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.AppParameters;
+import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
@@ -54,15 +54,10 @@ public class AdministratorWebService extends BaseWebService {
             return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer,true);
         timer.capture();
         
-        OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
+        ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
         
-        if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-            return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "Arguments should be :@Username " + timer, true);
-        
-        timer.capture();
-        
-        String userId 	= oneUsernameArgumentsMatcher.getUserIdArgument	 (arguments);
-        String userName = slackApiAccessService.getUser(userId).getName();
+        String userId = argumentsSplitter.getUserId();
+        String userName = argumentsSplitter.getUserName();
         		
         System.out.println("Name : "  + userName);
         if (!isAdmin(userId)) 
@@ -98,16 +93,16 @@ public class AdministratorWebService extends BaseWebService {
         if (!isAdmin(userId))
             return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
         timer.capture();
-        OneUsernameArgumentMatcher oneUsernameArgumentsMatcher = new OneUsernameArgumentMatcher();
-
-        if (!oneUsernameArgumentsMatcher.isCorrect(arguments))
-            return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "Arguments should be:@Username !" + timer,true);
-        timer.capture();
-        String id = oneUsernameArgumentsMatcher.getUserIdArgument(arguments);
+        
+        ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_del");
+        
+        String id = argumentsSplitter.getUserId();
         
         if (!isAdmin(id))
             return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|" + SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!" + timer,true);
+        
         timer.capture();
+        
         List<Role> roles = roleService.getAllAdmins();
         
         for (Role role : roles) 
