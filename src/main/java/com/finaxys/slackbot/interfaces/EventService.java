@@ -16,6 +16,8 @@ public interface EventService {
 	List<Event> getAll();
 
 	Event getEventByName(String eventName);
+	
+	List<Event> getEventByType(String type);
 
 	Event getFinaxysEvent();
 
