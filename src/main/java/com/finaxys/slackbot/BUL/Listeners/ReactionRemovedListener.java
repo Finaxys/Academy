@@ -8,19 +8,16 @@ import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 
 @Component
-public class ReactionRemovedListener implements EventListener {
-
+public class ReactionRemovedListener implements EventListener 
+{
     @Autowired
     ReactionRemovedService reactionRemovedService;
 
-    public ReactionRemovedListener() {
-    }
+    public ReactionRemovedListener() {}
 
-    public void handleMessage(JsonNode jsonNode) {
-    	
+    public void handleMessage(JsonNode jsonNode) 
+    {
         System.out.println(jsonNode.toString());
         reactionRemovedService.substituteReactionRemovedScore(jsonNode);
-
     }
-
 }
