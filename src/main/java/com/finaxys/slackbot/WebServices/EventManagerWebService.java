@@ -79,7 +79,10 @@ public class EventManagerWebService extends BaseWebService {
 			
 			slackUser.getRoles().add(role);
 			
-			slackUserService.save(slackUser);
+			SlackUser slackUser2 = slackUser;
+			
+			new Thread(()->{	slackUserService.save(slackUser2);	}).start();
+			
 			
 			timer.capture();
 
