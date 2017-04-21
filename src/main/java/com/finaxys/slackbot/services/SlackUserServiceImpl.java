@@ -66,6 +66,17 @@ public class SlackUserServiceImpl implements SlackUserService {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isEventManager(String id) {
+		Iterator<Role> it = users.findById(id).getRoles().iterator();
+		while (it.hasNext()) {
+			Role r = it.next();
+			if (r.getRole().equals("event_manager"))
+				return true;
+		}
+		return false;
+	}
 
 	@Override
 	public List<SlackUser> getAllOrderedByScore(int size) {
