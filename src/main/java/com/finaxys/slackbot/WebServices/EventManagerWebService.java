@@ -7,6 +7,7 @@ import com.finaxys.slackbot.DAL.*;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +24,12 @@ public class EventManagerWebService extends BaseWebService {
 	private SlackApiAccessService slackApiAccessService;
 	
 	@Autowired
-	Repository<SlackUser, String> slackUserRepository;
-
-	@Autowired
-	Repository<Role, Integer> roleRepository;
-
-	@Autowired
-	Repository<Event, Integer> eventRepository;
+	private SlackUserService slackUserService;
 
 	@RequestMapping(value = "/event_manager/fx_manager_add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
 			   								@RequestParam("user_id") String adminSlackUserId) {
-
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_add  ");
@@ -46,30 +40,26 @@ public class EventManagerWebService extends BaseWebService {
 		String profileName = argumentsSplitter.getUserName();
 		String eventName   = argumentsSplitter.getString(0);
 		
-		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		Event event = eventService.getEventByName(eventName);
 		
-		if (events.isEmpty())
+		if (event==null)
 		{
 			return newResponseEntity("/fx_manager_add : " + arguments + " event does not exist " + timer, true);
 		}
 		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
-			SlackUser slackUser = slackUserRepository.findById(profileId);
+			SlackUser slackUser = slackUserService.get(profileId);
 
 			timer.capture();
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
 
-			slackUserRepository.saveOrUpdate(slackUser);
+			slackUserService.save(slackUser);
 
-			Role role = new Role();
+			Role role = new Role("event_manager",slackUser,event);
 
-			role.setRole("event_manager");
-			role.setEvent(events.get(0));
-			role.setSlackUser(slackUser);
-
-			roleRepository.saveOrUpdate(role);
+			roleService.save(role);
 			timer.capture();
 
 			return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
@@ -94,11 +84,11 @@ public class EventManagerWebService extends BaseWebService {
 		String slackUserId = argumentsSplitter.getUserId();
 		String eventName   = argumentsSplitter.getString(0);
 
-		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		Event event = eventService.getEventByName(eventName);
 
 		timer.capture();
 		
-		if (events.size() == 0) {
+		if (event == null) {
 			Message message = new Message("event doesn't exist");
 
 			Log.info(message.getText());
@@ -108,15 +98,15 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(userId, eventName) || isAdmin(userId)) {
 				
-				Object[] roles = roleRepository.getAll().stream()
-						.filter(e -> e.getEvent() != null && e.getEvent().getEventId().equals(events.get(0).getEventId()))
+				Object[] roles = roleService.getAll().stream()
+						.filter(e -> e.getEvent() != null && e.getEvent().equals(event))
 						.toArray();
 				timer.capture();
 
 				for (Object r : roles) {
 					Role role = (Role)r;
 					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
-						roleRepository.delete(role);
+						roleService.remove(role);
 
 						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
 								+ "|" + slackApiAccessService.getUser(slackUserId).getName()
@@ -154,17 +144,17 @@ public class EventManagerWebService extends BaseWebService {
 		Log.info("/fx_manager_list");
 
 		String eventName = arguments.trim();
-		List<Event> events = eventRepository.getByCriterion("name", eventName);
+		Event event = eventService.getEventByName(eventName);
 
-		if (events.size() == 0) {
+		if (event == null) {
 			Message message = new Message("Event nonexistent");
 
 			Log.info(message.getText());
 
 			return newResponseEntity(message);
 		}
-		Object[] roles = roleRepository.getAll().stream()
-				.filter(e -> e.getEvent() != null && e.getEvent().getEventId().equals(events.get(0).getEventId()))
+		Object[] roles = roleService.getAll().stream()
+				.filter(e -> e.getEvent() != null && e.getEvent().equals(event))
 				.toArray();
 		System.out.println(roles.length);
 		String messageText = "List of Event managers list:\n";
