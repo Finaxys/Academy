@@ -10,27 +10,31 @@ import com.finaxys.slackbot.DAL.EventScore;
 import com.finaxys.slackbot.DAL.Repository;
 
 @Service
-public class ScoreService {
-
+public class ScoreService 
+{
 	private static Map<String, Integer> scores;
 	
 	@Autowired
 	Repository<EventScore, Integer> scoreRepository;
 	
-	public ScoreService() {		
+	public ScoreService() 
+	{		
 		scores = new HashMap<String, Integer>();
-		
 	}
 
-	public void init() {		
-		for (EventScore es : scoreRepository.getAll()) {
+	public void init() 
+	{		
+		for (EventScore es : scoreRepository.getAll()) 
+		{
 			scores.put(es.getAction(), es.getPoints());
 		}
 	}
 
 	
-	public int getScore(String action) {
-		if (scores.isEmpty()) {
+	public int getScore(String action) 
+	{
+		if (scores.isEmpty()) 
+		{
 			init();
 		}
 		return scores.get(action);

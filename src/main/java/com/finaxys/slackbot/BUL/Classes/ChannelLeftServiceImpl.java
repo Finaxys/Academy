@@ -31,30 +31,34 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 
 	@Transactional
 	@Override
-	public void onChannelLeaveMessage(JsonNode jsonNode) {
-		if (jsonIsValid(jsonNode)) {
-			String channelId = jsonNode.get("channel").asText();
-			Channel channel = slackApiAccessService.getChannel(channelId);
+	public void onChannelLeaveMessage(JsonNode jsonNode) 
+	{
+		if (jsonIsValid(jsonNode)) 
+		{
+			String 	channelId 	= jsonNode.get("channel").asText();
+			Channel channel 	= slackApiAccessService.getChannel(channelId);
 			TribeChannelMatcher matcher = new TribeChannelMatcher();
 
 			if (matcher.isNotTribe(channel.getName()))
 				return;
 
 			String userId = jsonNode.get("user").asText();
+			
 			SlackUser profile = slackUserRepository.findById(userId);
 
 			if (profile.getScore() == 0)
 				return;
-			//slackUserEventService.getScore(event, slackUser)
+		
 			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 			
-			new Thread(()->{slackUserRepository.updateEntity(profile);}).start();
+			new Thread(()->{	slackUserRepository.updateEntity(profile);	}).start();
 			
 			Log.logMemberLeftChannel(profile.getName(), channel.getName());
 		}
 	}
 
-	private boolean jsonIsValid(JsonNode jsonNode) {
+	private boolean jsonIsValid(JsonNode jsonNode) 
+	{
 		if (!jsonNode.has("user"))
 			return false;
 		return true;

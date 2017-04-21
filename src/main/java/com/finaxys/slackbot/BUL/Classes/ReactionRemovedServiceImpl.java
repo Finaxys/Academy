@@ -22,6 +22,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 	
 	@Override
 	public void substituteReactionRemovedScore(JsonNode jsonNode) {
+		
 		List<String> listEmojis = new ArrayList<String>();
 		listEmojis.add("+1");
 		listEmojis.add("clap");
@@ -32,7 +33,6 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		listEmojis.add("v");
 		listEmojis.add("white_check_mark");
 		listEmojis.add("cookie"); //give that guy a cookie
-		
 
 		if (jsonNode == null)
 			return;
@@ -45,15 +45,17 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 		String reaction 			= jsonNode.get("reaction").asText();
 		SlackUser userProfile 	= slackUserRepository.findById(itemUserId);
 
-		if (listEmojis.contains(reaction) && itemUserId != null && itemUserId != myUserId && userProfile != null) {
+		if (	listEmojis.contains(reaction) 
+				&& itemUserId != null 
+				&& itemUserId != myUserId 
+				&& userProfile != null) 
+		{
 			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			
-			new Thread(()->{
-				slackUserRepository.updateEntity(userProfile);
-			}).start();
+			new Thread(()->{	slackUserRepository.updateEntity(userProfile);	}).start();
 			
-			Log.logReactionRemoved(slackApiAccessService.getUser(myUserId).getName(),
-					slackApiAccessService.getUser(itemUserId).getName());
+			Log.logReactionRemoved(	slackApiAccessService.getUser(myUserId).getName(),
+									slackApiAccessService.getUser(itemUserId).getName());
 
 		}
 	}
