@@ -32,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public void remove(Role role) {
-		roles.delete(role);s
+		roles.delete(role);
 	}
 
 	@Override
