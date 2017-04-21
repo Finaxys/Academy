@@ -28,6 +28,9 @@ public class SlackUserWebService extends BaseWebService{
 
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         
+        if (size == 0)
+        	return newResponseEntity(messageText + "You must enter a positive integer" + timer, true);
+        
         List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
         
         for (SlackUser profile : users)

@@ -82,6 +82,7 @@ public class ArgumentsSplitterTest {
 	}
 	
 	@Test
+	@Ignore
 	public void fx_event_action_add_Test() {
 		String arguments = "OUI 3";
 		String command = "/fx_event_action_add";
@@ -94,6 +95,25 @@ public class ArgumentsSplitterTest {
 		assertEquals(true, splitter.verifier.Verify(arguments, command));
 		assertEquals("OUI", event);
 		assertEquals("3", code);
+	}
+	
+	@Test
+	public void fx_action_score_add_Test() {
+		String arguments = "OUI <@U4UMU314L|julien> 2";
+		String command = "/fx_action_score_add";
+		
+		splitter = new ArgumentsSplitter(arguments, command);
+		
+		String code   = splitter.getIntegers(0);
+		String event = splitter.getString(0);
+		String userId = splitter.getUserId();
+		String userName = splitter.getUserName();
+		
+		assertEquals(true, splitter.verifier.Verify(arguments, command));
+		assertEquals("OUI", event);
+		assertEquals("2", code);
+		assertEquals("U4UMU314L", userId);
+		assertEquals("julien", userName);
 	}
 	
 }

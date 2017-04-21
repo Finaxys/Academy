@@ -41,6 +41,9 @@ public class ArgumentsVerifier
 	
 	public boolean Verify(String arguments, String command)
 	{
+		if (command.equals("/fx_leaderboard") && arguments.isEmpty())
+			return true;
+		
 		List<Token> argsParsed = reader.parse(arguments);
 		
 		if (argsParsed == null)
