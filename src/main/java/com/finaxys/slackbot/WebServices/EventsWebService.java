@@ -44,7 +44,7 @@ public class EventsWebService extends BaseWebService {
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
 
-	@RequestMapping(value = "/type", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_events_by_type", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String arguments) 
 	{
@@ -79,7 +79,7 @@ public class EventsWebService extends BaseWebService {
 	}
 
 
-	@RequestMapping(value = "/name", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_named", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 	String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
@@ -106,7 +106,7 @@ public class EventsWebService extends BaseWebService {
 	}
 
 
-	@RequestMapping(value = "/date", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_events_by_date", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByDate(@RequestParam("text")  		  String text) {
 
@@ -148,7 +148,7 @@ public class EventsWebService extends BaseWebService {
 	}
 
 
-	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getAllEvents(	@RequestParam("token") 	  		String appVerificationToken,
 													@RequestParam("team_domain") 	String slackTeam) {
@@ -172,7 +172,7 @@ public class EventsWebService extends BaseWebService {
 	}
 	
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> create( @RequestParam("text") 		String text,
 			   								@RequestParam("user_id") 	String userId) {
@@ -248,7 +248,7 @@ public class EventsWebService extends BaseWebService {
 	}
 
 	
-	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_del", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> remove( @RequestParam("user_id") 	String profileId,
 			   								@RequestParam("text") 		String text) {

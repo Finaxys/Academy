@@ -18,13 +18,13 @@ public class SlackUserWebService extends BaseWebService{
     @Autowired
     private SlackUserService slackUserService;
 
-    @RequestMapping(value = "/scores", method = RequestMethod.POST)
+    @RequestMapping(value = "/fx_leaderboard", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<JsonNode> listScores(@RequestParam("text") 	String text){
     	
     	SlackBotTimer timer = new SlackBotTimer();
     	
-        String messageText = "/fx_LeaderBoard " + text + "\n";
+        String messageText = "/fx_leaderboard " + text + "\n";
 
         int size = text.isEmpty() ? -1 : Integer.parseInt(text);
         

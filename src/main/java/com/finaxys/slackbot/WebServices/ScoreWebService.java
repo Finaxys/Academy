@@ -37,7 +37,7 @@ public class ScoreWebService extends BaseWebService {
 	@Autowired
 	SlackUserEventService slackUserEventService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_score_add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> addEventScore(@RequestParam("text") String arguments,
 												  @RequestParam("user_id") String eventManagerId) {
@@ -109,7 +109,7 @@ public class ScoreWebService extends BaseWebService {
 				true);
 	}
 
-	@RequestMapping(value = "/listOne", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_event_score_list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> listScoreForEvent(@RequestParam("text") String arguments) {
 
@@ -147,7 +147,7 @@ public class ScoreWebService extends BaseWebService {
 		return newResponseEntity("/fx_event_score_list " + arguments + " \n" + textMessage + timer, true);
 	}
 
-	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
+	@RequestMapping(value = "/fx_score", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> scoreList(@RequestParam("text") String arguments) {
 		
