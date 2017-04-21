@@ -51,5 +51,10 @@ public class SlackUserServiceImpl implements SlackUserService {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<SlackUser> getAllOrderedByScore(int size) {
+		return users.getAllOrderedByAsList("score", false, size);
 	}	
 }

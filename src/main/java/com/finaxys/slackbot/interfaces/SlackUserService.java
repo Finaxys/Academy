@@ -16,4 +16,6 @@ public interface SlackUserService {
 
 	boolean isAdmin(String id);
 
+	List<SlackUser> getAllOrderedByScore(int size);
+
 }
