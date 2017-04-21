@@ -24,6 +24,7 @@ import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
+import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @RestController
@@ -38,55 +39,41 @@ public class EventsWebService extends BaseWebService {
 	private EventService eventService;
 	
 	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
 	private SlackApiAccessService slackApiAccessService;
-
-	private String getStringFromList(List<Event> events) 
-	{
-		String result = "";
-
-		for (Event event : events) 
-		{
-			result += 	"Event name: "
-						+ event.getName() 
-						+ ", number of participants: " 
-						+ event.getAttendees().size() 
-						+ " \n ";
-		}
-
-		return result;
-	}
-
 
 	@RequestMapping(value = "/type", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String text) 
+	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text")  String arguments) 
 	{
 
 		SlackBotTimer timer = new SlackBotTimer();
 		
 		EventTypeMatcher eventTypeMatcher = new EventTypeMatcher();
 		
-		if (!eventTypeMatcher.match(text))
+		if (!eventTypeMatcher.match(arguments))
 			return newResponseEntity(	" /fx_events_by_type " 
-										+ text 
+										+ arguments 
 										+ " \n " + "type has to be:[group|individual]" 
 										+ timer , true);
 		timer.capture();
 		
-		List<Event> events = eventRepository.getByCriterion("type", text);
+		List<Event> events = eventService.getEventByType(arguments);
 		
 		if (events.isEmpty())
 			return newResponseEntity(	" /fx_events_by_type " 
-										+ text 
+										+ arguments 
 										+ " \n " 
 										+ "No events with type" 
-										+ text 
+										+ arguments 
 										+ timer ,true);
 
 		return newResponseEntity(	" /fx_events_by_type " 
-									+ text 
+									+ arguments 
 									+ " \n " 
-									+ getStringFromList(events) 
+									+ eventService.getStringFromList(events)
 									+ timer , true);
 
 	}
@@ -94,26 +81,26 @@ public class EventsWebService extends BaseWebService {
 
 	@RequestMapping(value = "/name", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 	String text) {
+	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") 	String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
 		
-		Log.info("/fx_event_named " + text);
+		Log.info("/fx_event_named " + arguments);
 		
-		List<Event> events = eventRepository.getByCriterion("name", text);
+		Event event = eventService.getEventByName(arguments);
 		
 		timer.capture();
 		
-		if (events.isEmpty())
+		if (event == null)
 			return newResponseEntity(	"/fx_event_named "
-										+text
+										+arguments
 										+"\n"
 										+"Nonexistent event." 
 										+ timer,true);
 		else
 			return newResponseEntity( 	"/fx_events_named " 
-										+ text 
+										+ arguments 
 										+ "\n " 
-										+ getStringFromList(events) 
+										+ event
 										+ timer , true);
 
 	}
@@ -145,7 +132,7 @@ public class EventsWebService extends BaseWebService {
 		{
 		}
 		
-		List<Event> events = eventRepository.getByCriterion("creationDate", wantedDate);
+		List<Event> events = eventService.getEventByDate(wantedDate);
 		
 		timer.capture();
 		
@@ -157,7 +144,7 @@ public class EventsWebService extends BaseWebService {
 										+ text 
 										+ timer ,true);
 		else
-			return newResponseEntity(getStringFromList(events) + timer ,true);
+			return newResponseEntity(eventService.getStringFromList(events)+ timer ,true);
 	}
 
 
@@ -170,7 +157,7 @@ public class EventsWebService extends BaseWebService {
 
 		timer.capture();
 		
-		List<Event> events = eventRepository.getAll();
+		List<Event> events = eventService.getAll();
 		
 		timer.capture();
 		
@@ -181,7 +168,7 @@ public class EventsWebService extends BaseWebService {
 										+ timer, true);
 		
 		else
-			return newResponseEntity(getStringFromList(events) + timer, true);
+			return newResponseEntity(eventService.getStringFromList(events)+ timer, true);
 	}
 	
 
@@ -225,7 +212,7 @@ public class EventsWebService extends BaseWebService {
 			
 			new Thread(() -> { 
 				
-				eventRepository.addEntity(event);
+				eventService.save(event);
 				
 				Role role = new Role();
 				
@@ -241,7 +228,7 @@ public class EventsWebService extends BaseWebService {
 				role.setSlackUser	  (user);
 				role.setEvent  		  (event);
 				
-				roleRepository.addEntity(role);
+				roleService.save(role);
 				
 				newResponseEntity(	"/fx_event_add "
 									+text+" \n "
@@ -269,11 +256,11 @@ public class EventsWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 		
 		String  		eventName = text.trim();
-		List<Event> events 	  = eventRepository.getByCriterion("name",eventName);
+		Event event = eventService.getEventByName(eventName);
 		
 		timer.capture();
 		
-		if(events.size()==0)
+		if(event==null)
 			return newResponseEntity(	"fx_event_del "
 										+"\n"
 										+"Non existent event." 
@@ -286,16 +273,14 @@ public class EventsWebService extends BaseWebService {
 										+ timer ,true);
 		
 		timer.capture();
-		
-		Event  event =  events.get(0);
-		
+				
 		new Thread(()->{
-			List<Role> roles = roleRepository.getByCriterion("eventId",events.get(0).getEventId());
+			List<Role> roles = roleService.getAllByEvent(event);
 			
 			for(Role role : roles) {
-				roleRepository.delete(role);
+				roleService.remove(role);
 			}
-			eventRepository.delete(event);
+			eventService.remove(event);
 			
 		}).start();
 		

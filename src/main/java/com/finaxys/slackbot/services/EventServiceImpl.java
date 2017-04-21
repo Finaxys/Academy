@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.services;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,6 +81,24 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public List<Event> getEventByType(String type) {
-		return eventRepository.getByCriterion("type", type);;
+		return eventRepository.getByCriterion("type", type);
+	}
+	
+	@Override
+	public String getStringFromList(List<Event> events) 
+	{
+		String result = "";
+
+		for (Event event : events) 
+		{
+			result += event;
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<Event> getEventByDate(Date wantedDate) {
+		return eventRepository.getByCriterion("creationDate", wantedDate);
 	}
 }

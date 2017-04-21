@@ -84,4 +84,12 @@ public class Event implements Serializable {
     public void setAttendees(Set<SlackUserEvent> attendees) {
         this.attendees = attendees;
     }
+    
+    public String toString() {
+    	return "Event name: "
+				+ this.getName() 
+				+ ", number of participants: " 
+				+ this.getAttendees().size() 
+				+ " \n ";
+    }
 }
