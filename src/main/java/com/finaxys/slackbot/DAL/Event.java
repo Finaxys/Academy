@@ -17,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +29,7 @@ public class Event implements Serializable {
     private Integer eventId;
     private String 	name;
     private String 	description;
+    @Temporal(TemporalType.DATE)
     private Date 	creationDate;
     private String 	type;
     private Set<SlackUserEvent> attendees;

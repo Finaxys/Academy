@@ -1,7 +1,6 @@
 package com.finaxys.slackbot.WebServices;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.CreateEventMatcher;
 import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
-import com.finaxys.slackbot.BUL.Matchers.EventTypeMatcher;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -31,7 +28,6 @@ import com.finaxys.slackbot.interfaces.SlackUserService;
 @RestController
 @RequestMapping("/events")
 public class EventsWebService extends BaseWebService {
-
 	@Autowired
 	private SlackUserService slackUserService;
 
@@ -95,7 +91,7 @@ public class EventsWebService extends BaseWebService {
 			return newResponseEntity(" /fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer, true);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
+		
 		Date wantedDate = new Date();
 		try {
 			wantedDate = dateFormat.parse(text);
