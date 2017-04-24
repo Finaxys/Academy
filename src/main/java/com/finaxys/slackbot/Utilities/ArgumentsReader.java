@@ -75,11 +75,7 @@ public class ArgumentsReader
 	    int i = 0;
 	    if (str.charAt(0) == '-')
 	    {
-	        if (length == 1) 
-	        {
-	            return false;
-	        }
-	        i = 1;
+	        return false;
 	    }
 	    
 	    for (; i < length; i++) 

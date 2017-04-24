@@ -35,10 +35,15 @@ public class ArgumentsVerifier
 		commandPatternMap.put("/fx_action_add",       "Integer String Integer");
 		commandPatternMap.put("/fx_event_action_add", "String Integer");
 		commandPatternMap.put("/fx_action_score_add", "String UserId Integer");
+		commandPatternMap.put("/fxadmin_param",       "String Integer");
+		commandPatternMap.put("/fxadmin_list_params", "");
 	}
 	
 	public boolean Verify(String arguments, String command)
 	{
+		if (command.equals("/fx_leaderboard") && arguments.isEmpty())
+			return true;
+		
 		List<Token> argsParsed = reader.parse(arguments);
 		
 		if (argsParsed == null)

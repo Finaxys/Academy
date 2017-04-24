@@ -10,6 +10,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.finaxys.slackbot.Utilities.ArgumentsVerifier;
 
+import io.netty.handler.codec.http.HttpResponse;
+
 public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
@@ -28,8 +30,10 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 
 		if (!verifier.Verify(arguments, command)) {
 			response.getWriter()
-					.write(new ResponseEntity("The arguments didn't match the pattern : \n" + "It should have been : "
-							+ verifier.commandPatternMap.get(command).toString(), HttpStatus.BAD_REQUEST).toString());
+					.write(command + " " + arguments
+							+ "\nThe arguments didn't match the pattern : \n"
+							+ "It should have been : "
+							+ verifier.commandPatternMap.get(command).toString());
 			return false;
 		}
 
