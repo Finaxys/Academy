@@ -59,8 +59,10 @@ public class BaseWebService {
         if (!appVerificationToken.equals(Settings.appVerificationToken))
             return newResponseEntity("Wrong app verification token !");
         
-        if (!slackTeam.equals(Settings.slackTeam))
+        if (!slackTeam.equals(Settings.slackTeam)) {
+        	Log.info("Warning the slackTeamsId are not the same!!");
             return newResponseEntity("Only for Finaxys members !");
+        }
         
         return null;
     }

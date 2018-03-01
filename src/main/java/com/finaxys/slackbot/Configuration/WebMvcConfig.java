@@ -17,7 +17,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	public WebMvcConfig() {
 
 	}
-
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		super.addInterceptors(registry);

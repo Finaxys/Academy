@@ -34,18 +34,12 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
 		if (!eventHolderBean.getEventFired()) {
-
 			eventHolderBean.setEventFired(true);
-
 			System.out.println("Start");
 			ApplicationContext context = contextRefreshedEvent.getApplicationContext();
-
 			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
-
 			startCacheRefreshThread();
-
 			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
 					(UserChangedListener) context.getBean("userChangedListener"));
 
@@ -65,9 +59,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME,
 					(ChannelChangedListener) context.getBean("channelChangedListener"));
 			slackRealTimeMessagingClient.connect();
-
-			
-			
+		
 		}
 
 	}

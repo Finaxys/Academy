@@ -15,7 +15,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import com.finaxys.slackbot.BUL.Classes.ChannelLeftServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.NewTribeJoinedServiceImpl;

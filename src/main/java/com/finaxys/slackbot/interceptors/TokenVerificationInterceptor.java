@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.Settings;
 
 public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
@@ -26,6 +27,7 @@ public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		if (slackTeam == null || !slackTeam.equals(Settings.slackTeam)) {
+        	Log.info("Warning the slackTeamsId are not the same!!"+slackTeam);
 			response.getWriter().write(new ResponseEntity("Only for Finaxys members !", HttpStatus.BAD_REQUEST).toString());
 			return false;
 		}
