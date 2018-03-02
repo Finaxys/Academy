@@ -20,7 +20,7 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 	private SlackUserService slackUserService;
 
 	@Autowired
-	public SlackApiAccessService slackApiAccessService;
+	public  SlackApiAccessService slackApiAccessService;
 	
 	@Override
 	@Transactional
