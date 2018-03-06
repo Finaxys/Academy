@@ -9,12 +9,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Listeners.ChannelChangedListener;
+import com.finaxys.slackbot.BUL.Listeners.ChannelRenameListener;
 import com.finaxys.slackbot.BUL.Listeners.ChannelCreatedListener;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
-import com.finaxys.slackbot.BUL.Listeners.UserChangedListener;
+import com.finaxys.slackbot.BUL.Listeners.UserChangeListener;
 import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
@@ -40,24 +40,14 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 			ApplicationContext context = contextRefreshedEvent.getApplicationContext();
 			SlackRealTimeMessagingClient slackRealTimeMessagingClient = SlackBot.getSlackRealTimeMessagingClient();
 			startCacheRefreshThread();
-			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE,
-					(UserChangedListener) context.getBean("userChangedListener"));
+			
+			slackRealTimeMessagingClient.addListener(Event.USER_CHANGE     , (UserChangeListener     )context.getBean("userChangeListener"     ));
+			slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED , (ChannelCreatedListener )context.getBean("channelCreatedListener" ));
+			slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED  , (ReactionAddedListener  )context.getBean("reactionAddedListener"  ));
+			slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED, (ReactionRemovedListener)context.getBean("reactionRemovedListener"));
+			slackRealTimeMessagingClient.addListener(Event.MESSAGE         , (MessageListener        )context.getBean("messageListener"        ));
+			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME  , (ChannelRenameListener  )context.getBean("channelRenameListener"  ));
 
-			slackRealTimeMessagingClient.addListener(Event.CHANNEL_CREATED,
-					(ChannelCreatedListener) context.getBean("channelCreatedListener"));
-
-
-			slackRealTimeMessagingClient.addListener(Event.REACTION_ADDED,
-					(ReactionAddedListener) context.getBean("reactionAddedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.REACTION_REMOVED,
-					(ReactionRemovedListener) context.getBean("reactionRemovedListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.MESSAGE,
-					(MessageListener) context.getBean("messageListener"));
-
-			slackRealTimeMessagingClient.addListener(Event.CHANNEL_RENAME,
-					(ChannelChangedListener) context.getBean("channelChangedListener"));
 			slackRealTimeMessagingClient.connect();
 		
 		}

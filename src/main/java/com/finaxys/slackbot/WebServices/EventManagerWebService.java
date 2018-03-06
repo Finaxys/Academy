@@ -60,9 +60,6 @@ public class EventManagerWebService extends BaseWebService {
 			timer.capture();
 			
 			
-			
-			
-			
 			SlackUser slackUser = slackUserService.get(profileId);
 
 			timer.capture();
@@ -169,7 +166,7 @@ public class EventManagerWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("text") String arguments) {
 
 		Log.info("/fx_manager_list");
-
+		SlackBotTimer timer = new SlackBotTimer();
 		String eventName = arguments.trim();
 		Event event = eventService.getEventByName(eventName);
 
@@ -191,7 +188,7 @@ public class EventManagerWebService extends BaseWebService {
 				messageText += "<@" + role.getSlackUser().getSlackUserId() + "|"
 						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			}
-			Message message = new Message("/fx_manager_list " + "\n " + messageText);
+			Message message = new Message("/fx_manager_list " + "\n " + messageText + timer);
 
 			Log.info(message.getText());
 

@@ -146,8 +146,8 @@ public class SpringContext {
     }
     
     @Bean
-    public com.finaxys.slackbot.BUL.Listeners.UserChangedListener userChangedListener() {
-        return new com.finaxys.slackbot.BUL.Listeners.UserChangedListener();
+    public com.finaxys.slackbot.BUL.Listeners.UserChangeListener userChangedListener() {
+        return new com.finaxys.slackbot.BUL.Listeners.UserChangeListener();
     }
     
     @Bean
