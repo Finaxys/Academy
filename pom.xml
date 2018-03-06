@@ -68,7 +68,14 @@
 			<artifactId>slack-api</artifactId>
 			<version>v1.3.0.RELEASE</version>
 		</dependency>
-
+		
+		<!-- JSON org.json builder -->
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20180130</version>
+		</dependency>
+		
 		<!-- Hibernate core -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
