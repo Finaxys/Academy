@@ -195,7 +195,7 @@ public class EventManagerWebService extends BaseWebService {
 			return newResponseEntity(message);
 		}
 
-		Message message = new Message("/fx_manager_list :" + "\n " + messageText + " No event managers are found");
+		Message message = new Message("/fx_manager_list 2:" + "\n " + messageText + " No event managers are found\n" );
 
 		Log.info(message.getText());
 

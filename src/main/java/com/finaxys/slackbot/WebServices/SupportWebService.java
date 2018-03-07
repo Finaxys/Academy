@@ -38,7 +38,7 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n" +
                          "*/fx_contest_add* [contest] [points earned] \n Adds a contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n"+
-        				 "*/fxadmin_list* \n List of all administrators. \n \n";
+        				 "*/fxadmin_list* \n List1 of all administrators. \n \n";
         timer.capture();
 
         String fxAdminCommands =
@@ -51,6 +51,6 @@ public class SupportWebService extends BaseWebService {
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
         timer.capture();
-        return newResponseEntity(message ,true);
+        return newResponseEntity(message + timer,true);
     }
 }
