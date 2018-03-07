@@ -36,7 +36,7 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_manager_list* [event name] \n List of event managers . \n \n" +
                          "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n" +
                          "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n" +
-                         "*/fx_contest_add* [contest] [points earned] \n Adds a contest. \n \n" +
+                         "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n"+
         				 "*/fxadmin_list* \n List1 of all administrators. \n \n";
         timer.capture();
@@ -48,9 +48,9 @@ public class SupportWebService extends BaseWebService {
                          "*/fxadmin_list_params* \n List all parameters \n \n";
         timer.capture();
         
-        String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
+        String message = "/fx_help\nList of the FX1111 bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
         timer.capture();
-        return newResponseEntity(message ,true);
+        return newResponseEntity(message +timer,true);
     }
 }
