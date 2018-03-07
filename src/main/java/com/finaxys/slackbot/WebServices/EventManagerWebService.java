@@ -185,7 +185,7 @@ public class EventManagerWebService extends BaseWebService {
 		if (roles.length > 0) {
 			for (Object r : roles) {
 				Role role = (Role) r;
-				messageText += "@" +  role.getSlackUser().getSlackUserId() + "|"
+				messageText += "<@" +  role.getSlackUser().getSlackUserId() + "|"
 						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			}
 			Message message = new Message("/fx_manager_list " + "\n " + messageText + timer);

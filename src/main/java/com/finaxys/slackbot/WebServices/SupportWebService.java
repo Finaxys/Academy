@@ -39,14 +39,14 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n"+
         				 "*/fxadmin_list* \n List1 of all administrators. \n \n";
-        timer.capture();
+        
 
         String fxAdminCommands =
         				 "*/fxadmin_add* @username \n Adds an administrator. \n \n" +
                          "*/fxadmin_del* @username \n Removes an administrator. \n \n" +
                          "*/fxadmin_param* [parameter_name] [parameter_value] \n Set the value of a parameter \n \n"+
                          "*/fxadmin_list_params* \n List all parameters \n \n";
-        timer.capture();
+        
         
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
