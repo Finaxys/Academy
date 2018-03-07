@@ -30,10 +30,6 @@ public class EntrepriseWebService extends BaseWebService {
 	@Autowired
 	SlackUserService slackUserService;
 	
-	@Autowired
-	ActionService actionService;
-	
-	
 	@RequestMapping(value = "/start", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<JsonNode> startDiscover(@RequestParam("user_id") String userId){ 
