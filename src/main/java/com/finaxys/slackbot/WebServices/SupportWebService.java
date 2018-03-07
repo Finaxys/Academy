@@ -19,7 +19,7 @@ public class SupportWebService extends BaseWebService {
     	
     	SlackBotTimer timer = new SlackBotTimer();
     	
-    	timer.capture();
+    	
     	
         String fxCommands =
                 		 "*/fx_event_list* \n List all the events. \n \n" +
