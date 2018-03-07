@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.DAL.LogEvent;
 import com.finaxys.slackbot.DAL.Repository;
 
-@PropertySource(value = "file:${catalina.home}/credentials.properties")
+@PropertySource(value = "credentials.properties")
 @Component
 public class Settings {
 
