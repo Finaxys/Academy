@@ -48,7 +48,7 @@ public class SupportWebService extends BaseWebService {
                          "*/fxadmin_list_params* \n List all parameters \n \n";
         
         
-        String message = "/fx_help\nList of the FX111 bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
+        String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
         timer.capture();
         return newResponseEntity(message + timer ,true);
