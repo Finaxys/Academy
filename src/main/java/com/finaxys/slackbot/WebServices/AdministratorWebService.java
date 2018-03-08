@@ -60,7 +60,7 @@ public class AdministratorWebService extends BaseWebService {
 
 		String profile     = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
-		String eventName   = argumentsSplitter.getString(0);
+		//String eventName   = argumentsSplitter.getString(0);
 	 
 		System.out.println("---------------DEBUG 2 -------------------");
 
