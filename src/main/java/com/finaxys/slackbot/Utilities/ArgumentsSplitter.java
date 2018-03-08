@@ -60,6 +60,7 @@ public class ArgumentsSplitter
 					otherStrings.add(token.value);
 				}
 			}
+			System.out.println("---------------DEBUG 1.4 -------------------");
 		}
 	}
 	
