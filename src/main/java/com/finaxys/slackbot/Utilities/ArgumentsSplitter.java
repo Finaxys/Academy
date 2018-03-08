@@ -41,8 +41,8 @@ public class ArgumentsSplitter
 				
 				if (token.type.equals("UserId"))
 				{					
-					userId   = token.value.split("\\|")[0].split("<@")[1];
-					userName = token.value.split("\\|")[1].split(">")[0];
+					userId   = token.value.split("@")[1];
+					userName = userId;
 					System.out.println("---------------DEBUG 1.3 -------------------");
 					System.out.println("UserId = "+userId+" userName ="+userName);
 
