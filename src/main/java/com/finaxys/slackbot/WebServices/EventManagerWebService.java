@@ -76,7 +76,7 @@ public class EventManagerWebService extends BaseWebService {
 			}
 			
 			
-			return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
+			//return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
 
 		}
 		Event event = eventService.getEventByName(eventName);
