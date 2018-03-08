@@ -66,7 +66,7 @@ public class EventManagerWebService extends BaseWebService {
 			timer.capture();
 			System.out.println("------- BREAKPOINT 3 ------");
 
-			SlackUser slackUser = slackUserService.get(profileId);
+			SlackUser slackUser = slackUserService.get(adminSlackUserId);
 			System.out.println("------- BREAKPOINT 3.5 ------");
 
 			timer.capture();
