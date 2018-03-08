@@ -58,17 +58,21 @@ public class AdministratorWebService extends BaseWebService {
 		String profile     = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
 		String eventName   = argumentsSplitter.getString(0);
+	
 		String userId = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
 		
 		// GET USER ID OF THE SELECTED USER IN PARAMETER!
 		for(SlackUser user : allUsers) {
 			System.out.println(user.getName()+"  | "+ profile +" |  "+ profileName);
-			if (user.getName().equals(profileId)) {
+			if (user.getName().equals(profile)) {
 				userId = user.getSlackUserId();
 			}
 		}
+			
+		System.out.println("--------The one who typed the command is admin ? "+slackUserService.isAdmin(profileId));
 
+		
 		if (!slackUserService.isAdmin(userId)) {
 			SlackUser slackUser = slackUserService.get(userId);
 
