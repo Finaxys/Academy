@@ -53,10 +53,13 @@ public class EventManagerWebService extends BaseWebService {
 		String eventName   = argumentsSplitter.getString(0);
 		String userId = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
 		for(SlackUser user : allUsers) {
 			System.out.println(user.getName()+"  id="+user.getSlackUserId());
 			if (user.getName() == profileId) {
 				userId = user.getSlackUserId();
+				System.out.println("***************** YAY userId="+userId);
 			}
 		}
 		
@@ -70,9 +73,9 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(adminUserId, eventName) || isAdmin(adminUserId)) {
 			timer.capture();
-
+			System.out.println("--------------- DEBUG 0.0 ---------------");
 			SlackUser slackUser = slackUserService.get(userId);
-
+			System.out.println("--------------- DEBUG 1.0 ---------------");
 			timer.capture();
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
