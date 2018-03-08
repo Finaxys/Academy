@@ -115,7 +115,6 @@ public class EventManagerWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_del " + arguments);
-		System.out.println("------- BREAKPOINT -1 ------");
 
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_del");
 		
@@ -131,7 +130,6 @@ public class EventManagerWebService extends BaseWebService {
 		
 		
 		Event event = eventService.getEventByName(eventName);
-		System.out.println("------- BREAKPOINT 0 ------");
 
 		timer.capture();
 		
@@ -139,26 +137,21 @@ public class EventManagerWebService extends BaseWebService {
 			Message message = new Message("event doesn't exist");
 
 			Log.info(message.getText());
-			System.out.println("------- BREAKPOINT 0.5 ------");
 
 			return newResponseEntity(message);
 		}
-		System.out.println("------- BREAKPOINT 1 ------");
 
 
 		if (isEventManager(userId, eventName) || isAdmin(userId)) {
-			System.out.println("------- BREAKPOINT 2 ------");
-
+			
 				Object[] roles = roleService.getAll().stream()
 						.filter(e -> e.getEvent() != null && e.getEvent().equals(event))
 						.toArray();
 				timer.capture();
-				System.out.println("------- BREAKPOINT 3 ------");
 
 				for (Object r : roles) {
 					Role role = (Role)r;
 					if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
-						System.out.println("------- BREAKPOINT 3.5 ------");
 
 						Role role2 = role;
 						
@@ -174,7 +167,6 @@ public class EventManagerWebService extends BaseWebService {
 					}
 				}
 				
-				System.out.println("------- BREAKPOINT 4 ------");
 
 				timer.capture();
 
@@ -183,7 +175,6 @@ public class EventManagerWebService extends BaseWebService {
 						+ "> is already not a event manager!");
 
 				Log.info(message.getText());
-				System.out.println("------- BREAKPOINT 5 ------");
 
 				return newResponseEntity(message);
 		}
@@ -191,7 +182,6 @@ public class EventManagerWebService extends BaseWebService {
 		Message message = new Message(
 				"/fx_manager_del : " + arguments + "\n " + "You are neither an admin nor a event manager");
 
-		//Log.info(message.getText());
 
 		return newResponseEntity(message);
 	}

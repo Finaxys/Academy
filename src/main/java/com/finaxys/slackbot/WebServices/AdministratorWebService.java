@@ -55,7 +55,19 @@ public class AdministratorWebService extends BaseWebService {
 
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
 
-		String userId = argumentsSplitter.getUserId();
+		String profile   = argumentsSplitter.getUserId();
+		String profileName = argumentsSplitter.getUserName();
+		String eventName   = argumentsSplitter.getString(0);
+		String userId = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			System.out.println(user.getName()+"  | "+ profile +" |  "+ profileName);
+			if (user.getName().equals(profileId)) {
+				userId = user.getSlackUserId();
+			}
+		}
 
 		if (!slackUserService.isAdmin(userId)) {
 			SlackUser slackUser = slackUserService.get(userId);
@@ -136,7 +148,6 @@ public class AdministratorWebService extends BaseWebService {
 			timer.capture();
 			for (Role role : roles)
 				messageText += slackUserService.get(role.getSlackUser().getSlackUserId()).getName() + "\n";
-						//+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			messageText = (roles.size() > 0) ? messageText : "";
 			timer.capture();
 		}
