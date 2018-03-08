@@ -33,7 +33,7 @@ public class ArgumentsReader
 			else
 				value = regexMatcher.group();
 			
-			if (value.contains("<@"))
+			if (value.contains("@"))
 			{
 				type = "UserId";
 			}

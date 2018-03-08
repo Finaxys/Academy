@@ -9,7 +9,7 @@ public class AddEventManagerArgumentsPattern {
 
     private AddEventManagerArgumentsPattern() {
     	
-        eventManagerArgumentsPattern 	= ".+(<@\\w{9}|.*>){1}";
+        eventManagerArgumentsPattern 	= ".+(<@\\w)";
         pattern 							= Pattern.compile(eventManagerArgumentsPattern);
         
     }
