@@ -138,7 +138,7 @@ public class AdministratorWebService extends BaseWebService {
 			timer.capture();
 
 			for (Role role : roles)
-				messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
+				messageText += "< @" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
 						+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 
 			messageText = (roles.size() > 0) ? messageText : "";
