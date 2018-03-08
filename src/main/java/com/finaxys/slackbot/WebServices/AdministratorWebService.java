@@ -128,6 +128,7 @@ public class AdministratorWebService extends BaseWebService {
 		Log.info("/fxadmin_list");
 		timer.capture();
 		List<Role> roles = roleService.getAllAdmins();
+		roles.forEach(role -> System.out.println(role.getSlackUser().getName()));
 		String messageText = "";
 		System.out.println("--------------I'm here my friend1------------------");
 		if (roles.isEmpty())
@@ -140,7 +141,7 @@ public class AdministratorWebService extends BaseWebService {
 			timer.capture();
 			System.out.println("--------------I'm here my friend3------------------");
 			for (Role role : roles)
-				messageText += "< @" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
+				messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
 						+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			System.out.println("--------------I'm here my friend4------------------");
 			messageText = (roles.size() > 0) ? messageText : "";
