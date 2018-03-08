@@ -46,7 +46,8 @@ public class EventManagerWebService extends BaseWebService {
 		Log.info("/fx_manager_add text="+arguments+" user_id="+adminSlackUserId);
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
-		
+		System.out.println("------- BREAKPOINT 0 ------");
+
 		String profileId   = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
 		String eventName   = argumentsSplitter.getString(0);
