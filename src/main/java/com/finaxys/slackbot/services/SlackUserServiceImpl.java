@@ -41,11 +41,17 @@ public class SlackUserServiceImpl implements SlackUserService {
 
 	@Override
 	public SlackUser get(String id) {
+		System.out.println("*********** ID = "+id+"***********");
 		SlackUser user = users.findById(id);
+		
 		if (user == null) {
+			System.out.println("****************   USER NOT FOUND  ***********");
+
 			user = new SlackUser(slackApiAccessService.getUser(id));
 			this.save(user);
 		}
+		System.out.println("****************   USER FOUND  ***********");
+
 		return user;
 	}
 
