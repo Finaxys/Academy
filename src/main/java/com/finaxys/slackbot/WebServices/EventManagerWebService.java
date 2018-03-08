@@ -115,14 +115,16 @@ public class EventManagerWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fx_manager_del " + arguments);
-		
+		System.out.println("------- BREAKPOINT -1 ------");
+
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_del");
-		
+		System.out.println("------- BREAKPOINT 0 ------");
+
 		String slackUserId = argumentsSplitter.getUserId();
 		String eventName   = argumentsSplitter.getString(0);
 
 		Event event = eventService.getEventByName(eventName);
-		System.out.println("------- BREAKPOINT 0 ------");
+		System.out.println("------- BREAKPOINT 0.2 ------");
 
 		timer.capture();
 		
