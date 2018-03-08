@@ -54,6 +54,7 @@ public class EventManagerWebService extends BaseWebService {
 		String userId = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
 		for(SlackUser user : allUsers) {
+			System.out.println(user.getName()+"  id="+user.getSlackUserId());
 			if (user.getName() == profileId) {
 				userId = user.getSlackUserId();
 			}
