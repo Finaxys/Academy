@@ -131,7 +131,7 @@ public class AdministratorWebService extends BaseWebService {
 		roles.forEach(role -> slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName());
 		String messageText = "";
 		if (roles.isEmpty())
-			messageText = "There are no admins!";
+			messageText = "There are no admins! ";
 		else {
 			
 			messageText = "List of Admins: \n";
