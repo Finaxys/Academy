@@ -130,22 +130,18 @@ public class AdministratorWebService extends BaseWebService {
 		List<Role> roles = roleService.getAllAdmins();
 		System.out.println(roles.size());
 		String messageText = "";
-		System.out.println("--------------I'm here my friend1------------------");
+		roles.forEach(role -> System.out.println(role.getSlackUser().getSlackUserId()));
 		if (roles.isEmpty())
 			messageText = "There are no admins!";
 		else {
 			
-			System.out.println("--------------I'm here my friend2------------------");
 			messageText = "List of Admins: \n";
 
 			timer.capture();
-			System.out.println("--------------I'm here my friend3------------------");
 			for (Role role : roles)
 				messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
 						+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
-			System.out.println("--------------I'm here my friend4------------------");
 			messageText = (roles.size() > 0) ? messageText : "";
-			System.out.println("--------------I'm here my friend5------------------");
 			timer.capture();
 		}
 		
