@@ -52,6 +52,17 @@ public class ScoreWebService extends BaseWebService {
 		String userId = argumentsSplitter.getUserId();
 		String eventName = argumentsSplitter.getString(0);
 		
+		String userIdArgs = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			if (user.getName().equals(userId)) {
+				userIdArgs = user.getSlackUserId();
+			}
+		}
+		
+		
 		int score = Integer.parseInt(argumentsSplitter.getIntegers(0));
 		
 		timer.capture();
@@ -69,7 +80,7 @@ public class ScoreWebService extends BaseWebService {
 					+ "You are neither admin nor a event manager !" + timer, true);
 
 
-		SlackUser user = slackUserService.get(userId);
+		SlackUser user = slackUserService.get(userIdArgs);
 		
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 		
