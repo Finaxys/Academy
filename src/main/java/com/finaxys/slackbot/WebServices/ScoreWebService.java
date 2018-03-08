@@ -51,7 +51,8 @@ public class ScoreWebService extends BaseWebService {
 		
 		String userId = argumentsSplitter.getUserId();
 		String eventName = argumentsSplitter.getString(0);
-		
+		System.out.println("---------------DEBUG 1.5 + "+eventName+" "+userId+" -------------------");
+
 		String userIdArgs = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
 		
