@@ -129,7 +129,8 @@ public class AdministratorWebService extends BaseWebService {
 		timer.capture();
 		List<Role> roles = roleService.getAllAdmins();
 		System.out.println("--------------------------------BREAK1-----------------------");
-		roles.forEach(role -> System.out.println("+++++++++++++++++++++++++++++"+slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()+"++++++++++++++++++++++++"));
+		System.out.println("+++++++++++++++++++++++++++++"+slackApiAccessService.getUser(roles.get(0).getSlackUser().getSlackUserId()).getName()+"++++++++++++++++++++++++");
+		System.out.println("+++++++++++++++++++++++++++++"+slackApiAccessService.getUser(roles.get(1).getSlackUser().getSlackUserId()).getName()+"++++++++++++++++++++++++");
 		System.out.println("--------------------------------BREAK2-----------------------");
 		String messageText = "";
 		if (roles.isEmpty())
