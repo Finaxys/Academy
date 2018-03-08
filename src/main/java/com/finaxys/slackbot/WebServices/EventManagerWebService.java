@@ -121,7 +121,15 @@ public class EventManagerWebService extends BaseWebService {
 		
 		String slackUserId = argumentsSplitter.getUserId();
 		String eventName   = argumentsSplitter.getString(0);
-
+		String userIdArgs = "";
+		List<SlackUser> users = slackUserService.getAll();
+		for(SlackUser user : users) {
+			if (user.getName().equals(slackUserId)) {
+				userIdArgs = user.getSlackUserId();
+			}
+		}
+		
+		
 		Event event = eventService.getEventByName(eventName);
 		System.out.println("------- BREAKPOINT 0 ------");
 
@@ -149,7 +157,7 @@ public class EventManagerWebService extends BaseWebService {
 
 				for (Object r : roles) {
 					Role role = (Role)r;
-					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
+					if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
 						System.out.println("------- BREAKPOINT 3.5 ------");
 
 						Role role2 = role;
@@ -157,7 +165,7 @@ public class EventManagerWebService extends BaseWebService {
 						new Thread(() -> {	roleService.remove(role2);	}).start();	
 
 						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
-								+ "|" + slackApiAccessService.getUser(slackUserId).getName()
+								+ "|" + slackApiAccessService.getUser(userIdArgs).getName()
 								+ "> is no more a event manager!");
 
 						Log.info(message.getText());
@@ -171,7 +179,7 @@ public class EventManagerWebService extends BaseWebService {
 				timer.capture();
 
 				Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId + "|"
-						+ slackApiAccessService.getUser(slackUserId).getName()
+						+ slackApiAccessService.getUser(userIdArgs).getName()
 						+ "> is already not a event manager!");
 
 				Log.info(message.getText());
