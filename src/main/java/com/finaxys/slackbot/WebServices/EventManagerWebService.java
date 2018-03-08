@@ -39,8 +39,10 @@ public class EventManagerWebService extends BaseWebService {
 	@ResponseBody
 	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
 			   								@RequestParam("user_id") String adminSlackUserId) {
+		System.out.println("Entered the method fx_manager_add");
+		
 		SlackBotTimer timer = new SlackBotTimer();
-
+		
 		Log.info("/fx_manager_add text="+arguments+" user_id="+adminSlackUserId);
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
