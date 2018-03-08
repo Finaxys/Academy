@@ -67,8 +67,10 @@ public class EventManagerWebService extends BaseWebService {
 			System.out.println("------- BREAKPOINT 3 ------");
 
 			SlackUser slackUser = slackUserService.get(profileId);
+			System.out.println("------- BREAKPOINT 3.5 ------");
 
 			timer.capture();
+			System.out.println("------- BREAKPOINT 3.6 ------");
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
 			System.out.println("------- BREAKPOINT 4 ------");
@@ -77,16 +79,21 @@ public class EventManagerWebService extends BaseWebService {
 				return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 						+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 						+ "> is already a manager!" + timer, true);
-			
+			System.out.println("------- BREAKPOINT 4.5 ------");
+
 			
 			Role role = new Role("event_manager",slackUser,event);
-			
+			System.out.println("------- BREAKPOINT 4.6 ------");
+
 			slackUser.getRoles().add(role);
-			
+			System.out.println("------- BREAKPOINT 4.7 ------");
+
 			SlackUser slackUser2 = slackUser;
-			
+			System.out.println("------- BREAKPOINT 4.8 ------");
+
 			new Thread(()->{	slackUserService.save(slackUser2);	}).start();
-			
+			System.out.println("------- BREAKPOINT 4.9 ------");
+
 			
 			timer.capture();
 			System.out.println("------- BREAKPOINT 5 ------");
