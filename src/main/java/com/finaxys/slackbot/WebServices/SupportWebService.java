@@ -19,6 +19,8 @@ public class SupportWebService extends BaseWebService {
     	
     	SlackBotTimer timer = new SlackBotTimer();
     	
+    	
+    	
         String fxCommands =
                 		 "*/fx_event_list* \n List all the events. \n \n" +
                          "*/fx_event_add* [event name] [group|individual] [description] \n Adds a new event. \n \n" +
@@ -34,9 +36,10 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_manager_list* [event name] \n List of event managers . \n \n" +
                          "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n" +
                          "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n" +
-                         "*/fx_contest_add* [contest] [points earned] \n Adds a contest. \n \n" +
+                         "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n"+
-        				 "*/fxadmin_list* \n List of all administrators. \n \n";
+        				 "*/fxadmin_list* \n List1 of all administrators. \n \n";
+        
 
         String fxAdminCommands =
         				 "*/fxadmin_add* @username \n Adds an administrator. \n \n" +
@@ -44,8 +47,10 @@ public class SupportWebService extends BaseWebService {
                          "*/fxadmin_param* [parameter_name] [parameter_value] \n Set the value of a parameter \n \n"+
                          "*/fxadmin_list_params* \n List all parameters \n \n";
         
+        
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
-        return newResponseEntity(message + timer,true);
+        timer.capture();
+        return newResponseEntity(message  ,true);
     }
 }

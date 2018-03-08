@@ -58,10 +58,7 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
-			
-			
-			
-			
+
 			SlackUser slackUser = slackUserService.get(profileId);
 
 			timer.capture();
@@ -168,7 +165,7 @@ public class EventManagerWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("text") String arguments) {
 
 		Log.info("/fx_manager_list");
-
+		SlackBotTimer timer = new SlackBotTimer();
 		String eventName = arguments.trim();
 		Event event = eventService.getEventByName(eventName);
 
@@ -187,17 +184,17 @@ public class EventManagerWebService extends BaseWebService {
 		if (roles.length > 0) {
 			for (Object r : roles) {
 				Role role = (Role) r;
-				messageText += "<@" + role.getSlackUser().getSlackUserId() + "|"
+				messageText += "<@" +  role.getSlackUser().getSlackUserId() + "|"
 						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			}
-			Message message = new Message("/fx_manager_list " + "\n " + messageText);
+			Message message = new Message("/fx_manager_list " + "\n " + messageText + timer);
 
 			Log.info(message.getText());
 
 			return newResponseEntity(message);
 		}
 
-		Message message = new Message("/fx_manager_list :" + "\n " + messageText + " No event managers are found");
+		Message message = new Message("/fx_manager_list :" + "\n " + messageText + " No event managers are found\n" );
 
 		Log.info(message.getText());
 

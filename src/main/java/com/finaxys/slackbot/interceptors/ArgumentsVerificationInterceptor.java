@@ -36,7 +36,7 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 							+ verifier.commandPatternMap.get(command).toString());
 			return false;
 		}
-
+		System.out.println("we will return true");
 		return true;
 	}
 
