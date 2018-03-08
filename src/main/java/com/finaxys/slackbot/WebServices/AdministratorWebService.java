@@ -128,7 +128,7 @@ public class AdministratorWebService extends BaseWebService {
 		Log.info("/fxadmin_list");
 		timer.capture();
 		List<Role> roles = roleService.getAllAdmins();
-		roles.forEach(role -> System.out.println(role.getSlackUser().getName()));
+		System.out.println(roles.size());
 		String messageText = "";
 		System.out.println("--------------I'm here my friend1------------------");
 		if (roles.isEmpty())
