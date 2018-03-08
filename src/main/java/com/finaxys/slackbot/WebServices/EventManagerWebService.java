@@ -1,5 +1,7 @@
 package com.finaxys.slackbot.WebServices;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,71 +40,63 @@ public class EventManagerWebService extends BaseWebService {
 	@RequestMapping(value = "/event_manager/fx_manager_add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> create(	@RequestParam("text") String arguments,
-			   								@RequestParam("user_id") String adminSlackUserId) {
-		System.out.println("Entered the method fx_manager_add");
+			   								@RequestParam("user_id") String adminUserId) {
 		
 		SlackBotTimer timer = new SlackBotTimer();
 		
-		Log.info("/fx_manager_add text="+arguments+" user_id="+adminSlackUserId);
+		Log.info("/fx_manager_add text="+arguments+" user_id="+adminUserId);
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
-		System.out.println("------- BREAKPOINT 0 ------");
 
 		String profileId   = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
 		String eventName   = argumentsSplitter.getString(0);
+		String userId = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		for(SlackUser user : allUsers) {
+			if (user.getName() == profileId) {
+				userId = user.getSlackUserId();
+			}
+		}
 		
 		Event event = eventService.getEventByName(eventName);
-		System.out.println("------- BREAKPOINT 1 ------");
 
 		if (event==null)
 		{
 			return newResponseEntity("/fx_manager_add : " + arguments + " event does not exist " + timer, true);
 		}
-		System.out.println("------- BREAKPOINT 2 ------");
 
 		
-		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
+		if (isEventManager(adminUserId, eventName) || isAdmin(adminUserId)) {
 			timer.capture();
-			System.out.println("------- BREAKPOINT 3 ------");
 
-			SlackUser slackUser = slackUserService.get(adminSlackUserId);
-			System.out.println("------- BREAKPOINT 3.5 ------");
+			SlackUser slackUser = slackUserService.get(userId);
 
 			timer.capture();
-			System.out.println("------- BREAKPOINT 3.6 ------");
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
-			System.out.println("------- BREAKPOINT 4 ------");
 
 			if(slackUserService.isEventManager(profileId, eventName))
 				return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 						+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 						+ "> is already a manager!" + timer, true);
-			System.out.println("------- BREAKPOINT 4.5 ------");
 
 			
 			Role role = new Role("event_manager",slackUser,event);
-			System.out.println("------- BREAKPOINT 4.6 ------");
 
 			slackUser.getRoles().add(role);
-			System.out.println("------- BREAKPOINT 4.7 ------");
 
 			SlackUser slackUser2 = slackUser;
-			System.out.println("------- BREAKPOINT 4.8 ------");
 
 			new Thread(()->{	slackUserService.save(slackUser2);	}).start();
-			System.out.println("------- BREAKPOINT 4.9 ------");
 
 			
 			timer.capture();
-			System.out.println("------- BREAKPOINT 5 ------");
 
 			return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 					+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 					+ "> has just became a event manager!" + timer, true);
 		}
-		System.out.println("------- BREAKPOINT 6 ------");
 
 		return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer, true);
 	}
