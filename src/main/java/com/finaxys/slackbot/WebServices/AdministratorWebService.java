@@ -138,16 +138,16 @@ public class AdministratorWebService extends BaseWebService {
 			messageText = "List of Admins: \n";
 
 			timer.capture();
-
+			System.out.println("--------------I'm here my friend3------------------");
 			for (Role role : roles)
 				messageText += "< @" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
 						+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
-
+			System.out.println("--------------I'm here my friend4------------------");
 			messageText = (roles.size() > 0) ? messageText : "";
-
+			System.out.println("--------------I'm here my friend5------------------");
 			timer.capture();
 		}
-		System.out.println("--------------I'm here my friend3------------------");
+		
 		return newResponseEntity("/fxadmin_list :" + " \n" + messageText + timer, true);
 	}
 
