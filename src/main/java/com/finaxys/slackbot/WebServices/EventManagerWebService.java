@@ -62,7 +62,7 @@ public class EventManagerWebService extends BaseWebService {
 			}
 		}
 		 
-		if(!userId.isEmpty()) {
+		if(userId.isEmpty()) {
 			return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
 
 		}
