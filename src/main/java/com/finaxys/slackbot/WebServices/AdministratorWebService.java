@@ -128,9 +128,8 @@ public class AdministratorWebService extends BaseWebService {
 		Log.info("/fxadmin_list");
 		timer.capture();
 		List<Role> roles = roleService.getAllAdmins();
-		System.out.println(roles.size());
+		roles.forEach(role -> slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName());
 		String messageText = "";
-		roles.forEach(role -> System.out.println(role.getSlackUser().getSlackUserId()));
 		if (roles.isEmpty())
 			messageText = "There are no admins!";
 		else {
