@@ -63,6 +63,19 @@ public class EventManagerWebService extends BaseWebService {
 		}
 		 
 		if(userId.isEmpty()) {
+			SlackUser newUser = new SlackUser(profileId,profileName);
+			slackUserService.save(newUser);
+			
+		    allUsers = slackUserService.getAll();
+			
+			// GET USER ID OF THE SELECTED USER IN PARAMETER!
+			for(SlackUser user : allUsers) {
+				if (user.getName().equals(profileId)) {
+					userId = user.getSlackUserId();
+				}
+			}
+			
+			
 			return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
 
 		}
