@@ -110,14 +110,25 @@ public class AdministratorWebService extends BaseWebService {
 			return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
 
 		timer.capture();
-
+		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_del");
 
 		String id = argumentsSplitter.getUserId();
+		
+		String userIdArgs = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
 
-		if (!isAdmin(id))
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			System.out.println(user.getName()+"  | "+ id);
+			if (user.getName().equals(id)) {
+				userIdArgs = user.getSlackUserId();
+			}
+		}
+
+		if (!isAdmin(userIdArgs))
 			return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-					+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!"
+					+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is already not an administrator!"
 					+ timer, true);
 
 		timer.capture();
@@ -125,19 +136,19 @@ public class AdministratorWebService extends BaseWebService {
 		List<Role> roles = roleService.getAllAdmins();
 
 		for (Role role : roles) {
-			if (role.getSlackUser().getSlackUserId().equals(id)) {
+			if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
 				new Thread(() -> {
 					roleService.remove(role);
 				}).start();
 
 				return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-						+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!"
+						+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is no more an administrator!"
 						+ timer, true);
 			}
 		}
 		timer.capture();
 		return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-				+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is not an administrator!" + timer,
+				+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is not an administrator!" + timer,
 				true);
 	}
 
