@@ -200,7 +200,7 @@ public class EventManagerWebService extends BaseWebService {
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventManagers(@RequestParam("text") String arguments) {
 
-		Log.info("/fx_manager_list");
+		Log.info("/fx_manager_list ");
 		SlackBotTimer timer = new SlackBotTimer();
 		String eventName = arguments.trim();
 		Event event = eventService.getEventByName(eventName);
