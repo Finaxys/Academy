@@ -22,12 +22,12 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 		String arguments = request.getParameter("text");
 		String URL = request.getRequestURI();
 		String command = "/" + URL.split("/")[URL.split("/").length - 1];
-
+		
 		System.out.println("==================================================================================");
+		System.out.println("This arguments is correct? "+verifier.Verify(arguments, command));
 		System.out.println(arguments);
 		System.out.println(URL);
 		System.out.println(command);
-		System.out.println("This arguments is correct? "+verifier.Verify(arguments, command));
 		
 		if (!verifier.Verify(arguments, command)) {
 			response.getWriter()
