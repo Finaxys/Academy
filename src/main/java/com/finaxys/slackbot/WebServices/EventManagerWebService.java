@@ -118,29 +118,12 @@ public class EventManagerWebService extends BaseWebService {
 		System.out.println("------- BREAKPOINT -1 ------");
 
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_del");
-		System.out.println("------- BREAKPOINT 0 ------");
-
+		
 		String slackUserId = argumentsSplitter.getUserId();
 		String eventName   = argumentsSplitter.getString(0);
-		
-		
-		String userIdOfTheArgument = "";
-		List<SlackUser> allUsers = slackUserService.getAll();
-		
-		// GET USER ID OF THE SELECTED USER IN PARAMETER!
-		for(SlackUser user : allUsers) {
-			System.out.println(user.getName()+"  | "+ slackUserId);
-			if (user.getName().equals(slackUserId)) {
-				userIdOfTheArgument = user.getSlackUserId();
-			}
-		}
-		 
-		
-		
-		
-		
+
 		Event event = eventService.getEventByName(eventName);
-		System.out.println("------- BREAKPOINT 0.2 ------");
+		System.out.println("------- BREAKPOINT 0 ------");
 
 		timer.capture();
 		
@@ -166,7 +149,7 @@ public class EventManagerWebService extends BaseWebService {
 
 				for (Object r : roles) {
 					Role role = (Role)r;
-					if (role.getSlackUser().getSlackUserId().equals(userIdOfTheArgument)) {
+					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
 						System.out.println("------- BREAKPOINT 3.5 ------");
 
 						Role role2 = role;
@@ -174,7 +157,7 @@ public class EventManagerWebService extends BaseWebService {
 						new Thread(() -> {	roleService.remove(role2);	}).start();	
 
 						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
-								+ "|" + slackApiAccessService.getUser(userIdOfTheArgument).getName()
+								+ "|" + slackApiAccessService.getUser(slackUserId).getName()
 								+ "> is no more a event manager!");
 
 						Log.info(message.getText());
@@ -188,7 +171,7 @@ public class EventManagerWebService extends BaseWebService {
 				timer.capture();
 
 				Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId + "|"
-						+ slackApiAccessService.getUser(userIdOfTheArgument).getName()
+						+ slackApiAccessService.getUser(slackUserId).getName()
 						+ "> is already not a event manager!");
 
 				Log.info(message.getText());
