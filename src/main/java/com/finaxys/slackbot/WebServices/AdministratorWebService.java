@@ -55,7 +55,7 @@ public class AdministratorWebService extends BaseWebService {
 
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
 
-		String profile   = argumentsSplitter.getUserId();
+		String profile     = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
 		String eventName   = argumentsSplitter.getString(0);
 		String userId = "";
