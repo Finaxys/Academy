@@ -9,8 +9,8 @@ public class OneUsernameArgumentPattern {
 
     private OneUsernameArgumentPattern() {
     	
-        oneUsernameArgumentPattern 	= ".*(<@\\w{9}|.*>){1}.*";
-        pattern 					= Pattern.compile(oneUsernameArgumentPattern);
+    	oneUsernameArgumentPattern     = ".*(<@\\w{9}|.*>){1}.*";
+    	pattern 					= Pattern.compile(oneUsernameArgumentPattern);
     }
 
     public static Pattern getPattern() {
