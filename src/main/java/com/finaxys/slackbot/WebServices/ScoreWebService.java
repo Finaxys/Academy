@@ -48,10 +48,12 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_event_score_add");
-		
+		System.out.println("---------------DEBUG 1.4.1 -------------------");
+
 		String userId = argumentsSplitter.getUserId();
 		String eventName = argumentsSplitter.getString(0);
-		System.out.println("---------------DEBUG 1.5 + "+eventName+" "+userId+" -------------------");
+		System.out.println("---------------DEBUG 1.5 -------------------");
+
 
 		String userIdArgs = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
