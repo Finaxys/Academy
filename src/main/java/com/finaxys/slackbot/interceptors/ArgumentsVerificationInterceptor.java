@@ -18,7 +18,8 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		ArgumentsVerifier verifier = new ArgumentsVerifier();
-
+		
+		System.out.println("test bhimS");
 		String arguments = request.getParameter("text");
 		String URL = request.getRequestURI();
 		String command = "/" + URL.split("/")[URL.split("/").length - 1];
