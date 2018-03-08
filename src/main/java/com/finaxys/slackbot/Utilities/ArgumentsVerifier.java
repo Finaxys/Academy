@@ -28,6 +28,7 @@ public class ArgumentsVerifier
 		commandPatternMap.put("/fx_manager_del",      "String UserId");
 		commandPatternMap.put("/fx_contest_add",      "String Integer");
 		commandPatternMap.put("/fxadmin_add",         "UserId");
+		commandPatternMap.put("/start",         "UserId");
 		commandPatternMap.put("/fxadmin_del",         "UserId");
 		commandPatternMap.put("/fx_event_del",        "String");
 		commandPatternMap.put("/fx_score",            "UserId");
