@@ -41,7 +41,7 @@ public class EventManagerWebService extends BaseWebService {
 			   								@RequestParam("user_id") String adminSlackUserId) {
 		SlackBotTimer timer = new SlackBotTimer();
 
-		Log.info("/fx_manager_add ");
+		Log.info("/fx_manager_add text="+arguments+" user_id="+adminSlackUserId);
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
 		
@@ -58,7 +58,6 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
-			
 			
 			
 			

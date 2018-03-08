@@ -27,7 +27,7 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 		System.out.println(arguments);
 		System.out.println(URL);
 		System.out.println(command);
-
+		System.out.println("This arguments is correct? "+verifier.Verify(arguments, command));
 		if (!verifier.Verify(arguments, command)) {
 			response.getWriter()
 					.write(command + " " + arguments
