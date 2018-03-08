@@ -59,10 +59,13 @@ public class EventManagerWebService extends BaseWebService {
 			System.out.println(user.getName()+"  | "+ profileId +" |  "+ profileName);
 			if (user.getName().equals(profileId)) {
 				userId = user.getSlackUserId();
-				System.out.println("***************** YAY userId="+userId);
 			}
 		}
-		
+		 
+		if(!userId.isEmpty()) {
+			return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
+
+		}
 		Event event = eventService.getEventByName(eventName);
 
 		if (event==null)
@@ -73,9 +76,7 @@ public class EventManagerWebService extends BaseWebService {
 		
 		if (isEventManager(adminUserId, eventName) || isAdmin(adminUserId)) {
 			timer.capture();
-			System.out.println("--------------- DEBUG 0.0 ---------------");
 			SlackUser slackUser = slackUserService.get(userId);
-			System.out.println("--------------- DEBUG 1.0 ---------------");
 			timer.capture();
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
@@ -101,6 +102,7 @@ public class EventManagerWebService extends BaseWebService {
 					+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 					+ "> has just became a event manager!" + timer, true);
 		}
+		
 
 		return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer, true);
 	}
