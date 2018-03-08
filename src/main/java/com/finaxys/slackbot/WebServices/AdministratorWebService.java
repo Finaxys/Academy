@@ -129,10 +129,12 @@ public class AdministratorWebService extends BaseWebService {
 		timer.capture();
 		List<Role> roles = roleService.getAllAdmins();
 		String messageText = "";
+		System.out.println("--------------I'm here my friend------------------");
 		if (roles.isEmpty())
 			messageText = "There are no admins!";
 		else {
-
+			
+			System.out.println("--------------I'm here my friend------------------");
 			messageText = "List of Admins: \n";
 
 			timer.capture();
@@ -145,7 +147,7 @@ public class AdministratorWebService extends BaseWebService {
 
 			timer.capture();
 		}
-
+		System.out.println("--------------I'm here my friend------------------");
 		return newResponseEntity("/fxadmin_list :" + " \n" + messageText + timer, true);
 	}
 
