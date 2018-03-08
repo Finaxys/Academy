@@ -52,22 +52,26 @@ public class EventManagerWebService extends BaseWebService {
 		String eventName   = argumentsSplitter.getString(0);
 		
 		Event event = eventService.getEventByName(eventName);
-		
+		System.out.println("------- BREAKPOINT 1 ------");
+
 		if (event==null)
 		{
 			return newResponseEntity("/fx_manager_add : " + arguments + " event does not exist " + timer, true);
 		}
-		
+		System.out.println("------- BREAKPOINT 2 ------");
+
 		
 		if (isEventManager(adminSlackUserId, eventName) || isAdmin(adminSlackUserId)) {
 			timer.capture();
+			System.out.println("------- BREAKPOINT 3 ------");
 
 			SlackUser slackUser = slackUserService.get(profileId);
 
 			timer.capture();
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
-			
+			System.out.println("------- BREAKPOINT 4 ------");
+
 			if(slackUserService.isEventManager(profileId, eventName))
 				return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 						+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
@@ -84,11 +88,13 @@ public class EventManagerWebService extends BaseWebService {
 			
 			
 			timer.capture();
+			System.out.println("------- BREAKPOINT 5 ------");
 
 			return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 					+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 					+ "> has just became a event manager!" + timer, true);
 		}
+		System.out.println("------- BREAKPOINT 6 ------");
 
 		return newResponseEntity("/fx_manager_add  : " + arguments + " you are not a event manager!" + timer, true);
 	}
@@ -119,7 +125,6 @@ public class EventManagerWebService extends BaseWebService {
 			return newResponseEntity(message);
 		}
 		
-		System.out.println("------- BREAKPOINT 1 ------");
 
 		if (isEventManager(userId, eventName) || isAdmin(userId)) {
 			System.out.println("------- BREAKPOINT 2 ------");
