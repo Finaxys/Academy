@@ -41,7 +41,7 @@ public class EventManagerWebService extends BaseWebService {
 			   								@RequestParam("user_id") String adminSlackUserId) {
 		SlackBotTimer timer = new SlackBotTimer();
 
-		Log.info("/fx_manager_add ");
+		Log.info("/fx_manager_add we're in POST method");
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_manager_add");
 		

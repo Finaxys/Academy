@@ -47,21 +47,32 @@ public class ArgumentsVerifier
 		
 		List<Token> argsParsed = reader.parse(arguments);
 		
+		System.out.println("======== TEST ARGUMENTS IF THEY ARE PARSED ===== ");
+		for(Token tk : argsParsed) {
+			System.out.print(" Type "+tk.type+" Value="+tk.value+" ");
+		}
+		
 		if (argsParsed == null)
 			return commandPatternMap.get(command).length() == 0;
+		
 		
 		if (argsParsed.size() != commandPatternMap.get(command).split(" ").length)
 			return false;
 		
+		
 		int size = argsParsed.size();
 		
 		for (int i = 0; i < size; i++)
-		{
+		{   
+			System.out.println("======== TEST ARGUMENTS TYPE IF THEY MATCH THE PATTERN ===== ");
+			System.out.print(argsParsed.get(i).type.equals(commandPatternMap.get(command).split(" ")[i]));
+			
 			if (!argsParsed.get(i).type.equals(commandPatternMap.get(command).split(" ")[i]))
 			{
 				return false;
 			}
 		}
+		
 		return true;
 	}
 }
