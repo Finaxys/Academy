@@ -122,6 +122,7 @@ public class EventManagerWebService extends BaseWebService {
 		String eventName   = argumentsSplitter.getString(0);
 
 		Event event = eventService.getEventByName(eventName);
+		System.out.println("------- BREAKPOINT 0 ------");
 
 		timer.capture();
 		
@@ -129,10 +130,12 @@ public class EventManagerWebService extends BaseWebService {
 			Message message = new Message("event doesn't exist");
 
 			Log.info(message.getText());
+			System.out.println("------- BREAKPOINT 0.5 ------");
 
 			return newResponseEntity(message);
 		}
-		
+		System.out.println("------- BREAKPOINT 1 ------");
+
 
 		if (isEventManager(userId, eventName) || isAdmin(userId)) {
 			System.out.println("------- BREAKPOINT 2 ------");
@@ -146,7 +149,8 @@ public class EventManagerWebService extends BaseWebService {
 				for (Object r : roles) {
 					Role role = (Role)r;
 					if (role.getSlackUser().getSlackUserId().equals(slackUserId)) {
-						
+						System.out.println("------- BREAKPOINT 3.5 ------");
+
 						Role role2 = role;
 						
 						new Thread(() -> {	roleService.remove(role2);	}).start();	
