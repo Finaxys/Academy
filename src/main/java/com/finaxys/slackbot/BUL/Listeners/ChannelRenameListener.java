@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 
 @Component
-public class ChannelChangedListener implements EventListener 
+public class ChannelRenameListener implements EventListener 
 {
     @Autowired
     private SlackApiAccessService slackApiAccessService;
