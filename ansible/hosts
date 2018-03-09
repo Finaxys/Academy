@@ -1,0 +1,2 @@
+[finaxLab]
+178.33.83.145        ansible_connection=ssh        ansible_user=lab		ansible_ssh_pass=F1n@xlab

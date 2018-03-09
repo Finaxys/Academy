@@ -1,0 +1,6 @@
+---
+
+- hosts: finaxLab
+  roles:
+    - { role: lab, sudo: yes }
+
