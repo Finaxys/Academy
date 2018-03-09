@@ -116,7 +116,7 @@ public class AdministratorWebService extends BaseWebService {
 		// GET USER ID OF THE SELECTED USER IN PARAMETER!
 		for(SlackUser user : allUsers) {
 			System.out.println(user.getName()+"  | "+ id +" |");
-			if (user.getName().equals(userIdArgs)) {
+			if (user.getName().equals(id)) {
 				userIdArgs = user.getSlackUserId();
 			}
 		}
