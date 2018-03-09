@@ -45,26 +45,17 @@ public class AdministratorWebService extends BaseWebService {
 	public ResponseEntity<JsonNode> create(@RequestParam("user_id") String profileId,
 			@RequestParam("text") String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
-
 		timer.capture();
-		System.out.println("---------------DEBUG 0-------------------");
-
+		
 		if (!slackUserService.isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
 			return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer, true);
 
 		timer.capture();
-		System.out.println("---------------DEBUG 1 -------------------");
-
+		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
-		System.out.println("---------------DEBUG 1.5 -------------------");
-
 		String profile     = argumentsSplitter.getUserId();
 		String profileName = argumentsSplitter.getUserName();
-		//String eventName   = argumentsSplitter.getString(0);
-	 
-		System.out.println("---------------DEBUG 2 -------------------");
-
-		
+	 		
 		String userId = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
 		
@@ -76,9 +67,6 @@ public class AdministratorWebService extends BaseWebService {
 			}
 		}
 			
-		System.out.println("--------The one who typed the command is admin ? "+slackUserService.isAdmin(profileId));
-
-		
 		if (!slackUserService.isAdmin(userId)) {
 			SlackUser slackUser = slackUserService.get(userId);
 
@@ -103,14 +91,19 @@ public class AdministratorWebService extends BaseWebService {
 	@ResponseBody
 	public ResponseEntity<JsonNode> remove(@RequestParam("user_id") String userId,
 			@RequestParam("text") String arguments) {
+		
 		SlackBotTimer timer = new SlackBotTimer();
-
+		
+		System.out.println("--------- DEBUG 1--------------");
+		
 		timer.capture();
+		
 		if (!isAdmin(userId))
 			return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
 
 		timer.capture();
-		
+		System.out.println("--------- DEBUG 1.5--------------");
+
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_del");
 
 		String id = argumentsSplitter.getUserId();
@@ -118,6 +111,8 @@ public class AdministratorWebService extends BaseWebService {
 		String userIdArgs = "";
 		List<SlackUser> allUsers = slackUserService.getAll();
 		
+		System.out.println("--------- DEBUG 2--------------");
+
 		// GET USER ID OF THE SELECTED USER IN PARAMETER!
 		for(SlackUser user : allUsers) {
 			System.out.println(user.getName()+"  | "+ id +" |");
@@ -125,18 +120,20 @@ public class AdministratorWebService extends BaseWebService {
 				userIdArgs = user.getSlackUserId();
 			}
 		}
-
+		System.out.println("----------USER TO DELETE ----------"+ userIdArgs);
 		if (!isAdmin(userIdArgs))
 			return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
 					+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is already not an administrator!"
 					+ timer, true);
 
 		timer.capture();
-
+		System.out.println("--------- DEBUG 3--------------");
 		List<Role> roles = roleService.getAllAdmins();
 
 		for (Role role : roles) {
 			if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
+				System.out.println("--------- DEBUG 4--------------");
+
 				new Thread(() -> {
 					roleService.remove(role);
 				}).start();
