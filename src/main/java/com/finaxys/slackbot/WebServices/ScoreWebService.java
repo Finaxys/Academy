@@ -48,9 +48,23 @@ public class ScoreWebService extends BaseWebService {
 		timer.capture();
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_event_score_add");
-		
+		System.out.println("---------------DEBUG 1.4.1 -------------------");
+
 		String userId = argumentsSplitter.getUserId();
 		String eventName = argumentsSplitter.getString(0);
+		System.out.println("---------------DEBUG 1.5 -------------------");
+
+
+		String userIdArgs = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			if (user.getName().equals(userId)) {
+				userIdArgs = user.getSlackUserId();
+			}
+		}
+		
 		
 		int score = Integer.parseInt(argumentsSplitter.getIntegers(0));
 		
@@ -69,7 +83,7 @@ public class ScoreWebService extends BaseWebService {
 					+ "You are neither admin nor a event manager !" + timer, true);
 
 
-		SlackUser user = slackUserService.get(userId);
+		SlackUser user = slackUserService.get(userIdArgs);
 		
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 		

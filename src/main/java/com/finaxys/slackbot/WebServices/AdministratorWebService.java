@@ -47,16 +47,38 @@ public class AdministratorWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		timer.capture();
+		System.out.println("---------------DEBUG 0-------------------");
 
 		if (!slackUserService.isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
 			return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer, true);
 
 		timer.capture();
+		System.out.println("---------------DEBUG 1 -------------------");
 
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_add");
+		System.out.println("---------------DEBUG 1.5 -------------------");
 
-		String userId = argumentsSplitter.getUserId();
+		String profile     = argumentsSplitter.getUserId();
+		String profileName = argumentsSplitter.getUserName();
+		//String eventName   = argumentsSplitter.getString(0);
+	 
+		System.out.println("---------------DEBUG 2 -------------------");
 
+		
+		String userId = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			System.out.println(user.getName()+"  | "+ profile +" |  "+ profileName);
+			if (user.getName().equals(profile)) {
+				userId = user.getSlackUserId();
+			}
+		}
+			
+		System.out.println("--------The one who typed the command is admin ? "+slackUserService.isAdmin(profileId));
+
+		
 		if (!slackUserService.isAdmin(userId)) {
 			SlackUser slackUser = slackUserService.get(userId);
 
@@ -88,14 +110,25 @@ public class AdministratorWebService extends BaseWebService {
 			return newResponseEntity("/fxadmin_del " + arguments + " \n " + "You are not an admin!" + timer);
 
 		timer.capture();
-
+		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fxadmin_del");
 
 		String id = argumentsSplitter.getUserId();
+		
+		String userIdArgs = "";
+		List<SlackUser> allUsers = slackUserService.getAll();
+		
+		// GET USER ID OF THE SELECTED USER IN PARAMETER!
+		for(SlackUser user : allUsers) {
+			System.out.println(user.getName()+"  | "+ id +" |");
+			if (user.getName().equals(userIdArgs)) {
+				userIdArgs = user.getSlackUserId();
+			}
+		}
 
-		if (!isAdmin(id))
+		if (!isAdmin(userIdArgs))
 			return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-					+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is already not an administrator!"
+					+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is already not an administrator!"
 					+ timer, true);
 
 		timer.capture();
@@ -103,19 +136,19 @@ public class AdministratorWebService extends BaseWebService {
 		List<Role> roles = roleService.getAllAdmins();
 
 		for (Role role : roles) {
-			if (role.getSlackUser().getSlackUserId().equals(id)) {
+			if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
 				new Thread(() -> {
 					roleService.remove(role);
 				}).start();
 
 				return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-						+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is no more an administrator!"
+						+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is no more an administrator!"
 						+ timer, true);
 			}
 		}
 		timer.capture();
 		return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
-				+ SlackBot.getSlackWebApiClient().getUserInfo(id).getName() + "> is not an administrator!" + timer,
+				+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is not an administrator!" + timer,
 				true);
 	}
 
@@ -132,20 +165,14 @@ public class AdministratorWebService extends BaseWebService {
 		if (roles.isEmpty())
 			messageText = "There are no admins!";
 		else {
-
 			messageText = "List of Admins: \n";
-
 			timer.capture();
-
 			for (Role role : roles)
-				messageText += "<@" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName()
-						+ "|" + slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
-
+				messageText += slackUserService.get(role.getSlackUser().getSlackUserId()).getName() + "\n";
 			messageText = (roles.size() > 0) ? messageText : "";
-
 			timer.capture();
 		}
-
+		
 		return newResponseEntity("/fxadmin_list :" + " \n" + messageText + timer, true);
 	}
 

@@ -17,17 +17,19 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+	
 		ArgumentsVerifier verifier = new ArgumentsVerifier();
-
+		
 		String arguments = request.getParameter("text");
 		String URL = request.getRequestURI();
 		String command = "/" + URL.split("/")[URL.split("/").length - 1];
-
+		
 		System.out.println("==================================================================================");
+		System.out.println("This arguments is correct? "+verifier.Verify(arguments, command));
 		System.out.println(arguments);
 		System.out.println(URL);
 		System.out.println(command);
-
+		
 		if (!verifier.Verify(arguments, command)) {
 			response.getWriter()
 					.write(command + " " + arguments
@@ -36,7 +38,7 @@ public class ArgumentsVerificationInterceptor extends HandlerInterceptorAdapter 
 							+ verifier.commandPatternMap.get(command).toString());
 			return false;
 		}
-
+		System.out.println("we will return true");
 		return true;
 	}
 

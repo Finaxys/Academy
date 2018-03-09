@@ -42,10 +42,13 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public SlackUser get(String id) {
 		SlackUser user = users.findById(id);
+		
 		if (user == null) {
+
 			user = new SlackUser(slackApiAccessService.getUser(id));
 			this.save(user);
 		}
+
 		return user;
 	}
 

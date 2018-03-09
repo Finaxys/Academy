@@ -1,5 +1,4 @@
 package com.finaxys.slackbot.WebServices;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,16 +9,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 
 @RestController
-@RequestMapping("/fx_help")
-public class SupportWebService extends BaseWebService {
+@RequestMapping("/fx_new")
+public class NewSupport extends BaseWebService {
 	
 	
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<JsonNode> fx_help(@RequestParam("user_id") String userId) {
     	
     	SlackBotTimer timer = new SlackBotTimer();
-    	
-    	
     	
         String fxCommands =
                 		 "*/fx_event_list* \n List all the events. \n \n" +
@@ -36,10 +33,9 @@ public class SupportWebService extends BaseWebService {
                          "*/fx_manager_list* [event name] \n List of event managers . \n \n" +
                          "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n" +
                          "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n" +
-                         "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n" +
+                         "*/fx_contest_add* [contest] [points earned] \n Adds a contest. \n \n" +
                          "*/fx_score* [userName] \n Show a user's scores \n"+
-        				 "*/fxadmin_list* \n List1 of all administrators. \n \n";
-        
+        				 "*/fxadmin_list* \n List of all administrators. \n \n";
 
         String fxAdminCommands =
         				 "*/fxadmin_add* @username \n Adds an administrator. \n \n" +
@@ -47,10 +43,8 @@ public class SupportWebService extends BaseWebService {
                          "*/fxadmin_param* [parameter_name] [parameter_value] \n Set the value of a parameter \n \n"+
                          "*/fxadmin_list_params* \n List all parameters \n \n";
         
-        
         String message = "/fx_help\nList of the FX bot commands:\n " + fxCommands + (isAdmin(userId) ? " \n " + fxAdminCommands : "");
 
-        timer.capture();
-        return newResponseEntity(message  ,true);
+        return newResponseEntity(message + timer,true);
     }
 }

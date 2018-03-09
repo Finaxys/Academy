@@ -23,22 +23,29 @@ public class ArgumentsSplitter
 		
 		verifier = new ArgumentsVerifier();
 		ArgumentsReader reader = new ArgumentsReader();
-		
+		System.out.println("---------------DEBUG 1.1 -------------------");
+
 		if (verifier.Verify(arguments, command))
 		{
+			System.out.println("---------------DEBUG 1.2 -------------------");
+
 			reader = verifier.reader;
 						
 			if (reader.parse(arguments) == null)
 				return;
-			
+			System.out.println("---------------DEBUG 1.3 -------------------");
+
 			for (Token token : reader.parse(arguments))
 			{
 				System.out.println(token.type);
 				
 				if (token.type.equals("UserId"))
 				{					
-					userId   = token.value.split("\\|")[0].split("<@")[1];
-					userName = token.value.split("\\|")[1].split(">")[0];
+					 userId   = token.value.split("\\|")[0].split("<@")[1];
+	                 userName = token.value.split("\\|")[1].split(">")[0];
+					System.out.println("---------------DEBUG 1.3 -------------------");
+					System.out.println("UserId = "+userId+" userName ="+userName);
+
 				}
 				else if (token.type.equals("Integer"))
 				{	
@@ -53,6 +60,7 @@ public class ArgumentsSplitter
 					otherStrings.add(token.value);
 				}
 			}
+			System.out.println("---------------DEBUG 1.4 -------------------");
 		}
 	}
 	
