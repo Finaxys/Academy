@@ -89,11 +89,12 @@ public class ScoreWebService extends BaseWebService {
 		
 		if (slackUserEvent!=null) {
 			slackUserEvent.addScore(score);
-			slackUserService.updateScore(userIdArgs, score);
 		}
 		else {
 			slackUserEvent = new SlackUserEvent(score, event, user);
+			
 		}
+		slackUserService.updateScore(userIdArgs, score);
 
 		SlackUserEvent slackUserEvent2 = slackUserEvent;
 		
