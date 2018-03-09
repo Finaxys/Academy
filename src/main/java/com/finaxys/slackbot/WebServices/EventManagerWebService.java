@@ -1,5 +1,5 @@
 package com.finaxys.slackbot.WebServices;
-
+							
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class EventManagerWebService extends BaseWebService {
 		 
 		if(userId.isEmpty()) {
 			SlackUser newUser = new SlackUser(profileId,profileName);
-			slackUserService.save(newUser);
+			newUser = slackUserService.save(newUser);
 			
 		    allUsers = slackUserService.getAll();
 			
@@ -74,8 +74,7 @@ public class EventManagerWebService extends BaseWebService {
 					userId = user.getSlackUserId();
 				}
 			}
-			
-			
+			System.out.println("--------------- NEW USER ID ---------- "+userId);
 			//return newResponseEntity("/fx_manager_add  : " + arguments + " the user is not valid!" + timer, true);
 
 		}
@@ -171,7 +170,7 @@ public class EventManagerWebService extends BaseWebService {
 						new Thread(() -> {	roleService.remove(role2);	}).start();	
 
 						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
-								+ "|" + slackApiAccessService.getUser(userIdArgs).getName()
+								+ "|" + slackApiAccessService.getUser(userIdArgs).getName() + timer
 								+ "> is no more a event manager!");
 
 						Log.info(message.getText());
