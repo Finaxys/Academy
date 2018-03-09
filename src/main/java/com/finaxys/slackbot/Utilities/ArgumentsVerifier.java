@@ -37,6 +37,9 @@ public class ArgumentsVerifier
 		commandPatternMap.put("/fx_action_score_add", "String UserId Integer");
 		commandPatternMap.put("/fxadmin_param",       "String Integer");
 		commandPatternMap.put("/fxadmin_list_params", "");
+		commandPatternMap.put("/start", "");
+
+		
 	}
 	
 	public boolean Verify(String arguments, String command)

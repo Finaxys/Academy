@@ -85,7 +85,7 @@ public class EntrepriseWebService extends BaseWebService {
     	System.out.println("JSONOBJECT="+response.toString());
     	
     	// return new ResponseEntity<JSONObject>(response, HttpStatus.OK);
-        return newResponseEntity("Hello entreprise!!! ", true);
+        return newResponseEntity(response.toString(), true);
 
     }
     
