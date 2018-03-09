@@ -93,7 +93,7 @@ public class EventManagerWebService extends BaseWebService {
 
 			slackUser = (slackUser == null) ? new SlackUser(profileId, profileName) : slackUser;
 
-			if(slackUserService.isEventManager(profileId, eventName))
+			if(slackUserService.isEventManager(userId, eventName))
 				return newResponseEntity("/fx_manager_add  : " + arguments + "\n " + "<@" + profileId + "|"
 						+ slackApiAccessService.getUser(slackUser.getSlackUserId()).getName()
 						+ "> is already a manager!" + timer, true);
