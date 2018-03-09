@@ -110,4 +110,11 @@ public class SlackUserServiceImpl implements SlackUserService {
 	public List<SlackUser> getAllOrderedByScore(int size) {
 		return users.getAllOrderedByAsList("score", false, size);
 	}
+
+	@Override
+	public void updateScore(String id, int score) {
+		SlackUser user = users.findById(id);
+		user.incrementScore(score);
+		users.saveOrUpdate(user);
+	}
 }
