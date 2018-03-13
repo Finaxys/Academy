@@ -137,7 +137,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>slackbot</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
