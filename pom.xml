@@ -24,7 +24,6 @@
 
 	<dependencies>
 
-		<!-- Spring Framework dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -137,7 +136,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>slackbot</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
