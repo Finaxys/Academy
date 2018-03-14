@@ -7,8 +7,6 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<name>Slackbot Maven Webapp</name>
 	<url>http://maven.apache.org</url>
-
-
 	<properties>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -81,7 +79,6 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-
 		<!-- Database drivers -->
 		<!-- Sql Server 4 -->
 		<dependency>
@@ -107,7 +104,6 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-
 		<!-- Log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
