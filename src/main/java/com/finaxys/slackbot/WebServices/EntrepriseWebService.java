@@ -17,7 +17,6 @@ import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
-import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,10 +28,10 @@ public class EntrepriseWebService extends BaseWebService {
 	
 	@Autowired
 	SlackUserService slackUserService;
-	
-	@RequestMapping(value = "/start", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<JsonNode> startDiscover(@RequestParam("user_id") String userId){ 
+
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
+	@ResponseBody
+    public ResponseEntity<JsonNode> start(@RequestParam("user_id") String userId){ 
     	
     	SlackBotTimer timer          = new SlackBotTimer();
     	JSONObject    response       = new JSONObject();
