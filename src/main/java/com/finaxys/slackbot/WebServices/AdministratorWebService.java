@@ -84,7 +84,7 @@ public class AdministratorWebService extends BaseWebService {
 		} else
 			return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|"
 					+ SlackBot.getSlackWebApiClient().getUserInfo(userId).getName() + "> is already an administrator!"
-					+ timer, true);
+					+ timer, true); 
 
 	}
 
