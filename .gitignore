@@ -149,3 +149,6 @@ buildNumber.properties
 #Credentials file
 src/main/resources/credentials.properties
 src/main/resources/dataSourceInformation.properties
+
+#VSCode
+.vscode
