@@ -1,0 +1,35 @@
+node {
+  
+
+git branch: 'master', url: 'git@github.com:Finaxys/Academy.git'
+GIT_COMMIT = sh(returnStdout: true,script: "git log -n 1 --pretty=format:'%h'")
+withCredentials([string(credentialsId: 'appVerificationToken', variable: 'APP_VERIFICATION_TOKEN'), string(credentialsId: 'debugChannel', variable: 'DEBUG_CHANNEL'), string(credentialsId: 'token', variable: 'TOKEN'), string(credentialsId: 'appVerificationToken', variable: 'BOT_USER_OAUTH_ACCESS_TOKEN'), string(credentialsId: 'slackTeam', variable: 'SLACK_TEAM'), string(credentialsId: 'slackTeamId', variable: 'SLACK_TEAM_ID'), string(credentialsId: 'debugChannelId', variable: 'DEBUG_CHANNEL_ID')]) {
+
+
+stage ('Compile'){
+   
+    sh 'mvn compile'
+}
+stage ('Test'){
+    sh 'mvn test'
+}
+stage ('Package'){
+    sh 'mvn package'
+    sh 'echo ${WORKSPACE}'
+}
+    
+stage('Archival'){
+    archiveArtifacts 'target/*.war'
+    sh 'rm -rf /home/artifacts/'+GIT_COMMIT
+    sh 'mkdir /home/artifacts/'+GIT_COMMIT
+    sh 'cp ${WORKSPACE}/target/slackbot*.war /home/artifacts/'+GIT_COMMIT
+    sh 'cp ${WORKSPACE}/target/slackbot*.war /home/snapshots'
+    sh 'mv ${WORKSPACE}/target/slackbot*SNAPSHOT.war  ${WORKSPACE}/target/slackbot_dev.war'
+}
+stage('Deploy'){
+    sh 'scp  ${WORKSPACE}/target/slackbot_dev.war lab@213.32.28.130:/var/lib/tomcat8/webapps/'
+    //sh 'sudo service tomcat8 restart'
+    cleanWs()
+}
+}
+}
