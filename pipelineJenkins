@@ -27,7 +27,7 @@ stage('Archival'){
     sh 'mv ${WORKSPACE}/target/slackbot*SNAPSHOT.war  ${WORKSPACE}/target/slackbot_dev.war'
 }
 stage('Deploy'){
-    sh 'scp  ./build/classes/main/java/com/finaxys/slackbot/resources/dataSourceInformation.properties lab@213.32.28.130:/usr/share/tomcat8/'
+    sh 'scp  ./build/classes/main/java/com/finaxys/slackbot/resources/* lab@213.32.28.130:/usr/share/tomcat8/'
     sh 'scp  ${WORKSPACE}/target/slackbot_dev.war lab@213.32.28.130:/var/lib/tomcat8/webapps/'
     cleanWs()
 }
