@@ -39,7 +39,7 @@ import com.finaxys.slackbot.DAL.SlackUserEvent;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan({"com.finaxys.slackbot.*"})
-@PropertySource(value = "file:${catalina.home}/dataSourceInformation.properties")
+@PropertySource(value = "file:${catalina.home}/dataSourceInformationPostgres.properties")
 public class SpringContext {
 
     @Autowired
@@ -67,8 +67,7 @@ public class SpringContext {
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[]{"com.finaxys.slackbot.*"});
+        sessionFactory.setDataSource(dataSource());sessionFactory.setPackagesToScan(new String[]{"com.finaxys.slackbot.*"});
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

@@ -20,7 +20,6 @@ public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
 		
 		String token = request.getParameter("token");
 		String slackTeam = request.getParameter("team_domain");
-		
 		if (token == null || !token.equals(Settings.appVerificationToken)) {
 			response.getWriter().write(new ResponseEntity("Wrong app verification token !", HttpStatus.BAD_REQUEST).toString());
 			return false;
@@ -33,6 +32,7 @@ public class TokenVerificationInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		return true;
+		
 	}
 
 	@Override

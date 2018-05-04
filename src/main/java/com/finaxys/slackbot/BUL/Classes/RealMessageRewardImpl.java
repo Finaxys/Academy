@@ -45,6 +45,8 @@ public class RealMessageRewardImpl implements RealMessageReward
         
         String 	message = jsonNode.get("text").asText();
         
+        
+        
         if (realMessageMatcher.isRealMessage(message)) 
         {
             String userId = jsonNode.get("user").asText();

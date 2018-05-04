@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.interfaces.SlackUserService;
+
 import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
 
 @Service
 public class SlackApiAccessService
 {
-
 	private static Map<String, User> allUsers;
 
 	private static Map<String, Channel> allChannels;
@@ -22,7 +27,7 @@ public class SlackApiAccessService
 	{
 		List<Channel> 	channels 	= SlackBot.getSlackWebApiClient().getChannelList();
 		List<User> 		users 		= SlackBot.getSlackWebApiClient().getUserList();
-
+		
 		HashMap<String, User> 		tmpAllUsers 	= new HashMap<String, User>();
 		HashMap<String, Channel> 	tmpAllChannels 	= new HashMap<String, Channel>();
 
@@ -40,6 +45,7 @@ public class SlackApiAccessService
 		
 		allUsers = tmpAllUsers;
 		allChannels = tmpAllChannels;
+		
 
 	}
 
@@ -72,5 +78,9 @@ public class SlackApiAccessService
 	public void updateChannel(String channelId)
 	{
 		allChannels.put(channelId, SlackBot.getSlackWebApiClient().getChannelInfo(channelId));
+	}
+	
+	public Map<String, User> getAllUsers(){
+		return this.allUsers;
 	}
 }

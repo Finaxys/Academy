@@ -33,9 +33,11 @@ public class EventApiWebService extends BaseWebService{
     
     public boolean noAccess(String appVerificationToken, String slackTeam) 
     {
+    	
         if (appVerificationToken.equals(Settings.appVerificationToken) && slackTeam.equals(Settings.slackTeam))
             return false;
         
         return true;
+        
     }
 }

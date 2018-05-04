@@ -1,6 +1,7 @@
 package com.finaxys.slackbot.WebServices;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
+
+import allbegray.slack.type.User;
 
 @RestController
 @RequestMapping("/admins")
@@ -181,4 +184,33 @@ public class AdministratorWebService extends BaseWebService {
 																												// change
 																												// OK!!
 	}
+	
+	@RequestMapping(value = "/fxadmin_init", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<JsonNode> initAdmin(@RequestParam("user_id") String userId,
+			@RequestParam("pass") String password) {
+		SlackBotTimer timer = new SlackBotTimer();
+
+		SlackUser slackUser = slackUserService.get(userId);
+		
+		//save user into DB
+		for(Map.Entry<String, User> entry : slackApiAccessService.getAllUsers().entrySet()) {
+			slackUserService.save(new SlackUser(entry.getKey(), entry.getValue().getName()));
+		}
+		/*
+		Role role = new Role("admin", slackUser, null);
+		
+		new Thread(() -> {
+			roleService.save(role);
+		}).start();
+		*/
+//		if (!isAdmin(userId))
+			return newResponseEntity("/fxadmin_init : " + userId);
+//		timer.capture();
+//		return newResponseEntity("/fxadmin_list_params :" + " \n" + parameters.getAllAsLines() + timer, true); // TODO
+//																											// change
+									
+	}
+	
+
 }

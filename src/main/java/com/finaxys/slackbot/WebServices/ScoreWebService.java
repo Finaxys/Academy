@@ -146,7 +146,9 @@ public class ScoreWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 		
 		ArgumentsSplitter argumentsSplitter = new ArgumentsSplitter(arguments, "/fx_score");
-		
+
+		return newResponseEntity("Nonexistent event" + timer, true);
+		/*
 		String userSlackId = argumentsSplitter.getUserId();
 
 		SlackUser slackUser = slackUserService.get(userSlackId);
@@ -155,6 +157,7 @@ public class ScoreWebService extends BaseWebService {
 		
 		return newResponseEntity("<@" + slackUser.getSlackUserId() + "|"
 				+ slackApiAccessService.getUser(userSlackId).getName() + "> score :" + eventService.getGlobalScore(slackUser) + timer , true);
+				*/
 	}
 
 }
