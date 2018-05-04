@@ -9,7 +9,7 @@ public class AddEventScoreArgumentsPattern {
 
     private AddEventScoreArgumentsPattern() {
     	
-        eventScoreArgumentsPattern 	= ".*<@\\w{9}|.*>.*\\d{1,3}.*\\s\\w*\\sevent.*";
+        eventScoreArgumentsPattern 	= ".*<@\\w{9}.*\\d{1,3}.*\\s\\w*\\sevent.*";
         pattern 						= Pattern.compile(eventScoreArgumentsPattern);
     }
 

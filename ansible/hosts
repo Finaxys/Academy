@@ -1,0 +1,2 @@
+[finaxLab]
+#see_the_product_owner        ansible_connection=ssh        ansible_user=lab		ansible_ssh_pass=#see_the_product_owner

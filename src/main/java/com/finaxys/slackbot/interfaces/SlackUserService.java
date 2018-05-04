@@ -19,5 +19,7 @@ public interface SlackUserService {
 	List<SlackUser> getAllOrderedByScore(int size);
 
 	boolean isEventManager(String id, String eventName);
+	
+	void updateScore(String id, int score);
 
 }

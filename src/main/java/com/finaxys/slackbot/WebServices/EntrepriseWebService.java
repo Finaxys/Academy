@@ -45,7 +45,7 @@ public class EntrepriseWebService extends BaseWebService {
     	System.out.println("he entreprise POST method is triggered!!");
     	try {
     		// hello world 
-    		response.put("text","Bienvenu dans notre présentation de Finaxys!");
+    		response.put("text","Bienvenue dans notre présentation de Finaxys!");
 	    	
 	    	firstQuestion.put("text", "Découvrir Finaxys IT !");
 	    	firstQuestion.put("fallback", "Shame... buttons aren't supported in this land");
@@ -85,7 +85,7 @@ public class EntrepriseWebService extends BaseWebService {
     	System.out.println("JSONOBJECT="+response.toString());
     	
     	// return new ResponseEntity<JSONObject>(response, HttpStatus.OK);
-        return newResponseEntity("Hello entreprise!!! ", true);
+        return newResponseEntity(response.toString(), true);
 
     }
     

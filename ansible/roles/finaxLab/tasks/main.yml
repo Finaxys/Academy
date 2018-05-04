@@ -1,0 +1,92 @@
+---
+
+- name: Add JRE ppa
+  apt_repository: repo=ppa:webupd8team/java state=present
+
+- name: Copy configuration file for dns
+  template: src={{ item }}.j2 dest=/etc/{{ item }}
+  with_items:
+    - resolv.conf
+
+- name: Write empty iterfaces
+  shell: sudo nano interfaces
+
+- name: Copy configuration file for network interface
+  template: src={{ item }}.j2 dest=/etc/networkd/{{ item }}
+  with_items:
+    - interfaces
+
+- name: Automatically select the Oracle License
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+- name: Get JRE
+  shell: wget "http://ftp.osuosl.org/pub/funtoo/distfiles/oracle-java/jdk-7u80-linux-x64.tar.gz"
+
+- name: Move JRE
+  shell: sudo mv jdk-7u80-linux-x64.tar.gz /tmp/
+
+- name: Local Path 
+  shell: echo oracle-java7-installer oracle-java7-installer/local select /tmp | sudo /usr/bin/debconf-set-selections
+
+- name: Approve
+  shell: echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: Install JRE
+  apt: name=oracle-java7-installer update_cache=yes state=latest
+ 
+# Check if apache2 is already installed
+- name: Detect existing Apache installation at /etc/apache2$
+  stat: path=/etc/apache2$
+  register: state_of_apache2_installation
+
+# Check if tomcat8 is already installed
+- name: Detect existing tomcat8 installation at /etc/tomcat8$
+  stat: path=/etc/tomcat8$
+  register: state_of_tomcat8_installation
+
+- name: Install apache2
+  apt: name=apache2 update_cache=yes state=latest
+
+- name: Start tomcat
+  service: name=tomcat8 state=started
+
+- name: Install tomcat8
+  apt: name=tomcat8 update_cache=yes state=latest
+
+- name: install maven (and other packages if needed)
+  become: yes
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+    - maven
+
+- name: Install sql server
+  shell: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+- name: Add repo
+  shell: sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
+
+- name : Update & Install
+  shell: sudo apt-get update | sudo apt-get install -y mssql-server
+
+- name: Setup SQLSERVER
+  shell: sudo /opt/mssql/bin/mssql-conf setup
+
+- name: Copy database backup
+  template: src={{ item }}.j2 dest=/var/opt/mssql/data/{{ item }}
+  with_items:
+    - finaxslackbot.bak.j2
+
+- name: Retrieve finaxslackbot database  
+  shell: sqlcmd -S localhost -U SA -P F1n@xlab -Q "BACKUP LOG finaxslackbot TO DISK = N'/var/opt/mssql/data/finaxslackbot.bak' WITH NOFORMAT, NOINIT, NAME = N'finaxslackbot', NOSKIP, NOREWIND, NOUNLOAD, STATS = 5" 
+
+- name: SQL Tools
+  shell: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - | sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/prod.list)"
+
+- name: Update 
+  shell: sudo apt-get update |sudo apt-get install -y mssql-tools unixodbc-dev
+
+- name: Export variables 
+  shell: echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile | echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+
+- name: Source
+  shell: source ~/.bashrc

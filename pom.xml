@@ -4,11 +4,9 @@
 	<groupId>com.finaxys.slackbot</groupId>
 	<artifactId>slackbot</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Slackbot Maven Webapp</name>
 	<url>http://maven.apache.org</url>
-
-
 	<properties>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -24,7 +22,6 @@
 
 	<dependencies>
 
-		<!-- Spring Framework dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -82,7 +79,6 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-
 		<!-- Database drivers -->
 		<!-- Sql Server 4 -->
 		<dependency>
@@ -114,7 +110,6 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-
 		<!-- Log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -134,13 +129,18 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.5</version>
-
 		</dependency>
+
+
+		<dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.0</version>
+       </dependency>
 	</dependencies>
 	<build>
 		<plugins>

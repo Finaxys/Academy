@@ -42,10 +42,13 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public SlackUser get(String id) {
 		SlackUser user = users.findById(id);
+		
 		if (user == null) {
+
 			user = new SlackUser(slackApiAccessService.getUser(id));
 			this.save(user);
 		}
+
 		return user;
 	}
 
@@ -106,5 +109,12 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public List<SlackUser> getAllOrderedByScore(int size) {
 		return users.getAllOrderedByAsList("score", false, size);
+	}
+
+	@Override
+	public void updateScore(String id, int score) {
+		SlackUser user = users.findById(id);
+		user.incrementScore(score);
+		users.saveOrUpdate(user);
 	}
 }
