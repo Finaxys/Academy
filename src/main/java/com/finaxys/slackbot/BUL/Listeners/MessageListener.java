@@ -2,14 +2,24 @@ package com.finaxys.slackbot.BUL.Listeners;
 
 import allbegray.slack.rtm.EventListener;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
+import com.finaxys.slackbot.DAL.Event;
+import com.finaxys.slackbot.DAL.Role;
+import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.SlackBot;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
+import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
+import com.finaxys.slackbot.interfaces.RoleService;
+import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Component
 public class MessageListener implements EventListener {
@@ -27,7 +37,17 @@ public class MessageListener implements EventListener {
 	private ChannelLeftService channelLeftService;
 	
 	@Autowired
-	private HelpService helpService ;
+	private HelpService helpService;
+	
+	@Autowired
+	private EventService eventService;
+	
+	@Autowired
+	private SlackUserService slackUserService;
+	
+	@Autowired
+	private RoleService roleService;
+	
 
 	public MessageListener() {
 	}
@@ -46,6 +66,59 @@ public class MessageListener implements EventListener {
 				
 			}
 			break;
+			
+		case "fx_event_list":
+			if(command.length == 1) {
+				SlackBotTimer timer = new SlackBotTimer();
+
+				timer.capture();
+
+				List<Event> events = eventService.getAll();
+
+				timer.capture();
+
+				if (events.isEmpty())
+					SlackBot.postMessageToDebugChannelAsync(
+							"/fx_event SlackBot_list" + " \n " + "There no previous events! Come on create one!" + timer);
+
+				else
+					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events) + timer);
+			}
+			else
+			{
+				SlackBot.postMessageToDebugChannelAsync("fx_event_list ne prend pas d'arguments");
+
+			}
+			break;
+
+		case "fx_event_add":
+			if (command.length == 4)
+			{
+				SlackBotTimer timer = new SlackBotTimer();
+				timer.capture();
+
+				Event event = new Event(command[1], command[2], command[3]);
+				System.out.println(event.toString());
+
+				if (eventService.getEventByName(command[1]) != null)
+					SlackBot.postMessageToDebugChannelAsync("/fx_event_add " + command[1]+" " +command[2]+" "+command[3]+ " \n " + "event already exists !" + timer);
+				else 
+				{
+					new Thread(() -> {
+						eventService.save(event);
+						SlackUser user = slackUserService.get(jsonNode.get("UserId").asText().trim());
+						Role role = new Role("event_manager", user, event);
+						roleService.save(role);
+					}).start();
+					timer.capture();
+					SlackBot.postMessageToDebugChannelAsync(command[1]+" added successfuly");
+				}
+				timer.capture();
+			}
+			else
+			{
+				SlackBot.postMessageToDebugChannelAsync("fx_event_add prends 3 arguments");
+			}
 		default:
 			break;
 		}
@@ -54,7 +127,7 @@ public class MessageListener implements EventListener {
 
 	private static String getHelpCommands() {
 		String fxCommands = "*/fx_event_list* \n List all the events. \n \n"
-				+ "*/fx_event_add* [event name] [group|individual] [description] \n Adds a new event. \n \n"
+				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
 				+ "*/fx_event_named* [event name] \n Gives an event details. \n \n"
 				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
 				+ "*/fx_events_by_type* [group|individual] \n List of events by type \n \n"
