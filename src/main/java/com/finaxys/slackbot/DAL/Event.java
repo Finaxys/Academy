@@ -114,11 +114,11 @@ public class Event implements Serializable {
 	}
 
 	public String toString() {
-    	return "Event name: "
-				+ this.getName() 
-				+ ", number of participants: " 
-				+ this.getAttendees().size() 
-				+ " \n ";
+    	return "Event name: " + this.getName() + "\n"
+				+ "Description: " + this.getDescription() + "\n"
+				+ "Type: " + this.getType() + "\n"
+			    + "Creation date : " + this.getCreationDate() + "\n"
+				+ "Number of participants: " + this.getAttendees().size() + " \n ";
     }
     
     public boolean equals (Event event) {
