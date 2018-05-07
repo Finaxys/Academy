@@ -14,6 +14,7 @@ import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
@@ -101,7 +102,7 @@ public class MessageListener implements EventListener {
 				System.out.println(event.toString());
 
 				if (eventService.getEventByName(command[1]) != null)
-					SlackBot.postMessageToDebugChannelAsync("/fx_event_add " + command[1]+" " +command[2]+" "+command[3]+ " \n " + "event already exists !" + timer);
+					SlackBot.postMessageToDebugChannelAsync("/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " \n " + " :  Cet évènement existe déjà !" + timer);
 				else 
 				{
 					new Thread(() -> {
@@ -111,20 +112,45 @@ public class MessageListener implements EventListener {
 						roleService.save(role);
 					}).start();
 					timer.capture();
-					SlackBot.postMessageToDebugChannelAsync(command[1]+" added successfuly");
+					SlackBot.postMessageToDebugChannelAsync(command[1] + " has been successfully added !");
 				}
 				timer.capture();
 			}
 			else
 			{
-				SlackBot.postMessageToDebugChannelAsync("fx_event_add prends 3 arguments");
+				SlackBot.postMessageToDebugChannelAsync("fx_event_add takes 3 arguments");
 			}
+
+		case "fx_event_named" : 
+			if(command.length == 2) {
+				SlackBot.postMessageToDebugChannelAsync(getEventByName(command[1]));
+			}
+			else 
+			{
+				SlackBot.postMessageToDebugChannelAsync("fx_event_named takes only one argument: event_name");
+			}
+			break;
+
 		default:
 			break;
 		}
 
 	}
 
+	public  String getEventByName(String arguments) {
+		SlackBotTimer timer = new SlackBotTimer();
+		String fxevent = "";
+
+		Event event = eventService.getEventByName(arguments);
+
+		timer.capture();
+
+		if (event == null) 
+			return "fx_event_named " + arguments + "\n" + "Nonexistent event." + timer;
+		else
+			return event.toString() + timer; 
+	}
+	
 	private static String getHelpCommands() {
 		String fxCommands = "*/fx_event_list* \n List all the events. \n \n"
 				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
