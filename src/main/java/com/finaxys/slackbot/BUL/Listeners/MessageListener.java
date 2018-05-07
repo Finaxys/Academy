@@ -120,6 +120,7 @@ public class MessageListener implements EventListener {
 			{
 				SlackBot.postMessageToDebugChannelAsync("fx_event_add takes 3 arguments");
 			}
+			break;
 
 		case "fx_event_named" : 
 			if(command.length == 2) {
@@ -131,6 +132,15 @@ public class MessageListener implements EventListener {
 			}
 			break;
 
+		case "fx_event_del" : 
+			if(command.length == 2) {
+				SlackBot.postMessageToDebugChannelAsync(removeEventByName(command[1]));
+			}
+			else 
+			{
+				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes one argument: event_name");
+			}
+			break;
 		default:
 			break;
 		}
@@ -151,6 +161,23 @@ public class MessageListener implements EventListener {
 			return event.toString() + timer; 
 	}
 	
+	public  String removeEventByName(String arguments) {
+		SlackBotTimer timer = new SlackBotTimer();
+		String fxevent = "";
+
+		Event event = eventService.getEventByName(arguments);
+
+		timer.capture();
+
+		if (event == null) 
+			return "Error, can't find the event: " + arguments + ".\n" + timer;
+		else
+		{
+			eventService.remove(event);
+			return arguments + " has been removed ! " + timer; 
+		}
+	}
+	
 	private static String getHelpCommands() {
 		String fxCommands = "*/fx_event_list* \n List all the events. \n \n"
 				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
@@ -158,7 +185,7 @@ public class MessageListener implements EventListener {
 				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
 				+ "*/fx_events_by_type* [group|individual] \n List of events by type \n \n"
 				+ "*/fx_event_score_list*  [eventName] event \n Gives the score list of a given event. \n \n"
-				+ "*/fx_event_del* \n Removes an event! \n \n"
+				+ "*/fx_event_del* [event name] \n Removes an event! \n \n"
 				+ "*/fx_event_score_add* @username [points] [name] \n Adds a score to an event attendee. \n \n"
 				+ "*/fx_action_add* \n [Code] [ActionName] [Points] \n \n"
 				+ "*/fx_action_score_add* \n [EventName] [UserName] [ActionCode] \n \n"
