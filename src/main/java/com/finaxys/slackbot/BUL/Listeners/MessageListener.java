@@ -11,6 +11,7 @@ import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -20,6 +21,7 @@ import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
 import com.finaxys.slackbot.interfaces.RoleService;
+import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Component
@@ -48,6 +50,9 @@ public class MessageListener implements EventListener {
 	
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private ActionService actionService;
 	
 
 	public MessageListener() {
@@ -99,7 +104,6 @@ public class MessageListener implements EventListener {
 				timer.capture();
 
 				Event event = new Event(command[1], command[2], command[3]);
-				System.out.println(event.toString());
 
 				if (eventService.getEventByName(command[1]) != null)
 					SlackBot.postMessageToDebugChannelAsync("/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " \n " + " :  Cet évènement existe déjà !" + timer);
@@ -141,10 +145,19 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes one argument: event_name");
 			}
 			break;
+
+		case "fx_action_add" : 
+			if(command.length == 4) {
+				SlackBot.postMessageToDebugChannelAsync(addAction(command));
+			}
+			else 
+			{
+				SlackBot.postMessageToDebugChannelAsync("fx_action_add takes 3 arguments: [Code] [ActionName] [points]");
+			}
+			break;
 		default:
 			break;
 		}
-
 	}
 
 	public  String getEventByName(String arguments) {
@@ -176,6 +189,37 @@ public class MessageListener implements EventListener {
 			eventService.remove(event);
 			return arguments + " has been removed ! " + timer; 
 		}
+	}
+	
+	public String addAction(String[] commands)
+	{
+		SlackBotTimer timer = new SlackBotTimer();
+		timer.capture();
+
+		try
+		{
+			int code = Integer.parseInt(commands[1]);
+			int points = Integer.parseInt(commands[3]);
+			
+			Action action = new Action(code, commands[2], points);
+
+			if (actionService.get(code) != null)
+				return "/fx_action_add " + code + " " + commands[2] + " " + points + " \n " + " :  This action already exists ! " + timer;
+			else 
+			{
+				new Thread(() -> {
+					actionService.save(action);
+				}).start();
+				timer.capture();
+				return "The action named " + commands[2] + " has been successfully added ! " + timer;
+			}
+		}
+		catch (NumberFormatException e)
+		{
+			return "fx_action_add failed. Please, check the arguments types. " + timer;
+		}
+		
+		
 	}
 	
 	private static String getHelpCommands() {
