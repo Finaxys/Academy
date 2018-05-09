@@ -97,7 +97,7 @@ public class MessageListener implements EventListener {
 			break;
 
 		case "fx_event_add":
-			if (command.length == 4)
+			if (command.length == 4 && (command[3].equals("group") || command[3].equals("individual")))
 				SlackBot.postMessageToDebugChannelAsync(addEvent(command, jsonNode));
 			else
 				SlackBot.postMessageToDebugChannelAsync("fx_event_add takes 3 arguments : [event name] [description] [group|individual]");
@@ -142,10 +142,8 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		Event event = new Event(command[1], command[2], command[3]);
-		if (!(command[3].equals("group") || command[3].equals("individual")))
-			return "The last parameter needs to be 'group' or 'individual'.";
 		if (eventService.getEventByName(command[1]) != null)
-			return "/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " \n " + " :  This event already exists ! " + timer;
+			return "/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " :  This event already exists ! " + timer;
 		else 
 		{
 			new Thread(() -> {
