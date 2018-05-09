@@ -68,7 +68,7 @@ public class MessageListener implements EventListener {
 			}
 			else
 			{
-				SlackBot.postMessageToDebugChannelAsync("fx_help ne prend pas d'arguments");
+				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take arguments ");
 			}
 			break;
 			
@@ -84,14 +84,14 @@ public class MessageListener implements EventListener {
 
 				if (events.isEmpty())
 					SlackBot.postMessageToDebugChannelAsync(
-							"/fx_event SlackBot_list" + " \n " + "There no previous events! Come on create one!" + timer);
+							"/fx_event SlackBot_list" + " \n " + "There is no previous events! Come on create one!" + timer);
 
 				else
 					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events) + timer);
 			}
 			else
 			{
-				SlackBot.postMessageToDebugChannelAsync("fx_event_list ne prend pas d'arguments");
+				SlackBot.postMessageToDebugChannelAsync("fx_event_list doesn't take arguments");
 
 			}
 			break;
@@ -119,7 +119,7 @@ public class MessageListener implements EventListener {
 			}
 			else 
 			{
-				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes one argument: event_name");
+				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes only one argument: event_name");
 			}
 			break;
 
