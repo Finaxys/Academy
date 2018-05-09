@@ -27,7 +27,7 @@ stage('Archival'){
     sh 'mv ${WORKSPACE}/target/slackbot*SNAPSHOT.war  ${WORKSPACE}/target/slackbot_dev.war'
 }
 stage('Deploy'){
-    sh 'scp  ${WORKSPACE}/target/slackbot_dev.war lab@213.32.28.130:/var/lib/tomcat8_staging/webapps/'
+    sh 'scp  ${WORKSPACE}/target/slackbot_dev.war lab@213.32.28.130:/var/lib/tomcat8_staging/webapps'
     cleanWs()
 }
 }
