@@ -69,7 +69,6 @@ public class MessageListener implements EventListener {
 			else
 			{
 				SlackBot.postMessageToDebugChannelAsync("fx_help ne prend pas d'arguments");
-				
 			}
 			break;
 			
@@ -99,31 +98,9 @@ public class MessageListener implements EventListener {
 
 		case "fx_event_add":
 			if (command.length == 4)
-			{
-				SlackBotTimer timer = new SlackBotTimer();
-				timer.capture();
-
-				Event event = new Event(command[1], command[2], command[3]);
-
-				if (eventService.getEventByName(command[1]) != null)
-					SlackBot.postMessageToDebugChannelAsync("/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " \n " + " :  Cet évènement existe déjà !" + timer);
-				else 
-				{
-					new Thread(() -> {
-						eventService.save(event);
-						SlackUser user = slackUserService.get(jsonNode.get("UserId").asText().trim());
-						Role role = new Role("event_manager", user, event);
-						roleService.save(role);
-					}).start();
-					timer.capture();
-					SlackBot.postMessageToDebugChannelAsync(command[1] + " has been successfully added !");
-				}
-				timer.capture();
-			}
+				SlackBot.postMessageToDebugChannelAsync(addEvent(command, jsonNode));
 			else
-			{
-				SlackBot.postMessageToDebugChannelAsync("fx_event_add takes 3 arguments");
-			}
+				SlackBot.postMessageToDebugChannelAsync("fx_event_add takes 3 arguments : [event name] [description] [group|individual]");
 			break;
 
 		case "fx_event_named" : 
@@ -159,8 +136,30 @@ public class MessageListener implements EventListener {
 			break;
 		}
 	}
+	
+	public String addEvent(String[] command, JsonNode jsonNode) {
+		SlackBotTimer timer = new SlackBotTimer();
+		timer.capture();
 
-	public  String getEventByName(String arguments) {
+		Event event = new Event(command[1], command[2], command[3]);
+		if (!(command[3].equals("group") || command[3].equals("individual")))
+			return "The last parameter needs to be 'group' or 'individual'.";
+		if (eventService.getEventByName(command[1]) != null)
+			return "/fx_event_add " + command[1] + " " + command[2] + " " + command[3] + " \n " + " :  This event already exists ! " + timer;
+		else 
+		{
+			new Thread(() -> {
+				eventService.save(event);
+				SlackUser user = slackUserService.get(jsonNode.get("UserId").asText().trim());
+				Role role = new Role("event_manager", user, event);
+				roleService.save(role);
+			}).start();
+			timer.capture();
+			return command[1] + " has been successfully added ! " + timer;
+		}
+	}
+
+	public String getEventByName(String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
 		String fxevent = "";
 
@@ -174,7 +173,7 @@ public class MessageListener implements EventListener {
 			return event.toString() + timer; 
 	}
 	
-	public  String removeEventByName(String arguments) {
+	public String removeEventByName(String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
 		String fxevent = "";
 
