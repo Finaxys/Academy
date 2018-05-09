@@ -82,97 +82,73 @@ public class MessageListener implements EventListener {
 		String[] command = message.split(" ");
 		switch (command[0]) {
 		case "fx_help":
-			if (command.length == 1) {
+			if (command.length == 1)
 				SlackBot.postMessageToDebugChannelAsync(getHelpCommands(jsonNode));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take arguments ");
-
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take any argument.");
 			break;
 		case "fx_event_named":
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(getEventByName(command[1]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_event_named prend un seul argument : le nom de l'événement");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_event_named take 1 argument : name of the event.");
 			break;
 		case "fx_events_by_date":
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(getEventsByDate(command[1]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync("fx_events_by_date takes one argument : Date of events");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_events_by_date takes 1 argument : date of the events.");
 			break;
 		case "fx_events_by_type":
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(getEventsByType(command[1]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_events_by_type takes one argument : type of events : group or individual");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_events_by_type takes 1 argument : type of event (group or individual).");
 			break;
 		case "fx_event_score_list":
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(listScoreForEvent(command[1]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync("fx_event_score_list takes one argument : name of event");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_event_score_list takes 1 argument : name of event");
 			break;
 		case "fx_event_score_add":
-			System.out.print("messageee from add score to event");
-			if (command.length == 4) {
+			if (command.length == 4)
 				SlackBot.postMessageToDebugChannelAsync(addEventScore(command[1], command[2], command[3]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_event_score_add takes 3 argument : name of event , user name and score to add");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_event_score_add takes 3 argument : name of event , user name and score to add");
 			break;
 		case "fx_manager_list":
-			System.out.print("messageee from add score to event");
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(getEventManagers(command[1]));
-			} else {
+			else
 				SlackBot.postMessageToDebugChannelAsync("fx_event_score_add takes 1 argument : name of event");
-			}
 			break;
 		case "fx_action_score_add":
-
-			if (command.length == 4) {
+			if (command.length == 4)
 				SlackBot.postMessageToDebugChannelAsync(addActionScore(command[1], command[2], command[3]));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_action_score_add takes 3 arguments : name of event, name of user and action code");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_action_score_add takes 3 arguments : name of event, name of user and action code");
 			break;
 		case "fx_manager_add":
-
-			if (command.length == 3) {
+			if (command.length == 3)
 				SlackBot.postMessageToDebugChannelAsync(create(command[1], command[2], jsonNode.get("user").asText()));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_action_score_add takes 2 arguments : name of the manager and the event name");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_action_score_add takes 2 arguments : name of the manager and the event name");
 			break;
 		case "fx_leaderboard":
-
-			if (command.length == 2 && isInteger(command[1])) {
+			if (command.length == 2 && isInteger(command[1]))
 				SlackBot.postMessageToDebugChannelAsync(listScores(command[1]));
-			} else if (command.length == 1) {
+			else if (command.length == 1)
 				SlackBot.postMessageToDebugChannelAsync(listScores(""));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_leaderboard take the number of the manager to display their score");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_leaderboard take the number of the manager to display their score");
 			break;
 		case "fx_manager_remove":
-
-			if (command.length == 3) {
+			if (command.length == 3)
 				SlackBot.postMessageToDebugChannelAsync(remove(command[1], command[2], jsonNode.get("user").asText()));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_manager_remove takes 2 arguments : name of the manager to delete and event name");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_manager_remove takes 2 arguments : name of the manager to delete and event name");
+		
 		case "fx_event_list":
 			if (command.length == 1) {
 				SlackBotTimer timer = new SlackBotTimer();
@@ -191,10 +167,9 @@ public class MessageListener implements EventListener {
 					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events) + timer);
 			} else {
 				SlackBot.postMessageToDebugChannelAsync("fx_event_list doesn't take arguments");
-
 			}
 			break;
-
+			
 		case "fx_event_add":
 			if (command.length == 4 && (command[3].equals("group") || command[3].equals("individual")))
 				SlackBot.postMessageToDebugChannelAsync(addEvent(command, jsonNode));
@@ -204,20 +179,17 @@ public class MessageListener implements EventListener {
 			break;
 
 		case "fx_event_del":
-			if (command.length == 2) {
+			if (command.length == 2)
 				SlackBot.postMessageToDebugChannelAsync(removeEventByName(command[1]));
-			} else {
+			else
 				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes only one argument: event_name");
-			}
 			break;
 
 		case "fx_action_add":
-			if (command.length == 4) {
+			if (command.length == 4)
 				SlackBot.postMessageToDebugChannelAsync(addAction(command));
-			} else {
-				SlackBot.postMessageToDebugChannelAsync(
-						"fx_action_add takes 3 arguments: [Code] [ActionName] [points]");
-			}
+			else
+				SlackBot.postMessageToDebugChannelAsync("fx_action_add takes 3 arguments: code number, action name, points");
 			break;
 
 		default:
@@ -244,18 +216,6 @@ public class MessageListener implements EventListener {
 			return command[1] + " has been successfully added ! " + timer;
 		}
 	}
-
-	/*
-	 * public String getEventByName(String arguments) { SlackBotTimer timer = new
-	 * SlackBotTimer(); String fxevent = "";
-	 * 
-	 * Event event = eventService.getEventByName(arguments);
-	 * 
-	 * timer.capture();
-	 * 
-	 * if (event == null) return "fx_event_named " + arguments + "\n" +
-	 * "Non existent event." + timer; else return event.toString() + timer; }
-	 */
 
 	public String removeEventByName(String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
@@ -348,14 +308,12 @@ public class MessageListener implements EventListener {
 	}
 
 	public static boolean isInteger(String s) {
-
-		try {
+		try
+		{
 			Integer.parseInt(s);
 		} catch (Exception e) {
 			return false;
-
 		}
-
 		return true;
 	}
 
@@ -496,13 +454,8 @@ public class MessageListener implements EventListener {
 		String eventName = arguments.trim();
 		Event event = eventService.getEventByName(eventName);
 
-		if (event == null) {
-			// Message message = new Message("Event nonexistent");
-
-			// Log.info(message.getText());
-
+		if (event == null)
 			return "Event nonexistent";
-		}
 		Object[] roles = roleService.getAll().stream().filter(e -> e.getEvent() != null && e.getEvent().equals(event))
 				.toArray();
 		System.out.println(roles.length);
@@ -514,11 +467,9 @@ public class MessageListener implements EventListener {
 						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			}
 			return "fx_manager_list " + "\n " + messageText + timer;
-
 		}
 
 		return "fx_manager_list :" + "\n " + messageText + " No event managers are found\n";
-
 	}
 
 	public String addEventScore(String eventName, String userId, String scoreValue) {
@@ -599,8 +550,7 @@ public class MessageListener implements EventListener {
 		Date wantedDate = new Date();
 		try {
 			wantedDate = dateFormat.parse(text);
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 
 		List<Event> events = eventService.getEventByDate(wantedDate);
 
@@ -680,18 +630,18 @@ public class MessageListener implements EventListener {
 				+ "*/fx_event_named* [event name] \n Gives an event details. \n \n"
 				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
 				+ "*/fx_events_by_type* [group|individual] \n List of events by type \n \n"
-				+ "*/fx_event_score_list*  [eventName] event \n Gives the score list of a given event. \n \n"
+				+ "*/fx_event_score_list*  [event name] event \n Gives the score list of a given event. \n \n"
 				+ "*/fx_event_del* [event name] \n Removes an event! \n \n"
 				+ "*/fx_event_score_add* @username [points] [name] \n Adds a score to an event attendee. \n \n"
-				+ "*/fx_action_add* \n [Code] [ActionName] [Points] \n \n"
-				+ "*/fx_action_score_add* \n [EventName] [UserName] [ActionCode] \n \n"
-				+ "*/fx_manager_add* [event name] @username \n Adds an event manager. \n \n"
+				+ "*/fx_action_add* \n [code] [action name] [points] \n \n"
+				+ "*/fx_action_score_add* \n [event name] [user name] [action code] \n \n"
+				+ "*/fx_manager_add* [event name] [username] \n Adds an event manager. \n \n"
 				+ "*/fx_manager_list* [event name] \n List of event managers . \n \n"
-				+ "*/fx_manager_del* [eventName] [username] \n Removes an event manager. \n \n"
+				+ "*/fx_manager_del* [event name] [username] \n Removes an event manager. \n \n"
 				+ "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n"
 				+ "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n"
-				+ "*/fx_score* [userName] \n Show a user's scores \n"
-				+ "*/fxadmin_list* \n List1 of all administrators. \n \n";
+				+ "*/fx_score* [user name] \n Show a user's scores \n"
+				+ "*/fxadmin_list* \n List of all administrators. \n \n";
 
 		String fxAdminCommands = "*/fxadmin_add* @username \n Adds an administrator. \n \n"
 				+ "*/fxadmin_del* @username \n Removes an administrator. \n \n"
@@ -708,7 +658,7 @@ public class MessageListener implements EventListener {
 		if (!jsonNode.has("subtype")) {
 			realMessageReward.rewardReadMessage(jsonNode);
 
-			System.out.println("hello user " + jsonNode.get("user").asText());
+			System.out.println("Hello user " + jsonNode.get("user").asText());
 
 			analyseMessage(jsonNode);
 
