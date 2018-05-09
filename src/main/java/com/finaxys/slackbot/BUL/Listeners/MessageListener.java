@@ -85,7 +85,7 @@ public class MessageListener implements EventListener {
 			if (command.length == 1) {
 				SlackBot.postMessageToDebugChannelAsync(getHelpCommands(jsonNode));
 			} else {
-				SlackBot.postMessageToDebugChannelAsync("fx_help ne prend pas d'arguments");
+				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take arguments ");
 
 			}
 			break;
@@ -171,13 +171,132 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessageToDebugChannelAsync(remove(command[1], command[2], jsonNode.get("user").asText()));
 			} else {
 				SlackBot.postMessageToDebugChannelAsync(
-						"fx_leaderboard take the number of the manager to display their score");
+						"fx_manager_remove takes 2 arguments : name of the manager to delete and event name");
+			}
+		case "fx_event_list":
+			if (command.length == 1) {
+				SlackBotTimer timer = new SlackBotTimer();
+
+				timer.capture();
+
+				List<Event> events = eventService.getAll();
+
+				timer.capture();
+
+				if (events.isEmpty())
+					SlackBot.postMessageToDebugChannelAsync("/fx_event SlackBot_list" + " \n "
+							+ "There is no previous events! Come on create one!" + timer);
+
+				else
+					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events) + timer);
+			} else {
+				SlackBot.postMessageToDebugChannelAsync("fx_event_list doesn't take arguments");
+
 			}
 			break;
+
+		case "fx_event_add":
+			if (command.length == 4 && (command[3].equals("group") || command[3].equals("individual")))
+				SlackBot.postMessageToDebugChannelAsync(addEvent(command, jsonNode));
+			else
+				SlackBot.postMessageToDebugChannelAsync(
+						"fx_event_add takes 3 arguments : [event name] [description] [group|individual]");
+			break;
+
+		case "fx_event_del":
+			if (command.length == 2) {
+				SlackBot.postMessageToDebugChannelAsync(removeEventByName(command[1]));
+			} else {
+				SlackBot.postMessageToDebugChannelAsync("fx_event_del takes only one argument: event_name");
+			}
+			break;
+
+		case "fx_action_add":
+			if (command.length == 4) {
+				SlackBot.postMessageToDebugChannelAsync(addAction(command));
+			} else {
+				SlackBot.postMessageToDebugChannelAsync(
+						"fx_action_add takes 3 arguments: [Code] [ActionName] [points]");
+			}
+			break;
+
 		default:
 			break;
 		}
+	}
 
+	public String addEvent(String[] command, JsonNode jsonNode) {
+		SlackBotTimer timer = new SlackBotTimer();
+		timer.capture();
+
+		Event event = new Event(command[1], command[2], command[3]);
+		if (eventService.getEventByName(command[1]) != null)
+			return "/fx_event_add " + command[1] + " " + command[2] + " " + command[3]
+					+ " :  This event already exists ! " + timer;
+		else {
+			new Thread(() -> {
+				eventService.save(event);
+				SlackUser user = slackUserService.get(jsonNode.get("UserId").asText().trim());
+				Role role = new Role("event_manager", user, event);
+				roleService.save(role);
+			}).start();
+			timer.capture();
+			return command[1] + " has been successfully added ! " + timer;
+		}
+	}
+
+	/*
+	 * public String getEventByName(String arguments) { SlackBotTimer timer = new
+	 * SlackBotTimer(); String fxevent = "";
+	 * 
+	 * Event event = eventService.getEventByName(arguments);
+	 * 
+	 * timer.capture();
+	 * 
+	 * if (event == null) return "fx_event_named " + arguments + "\n" +
+	 * "Non existent event." + timer; else return event.toString() + timer; }
+	 */
+
+	public String removeEventByName(String arguments) {
+		SlackBotTimer timer = new SlackBotTimer();
+		String fxevent = "";
+
+		Event event = eventService.getEventByName(arguments);
+
+		timer.capture();
+
+		if (event == null)
+			return "Error, can't find the event: " + arguments + ".\n" + timer;
+		else {
+			eventService.remove(event);
+			return arguments + " has been removed ! " + timer;
+		}
+	}
+
+	public String addAction(String[] commands) {
+		SlackBotTimer timer = new SlackBotTimer();
+		timer.capture();
+
+		try {
+			int code = Integer.parseInt(commands[1]);
+			int points = Integer.parseInt(commands[3]);
+
+			Action action = new Action(code, commands[2], points);
+
+			if (actionService.get(code) != null)
+				return "/fx_action_add " + code + " " + commands[2] + " " + points + " \n "
+						+ " :  This action already exists ! " + timer;
+			else {
+				new Thread(() -> {
+					actionService.save(action);
+				}).start();
+				timer.capture();
+
+				return "The action named " + commands[2] + " has been successfully added ! " + timer;
+			}
+		} catch (NumberFormatException e) {
+			return "fx_action_add failed. Please, check the arguments types. " + timer;
+		}
 	}
 
 	public String remove(String managerName, String eventName, String adminId) {
@@ -202,7 +321,6 @@ public class MessageListener implements EventListener {
 		}
 
 		if (slackUserService.isEventManager(adminId, eventName) || slackUserService.isAdmin(adminId)) {
-
 			Object[] roles = roleService.getAll().stream()
 					.filter(e -> e.getEvent() != null && e.getEvent().equals(event)).toArray();
 			timer.capture();
@@ -558,18 +676,18 @@ public class MessageListener implements EventListener {
 
 	private String getHelpCommands(JsonNode jsonNode) {
 		String fxCommands = "*/fx_event_list* \n List all the events. \n \n"
-				+ "*/fx_event_add* [event name] [group|individual] [description] \n Adds a new event. \n \n"
+				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
 				+ "*/fx_event_named* [event name] \n Gives an event details. \n \n"
 				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
 				+ "*/fx_events_by_type* [group|individual] \n List of events by type \n \n"
 				+ "*/fx_event_score_list*  [eventName] event \n Gives the score list of a given event. \n \n"
-				+ "*/fx_event_del* \n Removes an event! \n \n"
+				+ "*/fx_event_del* [event name] \n Removes an event! \n \n"
 				+ "*/fx_event_score_add* @username [points] [name] \n Adds a score to an event attendee. \n \n"
 				+ "*/fx_action_add* \n [Code] [ActionName] [Points] \n \n"
 				+ "*/fx_action_score_add* \n [EventName] [UserName] [ActionCode] \n \n"
 				+ "*/fx_manager_add* [event name] @username \n Adds an event manager. \n \n"
 				+ "*/fx_manager_list* [event name] \n List of event managers . \n \n"
-				+ "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n"
+				+ "*/fx_manager_del* [eventName] [username] \n Removes an event manager. \n \n"
 				+ "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n"
 				+ "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n"
 				+ "*/fx_score* [userName] \n Show a user's scores \n"
