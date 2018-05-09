@@ -132,6 +132,13 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessageToDebugChannelAsync("fx_action_add takes 3 arguments: [Code] [ActionName] [points]");
 			}
 			break;
+		
+		case "fx_manager_del" :
+			if (command.length == 3)
+				SlackBot.postMessageToDebugChannelAsync(removeManager(command));
+			else
+				SlackBot.postMessageToDebugChannelAsync("/fx_manager_del takes 2 arguments : eventName username");
+				
 		default:
 			break;
 		}
@@ -215,8 +222,37 @@ public class MessageListener implements EventListener {
 		{
 			return "fx_action_add failed. Please, check the arguments types. " + timer;
 		}
+	}
+	
+	public String removeManager(String[] commands) {
+		SlackBotTimer timer = new SlackBotTimer();
+		String fxevent = "";
+		String eventName = commands[1];
+		String userName = commands[2];
+
+		timer.capture();
+
+		List<Event> events = eventService.getAll();
+		List<SlackUser> users = slackUserService.getAll();
+		List<Role> roles = roleService.getAll();
 		
+		Event event = null;
+		SlackUser user = null;
 		
+		for (Event e: events)
+			if (e.getName().equals(eventName))
+				event = e;
+		for (SlackUser u: users)
+			if (u.getName().equals(userName))
+				user = u;
+		for (Role role: roles)
+			if (role.getEvent().getEventId().equals(event.getEventId())
+					&& role.getSlackUser().getSlackUserId().equals(user.getSlackUserId()))
+			{
+				roleService.remove(role);
+				return  userName + " has been removed from " + eventName + " ! \n" + timer;
+			}
+		return  "Error: The user " + userName + " wasn't found for the event " + eventName + " ! \n" + timer;
 	}
 	
 	private static String getHelpCommands() {
@@ -232,7 +268,7 @@ public class MessageListener implements EventListener {
 				+ "*/fx_action_score_add* \n [EventName] [UserName] [ActionCode] \n \n"
 				+ "*/fx_manager_add* [event name] @username \n Adds an event manager. \n \n"
 				+ "*/fx_manager_list* [event name] \n List of event managers . \n \n"
-				+ "*/fx_manager_del* eventName @username \n Removes an event manager. \n \n"
+				+ "*/fx_manager_del* [eventName] [username] \n Removes an event manager. \n \n"
 				+ "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n"
 				+ "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n"
 				+ "*/fx_score* [userName] \n Show a user's scores \n"
