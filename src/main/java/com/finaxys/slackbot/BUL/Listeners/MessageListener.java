@@ -88,7 +88,7 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessageAsync(channelId, getHelpCommands(jsonNode));
 			}
 			else {
-				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take any argument.");
+				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take any argument. ");
 				SlackBot.postMessageAsync(channelId,"fx_help doesn't take any argument.");
 			}
 			break;
@@ -633,7 +633,7 @@ public class MessageListener implements EventListener {
 	}
 
 	private String getHelpCommands(JsonNode jsonNode) {
-		String fxCommands = "*/fx_event_list* \n List all the events. \n \n"
+		String fxCommands = "Helloooooooooooooooooooooo Audric !\n*/fx_event_list* \n List all the events. \n \n"
 				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
 				+ "*/fx_event_named* [event name] \n Gives an event details. \n \n"
 				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
