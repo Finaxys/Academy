@@ -113,6 +113,7 @@ public class EventServiceImpl implements EventService {
 		for (Event event : events) 
 		{
 			result += event;
+			result += "\n***********************************";
 		}
 
 		return result;

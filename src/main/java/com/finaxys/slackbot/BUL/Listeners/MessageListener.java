@@ -185,10 +185,10 @@ public class MessageListener implements EventListener {
 
 				if (events.isEmpty())
 					SlackBot.postMessageToDebugChannelAsync("/fx_event SlackBot_list" + " \n "
-							+ "There is no previous events! Come on create one!" + timer);
+							+ "There is no previous events! Come on create one!");
 
 				else
-					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events) + timer);
+					SlackBot.postMessageToDebugChannelAsync(eventService.getStringFromList(events));
 			} else {
 				SlackBot.postMessageToDebugChannelAsync("fx_event_list doesn't take arguments");
 
@@ -232,7 +232,7 @@ public class MessageListener implements EventListener {
 		Event event = new Event(command[1], command[2], command[3]);
 		if (eventService.getEventByName(command[1]) != null)
 			return "/fx_event_add " + command[1] + " " + command[2] + " " + command[3]
-					+ " :  This event already exists ! " + timer;
+					+ " :  This event already exists ! ";
 		else {
 			new Thread(() -> {
 				eventService.save(event);
@@ -241,7 +241,7 @@ public class MessageListener implements EventListener {
 				roleService.save(role);
 			}).start();
 			timer.capture();
-			return command[1] + " has been successfully added ! " + timer;
+			return command[1] + " has been successfully added ! " ;
 		}
 	}
 
@@ -266,10 +266,10 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		if (event == null)
-			return "Error, can't find the event: " + arguments + ".\n" + timer;
+			return "Error, can't find the event: " + arguments + ".\n" ;
 		else {
 			eventService.remove(event);
-			return arguments + " has been removed ! " + timer;
+			return arguments + " has been removed ! " ;
 		}
 	}
 
@@ -285,17 +285,17 @@ public class MessageListener implements EventListener {
 
 			if (actionService.get(code) != null)
 				return "/fx_action_add " + code + " " + commands[2] + " " + points + " \n "
-						+ " :  This action already exists ! " + timer;
+						+ " :  This action already exists ! ";
 			else {
 				new Thread(() -> {
 					actionService.save(action);
 				}).start();
 				timer.capture();
 
-				return "The action named " + commands[2] + " has been successfully added ! " + timer;
+				return "The action named " + commands[2] + " has been successfully added ! ";
 			}
 		} catch (NumberFormatException e) {
-			return "fx_action_add failed. Please, check the arguments types. " + timer;
+			return "fx_action_add failed. Please, check the arguments types. ";// + timer;
 		}
 	}
 
@@ -376,7 +376,7 @@ public class MessageListener implements EventListener {
 			messageText += profile.getName() + " " + profile.getScore() + "\n";
 		}
 
-		return messageText + timer;
+		return messageText;// + timer;
 	}
 
 	public String addActionScore(String eventName, String userName, String actionCode) {
@@ -388,7 +388,7 @@ public class MessageListener implements EventListener {
 		for (SlackUser user : allUsers) {
 			if (user.getName().equals(userName)) {
 				if (!slackUserService.isAdmin(user.getSlackUserId()))
-					return "You are not an admin!" + timer;
+					return "You are not an admin!";// + timer;
 				else {
 					admin = user;
 					break;
@@ -401,16 +401,16 @@ public class MessageListener implements EventListener {
 		Event event = eventService.getEventByName(eventName);
 
 		if (event == null)
-			return "Event does not exist " + timer;
+			return "Event does not exist ";// + timer;
 
 		Action action = actionService.get(code);
 
 		if (action == null)
-			return "Action does not exist " + timer;
+			return "Action does not exist ";// + timer;
 
 		eventService.addScore(event, admin.getSlackUserId(), action);
 
-		return "Score successfully added for the action " + timer;
+		return "Score successfully added for the action ";// + timer;
 	}
 
 	public String create(String profileName, String eventName, String adminUserId) {
@@ -458,7 +458,7 @@ public class MessageListener implements EventListener {
 		Event event = eventService.getEventByName(eventName);
 
 		if (event == null) {
-			return "/fx_manager_add : " + eventName + " event does not exist " + timer;
+			return "/fx_manager_add : " + eventName + " event does not exist ";// + timer;
 		}
 
 		if (slackUserService.isEventManager(adminUserId, eventName) || slackUserService.isAdmin(adminUserId)) {
@@ -469,7 +469,7 @@ public class MessageListener implements EventListener {
 			slackUser = (slackUser == null) ? new SlackUser(userId, profileName) : slackUser;
 
 			if (slackUserService.isEventManager(userId, eventName))
-				return "fx_manager_add  : " + profileName + " is already a manager!" + timer;
+				return "fx_manager_add  : " + profileName + " is already a manager!" ;//+ timer;
 
 			Role role = new Role("event_manager", slackUser, event);
 
@@ -483,10 +483,10 @@ public class MessageListener implements EventListener {
 
 			timer.capture();
 
-			return "/fx_manager_add  : " + profileName + " has just became a event manager!" + timer;
+			return "/fx_manager_add  : " + profileName + " has just became a event manager!";// + timer;
 		}
 
-		return "fx_manager_add  :   you are not a event manager!" + timer;
+		return "fx_manager_add  :   you are not a event manager!";// + timer;
 	}
 
 	public String getEventManagers(String arguments) {
@@ -513,7 +513,7 @@ public class MessageListener implements EventListener {
 				messageText += "<@" + role.getSlackUser().getSlackUserId() + "|"
 						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
 			}
-			return "fx_manager_list " + "\n " + messageText + timer;
+			return "fx_manager_list " + "\n " + messageText ;//+ timer;
 
 		}
 
@@ -546,14 +546,17 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		if (event == null)
-			return "Nonexistent event" + timer;
+			return "Nonexistent event";// + timer;
 
 		// TODO
 		// if (!isEventManager(eventManagerId, eventName) && !isAdmin(eventManagerId))
 		// return "/fx_event_score_add " + eventName + "\n" + "You are neither admin nor
 		// a event manager !" + timer;
-
-		SlackUser user = slackUserService.get(userIdArgs);
+		SlackUser user = null ;
+		if(!userIdArgs.equals(""))
+			user = slackUserService.get(userIdArgs);
+		else
+			return "A problem has occured! user " + userId + " not found !" ;//+ timer;
 
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
 
@@ -579,10 +582,10 @@ public class MessageListener implements EventListener {
 			timer.capture();
 		} catch (Exception e) {
 			return "/fx_event_score_add " + eventName + " \n"
-					+ "A problem has occured! The user may have a score for this event already !" + timer;
+					+ "A problem has occured! The user may have a score for this event already !" ;//+ timer;
 		}
 
-		return "/fx_event_score_add " + eventName + " \n" + "Score has been added !" + timer;
+		return "/fx_event_score_add " + eventName + " \n" + "Score has been added !" ;//+ timer;
 	}
 
 	public String getEventsByDate(String text) {
@@ -592,7 +595,7 @@ public class MessageListener implements EventListener {
 		DateMatcher dateMatcher = new DateMatcher();
 
 		if (!dateMatcher.match(text.trim()))
-			return "fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd" + timer;
+			return "fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd" ;//+ timer;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
