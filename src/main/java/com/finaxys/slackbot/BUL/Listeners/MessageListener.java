@@ -560,9 +560,9 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		if (events.isEmpty())
-			return " fx_events_by_date " + text + " \n " + "There are no events on this date: " + text + timer;
+			return " fx_events_by_date " + text + " \n " + "There are no events on this date: " + text; //+ timer;
 		else
-			return eventService.getStringFromList(events) + timer;
+			return eventService.getStringFromList(events);// + timer;
 	}
 
 	public String getEventsByType(String eventType) {
@@ -572,9 +572,9 @@ public class MessageListener implements EventListener {
 		List<Event> events = eventService.getEventByType(eventType);
 
 		if (events.isEmpty())
-			return "fx_events_by_type " + eventType + " \n " + "No events with type: " + eventType + timer;
+			return "fx_events_by_type " + eventType + " \n " + "No events with type: " + eventType; // + timer;
 
-		return "fx_events_by_type " + eventType + " \n " + eventService.getStringFromList(events) + timer;
+		return "fx_events_by_type " + eventType + " \n " + eventService.getStringFromList(events);// + timer;
 
 	}
 
@@ -589,9 +589,9 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		if (event == null)
-			fxevent = "fx_event_named " + arguments + "\n" + "Nonexistent event." + timer;
+			fxevent = "fx_event_named " + arguments + "\n" + "Nonexistent event.";// + timer;
 		else
-			fxevent = "fx_events_named " + arguments + "\n " + event.toString() + timer;
+			fxevent = "fx_events_named " + arguments + "\n " + event.toString();// + timer;
 		return fxevent;
 
 	}
@@ -606,14 +606,14 @@ public class MessageListener implements EventListener {
 		Event event = eventService.getEventByName(eventName);
 
 		if (event == null)
-			return "fx_event_score_list " + arguments + " \n" + "No such event ! Check the event name" + timer;
+			return "fx_event_score_list " + arguments + " \n" + "No such event ! Check the event name";// + timer;
 
 		timer.capture();
 
 		List<SlackUserEvent> listEvents = slackUserEventService.getAllByEvent(event);
 
 		if (listEvents == null)
-			return "fx_event_score_list " + arguments + " \n" + "No score has been saved till the moment !" + timer;
+			return "fx_event_score_list " + arguments + " \n" + "No score has been saved till the moment !";// + timer;
 
 		String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
 
@@ -624,7 +624,7 @@ public class MessageListener implements EventListener {
 					+ slackUserEvent.getScore() + " \n";
 		}
 
-		return "/fx_event_score_list " + arguments + " \n" + textMessage + timer;
+		return "/fx_event_score_list " + arguments + " \n" + textMessage;// + timer;
 	}
 
 	private String getHelpCommands(JsonNode jsonNode) {
