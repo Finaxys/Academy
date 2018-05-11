@@ -1,0 +1,9 @@
+node {
+    git branch: 'master', url: 'git@github.com:Finaxys/Academy.git'
+    def GIT_COMMIT_TAG = sh(returnStdout: true,script: "git rev-list -n 1 v1.0 --pretty=format:'%h' | sed -n '2p'").trim()
+    stage('Deploy To Prod'){
+        sh 'echo ${tag}'  
+        sh 'echo ${GIT_COMMIT_TAG}'
+        sh "scp /home/artifacts/$GIT_COMMIT_TAG/*.war lab@213.32.28.130:/var/lib/tomcat8_prod/webapps"
+    }
+}
