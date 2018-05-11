@@ -80,12 +80,17 @@ public class MessageListener implements EventListener {
 	private void analyseMessage(JsonNode jsonNode) {
 		String message = jsonNode.get("text").asText().trim();
 		String[] command = message.split(" ");
+		String channelId = jsonNode.get("channel").asText().trim();
 		switch (command[0]) {
 		case "fx_help":
-			if (command.length == 1)
+			if (command.length == 1) {
 				SlackBot.postMessageToDebugChannelAsync(getHelpCommands(jsonNode));
-			else
+				SlackBot.postMessageAsync(channelId, getHelpCommands(jsonNode));
+			}
+			else {
 				SlackBot.postMessageToDebugChannelAsync("fx_help doesn't take any argument.");
+				SlackBot.postMessageAsync(channelId,"fx_help doesn't take any argument.");
+			}
 			break;
 		case "fx_event_named":
 			if (command.length == 2)
