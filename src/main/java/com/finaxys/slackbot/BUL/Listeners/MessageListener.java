@@ -8,12 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
@@ -24,11 +21,9 @@ import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.DebugMode;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Message;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
@@ -36,8 +31,7 @@ import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
 import com.finaxys.slackbot.interfaces.RoleService;
-import com.finaxys.slackbot.interfaces.ActionService;
-import com.finaxys.slackbot.interfaces.DebugModeService;
+import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Component
@@ -104,67 +98,60 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_help doesn't take arguments ", flagDebug.isOnDebugMode());
 			
 			break;
-		case "fx_event_named":
-			if (command.length == 2)
-				SlackBot.postMessageToDebugChannelAsync(getEventByName(command[1]));
-			else
-				SlackBot.postMessageToDebugChannelAsync("fx_event_named take 1 argument : name of the event.");
-			break;
 		case "fx_events_by_date":
 			if (command.length == 2)
-				SlackBot.postMessageToDebugChannelAsync(getEventsByDate(command[1]));
+				SlackBot.postMessage(channelId,getEventsByDate(command[1]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_events_by_date takes 1 argument : date of the events.");
+				SlackBot.postMessage(channelId,"fx_events_by_date takes 1 argument : date of the events.", flagDebug.isOnDebugMode());
 			break;
 		case "fx_events_by_type":
 			if (command.length == 2)
-				SlackBot.postMessageToDebugChannelAsync(getEventsByType(command[1]));
+				SlackBot.postMessage(channelId,getEventsByType(command[1]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_events_by_type takes 1 argument : type of event (group or individual).");
+				SlackBot.postMessage(channelId,"fx_events_by_type takes 1 argument : type of event (group or individual).", flagDebug.isOnDebugMode());
 			break;
 		case "fx_event_score_list":
 			if (command.length == 2)
-				SlackBot.postMessageToDebugChannelAsync(listScoreForEvent(command[1]));
+				SlackBot.postMessage(channelId,listScoreForEvent(command[1]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_event_score_list takes 1 argument : name of event");
+				SlackBot.postMessage(channelId,"fx_event_score_list takes 1 argument : name of event", flagDebug.isOnDebugMode());
 			break;
 		case "fx_event_score_add":
 			if (command.length == 4)
-				SlackBot.postMessageToDebugChannelAsync(addEventScore(command[1], command[2], command[3]));
+				SlackBot.postMessage(channelId,addEventScore(command[1], command[2], command[3]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_event_score_add takes 3 argument : name of event , user name and score to add");
+				SlackBot.postMessage(channelId,"fx_event_score_add takes 3 argument : name of event , user name and score to add", flagDebug.isOnDebugMode());
 			break;
 		case "fx_manager_list":
 			if (command.length == 2)
-				SlackBot.postMessageToDebugChannelAsync(getEventManagers(command[1]));
+				SlackBot.postMessage(channelId,getEventManagers(command[1]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_event_score_add takes 1 argument : name of event");
+				SlackBot.postMessage(channelId,"fx_event_score_add takes 1 argument : name of event", flagDebug.isOnDebugMode());
 			break;
 		case "fx_action_score_add":
 			if (command.length == 4)
-				SlackBot.postMessageToDebugChannelAsync(addActionScore(command[1], command[2], command[3]));
+				SlackBot.postMessage(channelId,addActionScore(command[1], command[2], command[3]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_action_score_add takes 3 arguments : name of event, name of user and action code");
+				SlackBot.postMessage(channelId,"fx_action_score_add takes 3 arguments : name of event, name of user and action code", flagDebug.isOnDebugMode());
 			break;
 		case "fx_manager_add":
 			if (command.length == 3)
-				SlackBot.postMessageToDebugChannelAsync(create(command[1], command[2], jsonNode.get("user").asText()));
+				SlackBot.postMessage(channelId,create(command[1], command[2], jsonNode.get("user").asText()), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_action_score_add takes 2 arguments : name of the manager and the event name");
+				SlackBot.postMessage(channelId,"fx_action_score_add takes 2 arguments : name of the manager and the event name", flagDebug.isOnDebugMode());
 			break;
 		case "fx_leaderboard":
 			if (command.length == 2 && isInteger(command[1]))
-				SlackBot.postMessageToDebugChannelAsync(listScores(command[1]));
+				SlackBot.postMessage(channelId,listScores(command[1]), flagDebug.isOnDebugMode());
 			else if (command.length == 1)
-				SlackBot.postMessageToDebugChannelAsync(listScores(""));
-			else
-				SlackBot.postMessageToDebugChannelAsync("fx_leaderboard take the number of the manager to display their score");
+				SlackBot.postMessage(channelId,listScores(""), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId,"fx_leaderboard take the number of the manager to display their score", flagDebug.isOnDebugMode());
 			break;
 		case "fx_manager_remove":
 			if (command.length == 3)
-				SlackBot.postMessageToDebugChannelAsync(remove(command[1], command[2], jsonNode.get("user").asText()));
+				SlackBot.postMessage(channelId,remove(command[1], command[2], jsonNode.get("user").asText()), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessageToDebugChannelAsync("fx_manager_remove takes 2 arguments : name of the manager to delete and event name");
+				SlackBot.postMessage(channelId,"fx_manager_remove takes 2 arguments : name of the manager to delete and event name", flagDebug.isOnDebugMode());
 		
 		case "fx_event_list":
 			if (command.length == 1) {
@@ -218,12 +205,6 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId,"fx_action_add takes 3 arguments: [Code] [ActionName] [points]", flagDebug.isOnDebugMode());
 			break;
 		
-		case "fx_manager_del" :
-			if (command.length == 3)
-				SlackBot.postMessage(channelId,removeManager(command), flagDebug.isOnDebugMode());
-			else
-				SlackBot.postMessage(channelId,"/fx_manager_del takes 2 arguments : eventName username", flagDebug.isOnDebugMode());
-				
 		default:
 			break;
 		}
