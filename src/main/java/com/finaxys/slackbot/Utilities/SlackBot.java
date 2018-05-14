@@ -3,13 +3,20 @@ package com.finaxys.slackbot.Utilities;
 import allbegray.slack.SlackClientFactory;
 import allbegray.slack.rtm.SlackRealTimeMessagingClient;
 import allbegray.slack.webapi.SlackWebApiClient;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.finaxys.slackbot.DAL.DebugMode;
+import com.finaxys.slackbot.interfaces.DebugModeService;
 
 @Component
 public class SlackBot {
 	
 	private static SlackWebApiClient slackWebApiClient;
 	private static SlackRealTimeMessagingClient slackRealTimeMessagingClient;
+	
+
 	
 	public static SlackWebApiClient getSlackWebApiClient() {
 		return slackWebApiClient == null ? SlackClientFactory.createWebApiClient(Settings.botUserOauthAccessToken)
@@ -30,5 +37,13 @@ public class SlackBot {
 
 	public static void postMessageToDebugChannelAsync(String message) {
 		postMessageAsync(Settings.debugChannelId, message);
+	}
+	
+	public static void postMessage(String channelId, String message, boolean flag) {
+		if(flag) 	
+			postMessageToDebugChannelAsync(message);
+		else
+			postMessageAsync(channelId, message);
+	
 	}
 }
