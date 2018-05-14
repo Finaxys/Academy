@@ -47,6 +47,8 @@ public class MessageListener implements EventListener {
 			}
 			break;
 		default:
+			System.out.println("-------------------" + message);
+			SlackBot.postMessageToDebugChannelAsync("hi " + message);
 			break;
 		}
 

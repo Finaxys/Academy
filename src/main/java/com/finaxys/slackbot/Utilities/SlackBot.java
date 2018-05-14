@@ -29,6 +29,7 @@ public class SlackBot {
 	}
 
 	public static void postMessageToDebugChannelAsync(String message) {
+		System.out.println("*******" + Settings.debugChannelId);
 		postMessageAsync(Settings.debugChannelId, message);
 	}
 }
