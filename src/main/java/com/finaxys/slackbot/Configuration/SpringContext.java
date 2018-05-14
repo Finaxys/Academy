@@ -30,11 +30,13 @@ import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Action;
+import com.finaxys.slackbot.DAL.DebugMode;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
+import com.finaxys.slackbot.interfaces.DebugModeService;
 
 @Configuration
 @EnableTransactionManagement
@@ -44,6 +46,9 @@ public class SpringContext {
 
     @Autowired
     private Environment environment;
+    
+    @Autowired
+	private DebugModeService debugModeService;
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
@@ -87,7 +92,7 @@ public class SpringContext {
 
     @Bean
     public MessageListener messageListener() {
-        return new MessageListener();
+        return new MessageListener(debugModeService.save(DebugMode.beginDebugMode()));
     }
 
     @Bean
@@ -145,6 +150,12 @@ public class SpringContext {
     }
     
     @Bean
+    public Repository<DebugMode, Integer> debugmodeRepository() {
+        return new Repository<>(DebugMode.class);
+    }
+    
+    
+    @Bean
     public com.finaxys.slackbot.BUL.Listeners.UserChangeListener userChangedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.UserChangeListener();
     }
@@ -163,5 +174,8 @@ public class SpringContext {
     public com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener reactionAddedListener() {
         return new com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener();
     }
+    
+    
+  
 
 }

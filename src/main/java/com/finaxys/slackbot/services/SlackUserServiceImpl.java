@@ -117,4 +117,6 @@ public class SlackUserServiceImpl implements SlackUserService {
 		user.incrementScore(score);
 		users.saveOrUpdate(user);
 	}
+	
+	
 }

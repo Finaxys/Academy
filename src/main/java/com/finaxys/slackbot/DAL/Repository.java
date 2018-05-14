@@ -79,6 +79,10 @@ public class Repository<T, K extends Serializable> {
     public T findById(K id) {
         return (T) sessionFactory.getCurrentSession().get(persistentClass, id);
     }
+    
+    public T findByName(K name) {
+        return (T) sessionFactory.getCurrentSession().get(persistentClass, name);
+    }
 
     public void saveOrUpdate(T entity) {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
