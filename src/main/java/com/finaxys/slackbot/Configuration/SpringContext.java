@@ -145,7 +145,7 @@ public class SpringContext {
     }
     
     @Bean
-    public Repository<Action, Integer> actionRepository() {
+    public Repository<Action, String> actionRepository() {
         return new Repository<>(Action.class);
     }
     

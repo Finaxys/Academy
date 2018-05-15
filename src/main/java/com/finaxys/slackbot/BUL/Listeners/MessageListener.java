@@ -97,6 +97,7 @@ public class MessageListener implements EventListener {
 			else
 				SlackBot.postMessage(channelId, "fx_help doesn't take arguments ", flagDebug.isOnDebugMode());
 			
+			
 			break;
 		case "fx_events_by_date":
 			if (command.length == 2)
@@ -119,6 +120,12 @@ public class MessageListener implements EventListener {
 		case "fx_event_score_add":
 			if (command.length == 4)
 				SlackBot.postMessage(channelId,addEventScore(command[1], command[2], command[3]), flagDebug.isOnDebugMode());
+			else
+				SlackBot.postMessage(channelId,"fx_event_score_add takes 3 argument : name of event , user name and score to add", flagDebug.isOnDebugMode());
+			break;
+		case "fx_event_action_add":
+			if (command.length == 5)
+				SlackBot.postMessage(channelId, eventService.addEventAction(command[1], command[2], command[3], Integer.parseInt(command[4])), flagDebug.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,"fx_event_score_add takes 3 argument : name of event , user name and score to add", flagDebug.isOnDebugMode());
 			break;
@@ -253,7 +260,7 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		try {
-			int code = Integer.parseInt(commands[1]);
+			String code = commands[1];
 			int points = Integer.parseInt(commands[3]);
 
 			Action action = new Action(code, commands[2], points);
@@ -369,14 +376,13 @@ public class MessageListener implements EventListener {
 			}
 		}
 
-		int code = Integer.parseInt(actionCode);
 
 		Event event = eventService.getEventByName(eventName);
 
 		if (event == null)
 			return "Event does not exist ";// + timer;
 
-		Action action = actionService.get(code);
+		Action action = actionService.get(actionCode);
 
 		if (action == null)
 			return "Action does not exist ";// + timer;

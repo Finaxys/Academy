@@ -16,44 +16,39 @@ public class Action implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer code;
-	private String 	action;
-	private int 	points;
+	private String code;
+	private String description;
+	private int points;
 
 	public Action() {
 	}
 
 	public Action(String event, int score) {
-		action=event;
-		points=score;
+		description = event;
+		points = score;
 	}
 
-	public Action(int code, String actionName, int points) {
-		action=actionName;
-		this.points=points;
-		this.code=code;
+	public Action(String actionCode, String actionDesc, int points) {
+		this.description = actionDesc;
+		this.points = points;
+		this.code = actionCode;
 	}
-
-	public void setCode(Integer code) {
-		this.code = code;
-	}
-
+	
 	@Id
 	@Column(name="ACTION_ID")
-	public Integer getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
-
-	public String getAction() {
-		return action;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setAction(String action) {
-		this.action = action;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public int getPoints() {

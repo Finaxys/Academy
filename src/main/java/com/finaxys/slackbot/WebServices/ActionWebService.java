@@ -35,7 +35,7 @@ public class ActionWebService extends BaseWebService {
     	
     	if(!slackUserService.isAdmin(userId))
     		return newResponseEntity("/fx_action_add " + arguments + " \n " + "You are not an admin!" + timer,true);
-    	
+    	/*
     	int code = Integer.parseInt(argumentsSplitter.getIntegers(0));
     	int points = Integer.parseInt(argumentsSplitter.getIntegers(1));
     	String actionName = argumentsSplitter.getString(0);
@@ -43,7 +43,7 @@ public class ActionWebService extends BaseWebService {
     	Action action = new Action(code, actionName, points);
     	
     	new Thread(()->{actionService.save(action);}).start();
-
+*/
         return newResponseEntity("Action successfully added " + timer,true);
     }
     
@@ -59,7 +59,7 @@ public class ActionWebService extends BaseWebService {
     	if(!slackUserService.isAdmin(userId))
     		return newResponseEntity("/fx_event_action_add " + arguments + " \n " + "You are not an admin!" + timer,true);
     	
-    	int code = Integer.parseInt(argumentsSplitter.getIntegers(0));
+    	String code = argumentsSplitter.getIntegers(0);
     	String eventName = argumentsSplitter.getString(0);
     	
     	Event event = eventService.getEventByName(eventName);
@@ -84,7 +84,7 @@ public class ActionWebService extends BaseWebService {
     	if(!slackUserService.isAdmin(userId))
     		return newResponseEntity("/fx_action_score_add " + arguments + " \n " + "You are not an admin!" + timer,true);
     	
-    	int code = Integer.parseInt(argumentsSplitter.getIntegers(0));
+    	String code = argumentsSplitter.getIntegers(0);
     	String eventName = argumentsSplitter.getString(0);
     	String slackUserId = argumentsSplitter.getUserId();
     	

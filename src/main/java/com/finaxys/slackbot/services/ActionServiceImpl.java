@@ -14,13 +14,13 @@ import com.finaxys.slackbot.interfaces.ActionService;
 public class ActionServiceImpl implements ActionService {
 
 	@Autowired
-	Repository<Action, Integer> actionRepository;
+	Repository<Action, String> actionRepository;
 
 	@Autowired
 	Repository<Event, Integer> eventRepository;
 
 	@Override
-	public Action get(int id) {
+	public Action get(String id) {
 		return actionRepository.findById(id);
 	}
 

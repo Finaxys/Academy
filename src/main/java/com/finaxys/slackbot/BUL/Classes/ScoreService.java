@@ -15,7 +15,7 @@ public class ScoreService
 	private static Map<String, Integer> scores;
 	
 	@Autowired
-	Repository<Action, Integer> scoreRepository;
+	Repository<Action, String> scoreRepository;
 	
 	public ScoreService() 
 	{		
@@ -26,7 +26,7 @@ public class ScoreService
 	{		
 		for (Action es : scoreRepository.getAll()) 
 		{
-			scores.put(es.getAction(), es.getPoints());
+			scores.put(es.getDescription(), es.getPoints());
 		}
 	}
 

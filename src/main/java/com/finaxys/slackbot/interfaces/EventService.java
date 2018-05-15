@@ -29,9 +29,11 @@ public interface EventService {
 
 	List<Event> getEventByDate(Date wantedDate);
 	
-	void addAction(Event event, int code);
+	void addAction(Event event, String code);
 
 	void addScore(Event event, String userId, Action action);
+
+	String addEventAction(String eventCode, String actionCode, String actionDesc, int actionPoints);
 
 
 

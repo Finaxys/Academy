@@ -5,12 +5,12 @@ import java.util.List;
 import com.finaxys.slackbot.DAL.Action;
 
 public interface ActionService {
-
-	Action get(int id);
 	
 	Action save(Action action);
 	
 	void remove(Action action);
 	
 	List<Action> getAll();
+
+	Action get(String id);
 }
