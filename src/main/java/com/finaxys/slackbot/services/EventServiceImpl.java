@@ -181,9 +181,7 @@ public class EventServiceImpl implements EventService {
 				return "/fx_action_add " + actionCode + "\n "
 						+ " :  This action already exists ! ";
 			else {
-				new Thread(() -> {
 					actionService.save(action);
-				}).start();
 
 				
 			}
