@@ -33,7 +33,7 @@ public class Action implements Serializable {
 		this.points = points;
 		this.code = actionCode;
 	}
-	
+		
 	@Id
 	@Column(name="ACTION_ID")
 	public String getCode() {
