@@ -83,6 +83,7 @@ public class MessageListener implements EventListener {
 		String message = jsonNode.get("text").asText().trim();
 		String[] command = message.split(" ");
 		String channelId = jsonNode.get("channel").asText().trim();
+		String userId = jsonNode.get("user").asText().trim();
 		
 		System.out.println("**********");
 		System.out.println(flagDebug.isOnDebugMode());
@@ -202,6 +203,13 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId,removeEventByName(command[1]), flagDebug.isOnDebugMode());
 			else 
 				SlackBot.postMessage(channelId,"fx_event_del takes only one argument: event_name", flagDebug.isOnDebugMode());
+			break;
+			
+		case "fx_event_join" : 
+			if(command.length == 2) 
+				SlackBot.postMessage(channelId,eventService.joinEvent(userId, command[1]), flagDebug.isOnDebugMode());
+			else 
+				SlackBot.postMessage(channelId,"fx_event_join takes only one argument: event_name", flagDebug.isOnDebugMode());
 			break;
 
 		case "fx_action_add" : 

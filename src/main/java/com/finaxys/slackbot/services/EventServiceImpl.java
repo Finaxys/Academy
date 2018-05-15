@@ -12,6 +12,7 @@ import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
+import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
@@ -194,4 +195,40 @@ public class EventServiceImpl implements EventService {
 		return "The action named " + actionCode + " has been successfully added ! ";
 		
 	}
+
+	@Override
+	public String joinEvent(String userId, String eventName) {
+			
+			SlackUser user = slackUserService.get(userId);
+
+			Event event = this.getEventByName(eventName);
+
+			if (event == null)
+				return "Nonexistent event";// + timer;
+
+			// TODO
+			// if (!isEventManager(eventManagerId, eventName) && !isAdmin(eventManagerId))
+			// return "/fx_event_score_add " + eventName + "\n" + "You are neither admin nor
+			// a event manager !" + timer;
+
+			SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
+
+			if (slackUserEvent != null) {
+				return "You have already participated to this event " + eventName;
+			} else {
+				slackUserEvent = new SlackUserEvent(event, user);
+
+			}
+
+			try {
+					slackUserEventService.save(slackUserEvent);
+			} catch (Exception e) {
+				return "/fx_event_join " + eventName + " \n"
+						+ "A problem has occured!";
+			}
+			
+			return "You are now a member of this event " + eventName;
+	}
+	
+	
 }

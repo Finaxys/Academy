@@ -20,6 +20,11 @@ public class SlackUserEvent implements Serializable {
 
     public SlackUserEvent() {
     }
+    
+    public SlackUserEvent(Event event, SlackUser slackUser) {
+        this.event = event;
+        this.slackUser=slackUser;
+    }
 
     public SlackUserEvent(int score, Event event, SlackUser slackUser) {
         this.score = score;

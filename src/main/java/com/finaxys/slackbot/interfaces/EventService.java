@@ -35,6 +35,7 @@ public interface EventService {
 
 	String addEventAction(String eventCode, String actionCode, String actionDesc, int actionPoints);
 
+	String joinEvent(String userId, String eventName);
 
 
 }
