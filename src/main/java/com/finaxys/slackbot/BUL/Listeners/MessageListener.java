@@ -231,6 +231,16 @@ public class MessageListener implements EventListener {
 			else 
 				SlackBot.postMessage(channelId,"fx_action_add takes 1 arguments: [eventName]", flagDebug.isOnDebugMode());
 			break;
+			
+		case "fx_event_action_add_to_user" :
+			if(command.length == 4) {
+				System.out.println("-------------------\n" + command[3]);
+				SlackBot.postMessage(channelId, eventService.addActionToSlackuser(command[1], command[2], command[3]), flagDebug.isOnDebugMode());
+			}
+			else 
+				SlackBot.postMessage(channelId,"fx_event_action_add_to_user takes 3 arguments: [eventName], [actionCode] and [slack_user name]", flagDebug.isOnDebugMode());
+			break;
+			
 		default:
 			System.out.println("-------------------" + message);
 			SlackBot.postMessageToDebugChannelAsync("hi " + message);
@@ -394,8 +404,7 @@ public class MessageListener implements EventListener {
 				}
 			}
 		}
-
-
+		
 		Event event = eventService.getEventByName(eventName);
 
 		if (event == null)

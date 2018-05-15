@@ -21,7 +21,7 @@ public class SlackUser implements Serializable {
     private Set<Role> roles = new HashSet<>();
     
     private Set<SlackUserEvent> slackUserEvents;
-    public Set<Action> actions;
+    public Set<Action> actions ;
 
     public SlackUser() {
         this.score = 0;
@@ -31,6 +31,7 @@ public class SlackUser implements Serializable {
         this.score 	= 0;
         this.slackUserId 	= userId;
         this.name 	= userName;
+        
     }
 
     public SlackUser(String userId, String userName,int score) {

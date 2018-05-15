@@ -32,7 +32,6 @@ public class SlackUserServiceImpl implements SlackUserService {
 		this.events = events;
 	}
 
-
 	@Autowired
 	RoleService roles;
 
