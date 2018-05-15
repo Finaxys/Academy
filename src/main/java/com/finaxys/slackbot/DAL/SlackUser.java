@@ -33,7 +33,7 @@ public class SlackUser implements Serializable {
         this.name 	= userName;
     }
 
-    public SlackUser(String userId, String userName, boolean isChallengeManager, int score) {
+    public SlackUser(String userId, String userName,int score) {
         this.slackUserId 	= userId;
         this.name 	= userName;
         this.score 	= score;
