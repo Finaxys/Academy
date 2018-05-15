@@ -1,12 +1,16 @@
 package com.finaxys.slackbot.services;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
@@ -178,7 +182,7 @@ public class EventServiceImpl implements EventService {
 			Action action = new Action(actionCode, actionDesc, actionPoints);
 
 			if (actionService.get(actionCode) != null)// check actionCode isUnique in an event
-				return "/fx_action_add " + actionCode + "\n "
+				return "/fx_event_action_add " + actionCode + "\n "
 						+ " :  This action already exists ! ";
 			else {
 					actionService.save(action);
@@ -186,12 +190,44 @@ public class EventServiceImpl implements EventService {
 				
 			}
 		} catch (NumberFormatException e) {
-			return "fx_action_add failed. Please, check the arguments types. ";// + timer;
+			return "fx_event_action_add failed. Please, check the arguments types. ";// + timer;
 		}
     	
     	this.addAction(event, actionCode);
 		
 		return "The action named " + actionCode + " has been successfully added ! ";
+		
+	}
+	
+	@Override
+	public String addActionToSlackuser(String eventCode, String actionCode, String slackuserName) {
+		Event event = this.getEventByName(eventCode);
+		Action action = actionService.get(actionCode);
+		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
+		String userId = "";
+		if (um.isCorrect(slackuserName))
+			userId = um.getUserIdArgument(slackuserName);
+		else
+			return "User name incorrect";
+		
+		SlackUser slackuser = slackUserService.get(userId);
+		
+		if (event == null)
+    		return "Event does not exist ";
+		if (action == null)
+    		return "Action does not exist ";
+		if (slackuser == null)
+        	return "User does not exist ";
+		if(event.getEventScores().stream().filter(a -> a.getCode().equals(action.getCode())).count() == 0)
+			return "Action does not exist in this event!";
+		
+		if (slackuser.getActions() == null) 
+			slackuser.setActions(new HashSet<>());
+
+		slackuser.getActions().add(action);
+		slackUserService.save(slackuser);
+		
+		return "The action named " + actionCode + " has been successfully performed by " + slackuserName+" ! ";
 		
 	}
 }

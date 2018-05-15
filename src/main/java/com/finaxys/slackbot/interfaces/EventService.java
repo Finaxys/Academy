@@ -34,6 +34,8 @@ public interface EventService {
 	void addScore(Event event, String userId, Action action);
 
 	String addEventAction(String eventCode, String actionCode, String actionDesc, int actionPoints);
+	
+	String addActionToSlackuser(String eventCode, String actionCode, String slackuserName);
 
 
 
