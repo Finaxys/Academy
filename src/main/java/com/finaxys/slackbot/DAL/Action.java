@@ -10,6 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ACTION")
@@ -22,6 +26,7 @@ public class Action implements Serializable {
 	private String code;
 	private String description;
 	private int points;
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Event event;
 	/*
 	private Set<SlackUser> slackUsers;

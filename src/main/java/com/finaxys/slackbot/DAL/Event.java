@@ -99,12 +99,7 @@ public class Event implements Serializable {
         this.attendees = attendees;
     }
     
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-    	      name="EVENT_ACTION",
-    	      joinColumns=@JoinColumn(name="EVENT_ID", referencedColumnName="EVENT_ID"),
-    	      inverseJoinColumns=@JoinColumn(name="ACTION_ID", referencedColumnName="ACTION_ID"))
-    
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     public Set<Action> getEventScores() {
 		return eventScores;
 	}
