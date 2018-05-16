@@ -220,7 +220,7 @@ public class MessageListener implements EventListener {
 			break;
 		case "fx_action_get" : 
 			if(command.length == 2)
-				SlackBot.postMessage(channelId, actionService.get(command[1])!=null ? actionService.get(command[1]).getCode() : "0", flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, actionService.getActionByCode(command[1])!=null ? actionService.getActionByCode(command[1]).getCode() : "0", flagDebug.isOnDebugMode());
 			else 
 				SlackBot.postMessage(channelId,"fx_action_add takes 1 argument: [ActionName]", flagDebug.isOnDebugMode());
 			break;
@@ -294,7 +294,7 @@ public class MessageListener implements EventListener {
 
 			Action action = new Action(code, commands[2], points);
 
-			if (actionService.get(code) != null)
+			if (actionService.getActionByCode(code) != null)
 				return "/fx_action_add " + code + " " + commands[2] + " " + points + " \n "
 						+ " :  This action already exists ! ";
 			else {
@@ -410,7 +410,7 @@ public class MessageListener implements EventListener {
 		if (event == null)
 			return "Event does not exist ";// + timer;
 
-		Action action = actionService.get(actionCode);
+		Action action = actionService.getActionByCode(actionCode);
 
 		if (action == null)
 			return "Action does not exist ";// + timer;

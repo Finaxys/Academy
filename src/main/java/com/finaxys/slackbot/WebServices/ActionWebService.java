@@ -93,7 +93,7 @@ public class ActionWebService extends BaseWebService {
     	if (event == null)
     		return newResponseEntity("Event does not exist " + timer, true);
     	
-    	Action action = actionService.get(code);
+    	Action action = actionService.getActionByCode(code);
 		
 		if (action == null)
 			return newResponseEntity("Action does not exist " + timer,true);

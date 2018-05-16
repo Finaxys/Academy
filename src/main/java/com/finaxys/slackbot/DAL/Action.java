@@ -16,6 +16,7 @@ public class Action implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private long id;
 	private String code;
 	private String description;
 	private int points;
@@ -29,6 +30,7 @@ public class Action implements Serializable {
 	}
 
 	public Action(String actionCode, String actionDesc, int points) {
+		super();
 		this.description = actionDesc;
 		this.points = points;
 		this.code = actionCode;
@@ -36,6 +38,15 @@ public class Action implements Serializable {
 		
 	@Id
 	@Column(name="ACTION_ID")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}	
+	
 	public String getCode() {
 		return code;
 	}

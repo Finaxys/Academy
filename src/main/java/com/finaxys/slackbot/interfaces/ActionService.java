@@ -12,5 +12,6 @@ public interface ActionService {
 	
 	List<Action> getAll();
 
-	Action get(String id);
+	Action get(long id);
+	Action getActionByCode(String code);
 }

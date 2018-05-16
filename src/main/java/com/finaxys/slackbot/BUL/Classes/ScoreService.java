@@ -15,7 +15,7 @@ public class ScoreService
 	private static Map<String, Integer> scores;
 	
 	@Autowired
-	Repository<Action, String> scoreRepository;
+	Repository<Action, Long> scoreRepository;
 	
 	public ScoreService() 
 	{		

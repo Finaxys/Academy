@@ -131,7 +131,7 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public void addAction(Event event, String code) {
-		Action action = actionService.get(code);
+		Action action = actionService.getActionByCode(code);
 		
 		System.out.println("trsr");
 		
@@ -182,7 +182,7 @@ public class EventServiceImpl implements EventService {
 
 			Action action = new Action(actionCode, actionDesc, actionPoints);
 
-			if (actionService.get(actionCode) != null)// check actionCode isUnique in an event
+			if (actionService.getActionByCode(actionCode) != null)// check actionCode isUnique in an event
 				return "/fx_event_action_add " + actionCode + "\n "
 						+ " :  This action already exists ! ";
 			else {
@@ -239,7 +239,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public String addActionToSlackuser(String eventCode, String actionCode, String slackuserName) {
 		Event event = this.getEventByName(eventCode);
-		Action action = actionService.get(actionCode);
+		Action action = actionService.getActionByCode(actionCode);
 		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
 		String userId = "";
 		if (um.isCorrect(slackuserName))
