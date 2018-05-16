@@ -181,6 +181,7 @@ public class EventServiceImpl implements EventService {
     	try {
 
 			Action action = new Action(actionCode, actionDesc, actionPoints);
+			action.setEvent(event);
 
 			if (actionService.getActionByCode(actionCode) != null)// check actionCode isUnique in an event
 				return "/fx_event_action_add " + actionCode + "\n "

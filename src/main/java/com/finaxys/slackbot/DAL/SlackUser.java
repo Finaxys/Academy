@@ -118,7 +118,7 @@ public class SlackUser implements Serializable {
     }
     
     public int calculateScore(Event event) {
-    	return actions.stream().filter(x->x.getEvent() == event).mapToInt(x->x.getPoints()).sum();
+    	return actions.stream().filter(x->x.getEvent().equals(event)).mapToInt(x->x.getPoints()).sum();
     }
     
     public int calculateScore() {

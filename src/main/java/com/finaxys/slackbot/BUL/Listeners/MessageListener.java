@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -660,19 +661,34 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		List<SlackUserEvent> listEvents = slackUserEventService.getAllByEvent(event);
-
+/*
 		if (listEvents == null)
 			return "fx_event_score_list " + arguments + " \n" + "No score has been saved till the moment !";// + timer;
-
+*/
 		String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
-
+		/*
+		Action[] actions = (Action[]) actionService.getAll().stream().filter(a -> a.getEvent().getEventId() == eventService.getEventByName(eventName).getEventId()).toArray();
+		for(Action action : actions) {
+			
+		}
+		*/
+		for (SlackUser slackUser: slackUserService.getAll()) {
+			if (slackUser.getActions() == null) 
+				slackUser.setActions(new HashSet<>());
+			
+			if(slackUser.getActions().size() != 0)
+				textMessage += slackUser.getSlackUserId() + "|" + slackUser.getName() +
+				slackUser.calculateScore(eventService.getEventByName(eventName))  //getActions().stream().filter(a -> a.getEvent().getEventId() == eventService.getEventByName(eventName).getEventId()).mapToInt(a -> a.getPoints()).sum()
+				+ "\n";
+		}
+		/*
 		for (SlackUserEvent slackUserEvent : listEvents) {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 			textMessage += "<@" + slackUser.getSlackUserId() + "|" + slackUser.getName() + "> "
 					+ slackUser.calculateScore(event) + " \n";
 		}
-
+*/
 		return "/fx_event_score_list " + arguments + " \n" + textMessage;// + timer;
 	}
 
