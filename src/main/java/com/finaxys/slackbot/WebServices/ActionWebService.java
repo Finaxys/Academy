@@ -67,7 +67,7 @@ public class ActionWebService extends BaseWebService {
     	if (event == null)
     		return newResponseEntity("Event does not exist " + timer, true);
     	
-    	eventService.addAction(event, code);
+    	//eventService.addAction(event, code);
 
         return newResponseEntity("Action successfully added to the event " + timer,true);
     }

@@ -11,8 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +29,7 @@ public class Action implements Serializable {
 	private String code;
 	private String description;
 	private int points;
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Event event;
 
 	public Action() {
@@ -82,7 +85,7 @@ public class Action implements Serializable {
 		this.event = event;
 	}
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER)
 	public Event getEvent() {
 		return event;
 	}

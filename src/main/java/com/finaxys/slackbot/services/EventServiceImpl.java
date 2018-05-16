@@ -126,27 +126,6 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public void addAction(Event event, String code) {
-		Action action = actionService.getActionByCode(code);
-
-		System.out.println("trsr");
-
-		if (action == null) {
-			System.out.println("upgodhl");
-			return;
-		}
-
-		event.getEventScores().add(action);
-
-		System.out.println(event.getEventScores().iterator().next().getCode());
-
-		new Thread(() -> {
-			eventRepository.saveOrUpdate(event);
-		}).start();
-
-	}
-
-	@Override
 	public void addScore(Event event, String userId, Action action) {
 
 		SlackUser user = slackUserService.get(userId);
@@ -178,17 +157,15 @@ public class EventServiceImpl implements EventService {
 		try {
 
 			Action action = new Action(actionCode, actionDesc, actionPoints);
-
+			action.setEvent(event);
 			if (actionService.getActionByCode(actionCode) != null)// check actionCode isUnique in an event
 				return "/fx_event_action_add " + actionCode + "\n " + " :  This action already exists ! ";
-			else {
+			else
 				actionService.save(action);
-			}
+			
 		} catch (NumberFormatException e) {
 			return "fx_event_action_add failed. Please, check the arguments types. ";// + timer;
 		}
-
-		this.addAction(event, actionCode);
 
 		return "The action named " + actionCode + " has been successfully added ! ";
 

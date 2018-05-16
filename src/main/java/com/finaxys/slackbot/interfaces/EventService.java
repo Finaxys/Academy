@@ -28,8 +28,6 @@ public interface EventService {
 	String getStringFromList(List<Event> events);
 
 	List<Event> getEventByDate(Date wantedDate);
-	
-	void addAction(Event event, String code);
 
 	void addScore(Event event, String userId, Action action);
 
@@ -40,6 +38,8 @@ public interface EventService {
 	String joinEvent(String userId, String eventName);
 
 	String removeEventAction(String eventCode, String actionCode);
+
+	void addAction(Event event, Action action);
 
 
 }
