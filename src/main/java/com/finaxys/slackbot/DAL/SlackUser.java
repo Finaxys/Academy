@@ -7,6 +7,8 @@ import allbegray.slack.type.User;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "SLACK_USER")
@@ -21,7 +23,7 @@ public class SlackUser implements Serializable {
     private Set<Role> roles = new HashSet<>();
     
     private Set<SlackUserEvent> slackUserEvents;
-    public Set<Action> actions ;
+    private Set<Action> actions ;
 
     public SlackUser() {
         this.score = 0;
@@ -114,4 +116,14 @@ public class SlackUser implements Serializable {
     	System.out.println(slackUser.getSlackUserId() + "  Compare to  " + this.getSlackUserId());
     	return this.slackUserId.equals(slackUser.getSlackUserId());
     }
+    
+    public int calculateScore(Event event) {
+    	return actions.stream().filter(x->x.getEvent() == event).mapToInt(x->x.getPoints()).sum();
+    }
+    
+    public int calculateScore() {
+    	return actions.stream().mapToInt(x->x.getPoints()).sum();   	
+    }
+    
+    
 }

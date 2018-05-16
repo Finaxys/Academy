@@ -112,14 +112,21 @@ public class Event implements Serializable {
 	public void setEventScores(Set<Action> eventScores) {
 		this.eventScores = eventScores;
 	}
+	
+	public String displayActions() {
+		StringBuilder sb = new StringBuilder();
+		this.eventScores.forEach(x->sb.append("\t* "+ x.getCode() + " : " + x.getDescription() +"\n"));
+		return sb.toString();
+	}
 
 	public String toString() {
     	return "Event name: " + this.getName() + "\n"
 				+ "Description: " + this.getDescription() + "\n"
 				+ "Type: " + this.getType() + "\n"
 			    + "Creation date : " + this.getCreationDate() + "\n"
-				+ "Number of participants: " + this.getAttendees().size() + " \n ";
-    }
+				+ "Number of participants: " + this.getAttendees().size() + " \n "
+    			+ "Actions of the event : \n" + this.displayActions();
+    } 
     
     public boolean equals (Event event) {
     	return event.getEventId()==this.getEventId();

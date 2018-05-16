@@ -264,7 +264,8 @@ public class EventServiceImpl implements EventService {
 		slackuser.getActions().add(action);
 		slackUserService.save(slackuser);
 		
-		return "The action named " + actionCode + " has been successfully performed by " + slackuserName+" ! ";
-		
+		return "The action named " + actionCode + " has been successfully performed by " + slackuserName+" ! ";		
 	}
+	
+	
 }

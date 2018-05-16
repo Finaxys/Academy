@@ -382,7 +382,7 @@ public class MessageListener implements EventListener {
 		List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
 
 		for (SlackUser profile : users) {
-			messageText += profile.getName() + " " + profile.getScore() + "\n";
+			messageText += profile.getName() + " " + profile.calculateScore() + "\n";
 		}
 
 		return messageText;// + timer;
@@ -670,7 +670,7 @@ public class MessageListener implements EventListener {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 			textMessage += "<@" + slackUser.getSlackUserId() + "|" + slackUser.getName() + "> "
-					+ slackUserEvent.getScore() + " \n";
+					+ slackUser.calculateScore(event) + " \n";
 		}
 
 		return "/fx_event_score_list " + arguments + " \n" + textMessage;// + timer;
