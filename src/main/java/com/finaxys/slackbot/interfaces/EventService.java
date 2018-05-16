@@ -39,5 +39,7 @@ public interface EventService {
 
 	String joinEvent(String userId, String eventName);
 
+	String removeEventAction(String eventCode, String actionCode);
+
 
 }

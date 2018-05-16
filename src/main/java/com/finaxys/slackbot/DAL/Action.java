@@ -82,8 +82,7 @@ public class Action implements Serializable {
 		this.event = event;
 	}
 
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
 	public Event getEvent() {
 		return event;
 	}

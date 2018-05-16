@@ -143,10 +143,22 @@ public class MessageListener implements EventListener {
 							flagDebug.isOnDebugMode());
 				else
 					SlackBot.postMessage(channelId,
-							"fx_event_action_add takes 3 arguments : name of event, name of action, number of points.",
+							"fx_event_action_add takes 4 arguments : name of event, name of action, description of action, number of points.",
 							flagDebug.isOnDebugMode());
 				break;
 		
+			
+			case "fx_event_action_del":
+				if (command.length == 3)
+					SlackBot.postMessage(channelId,
+							eventService.removeEventAction(command[1], command[2]),
+							flagDebug.isOnDebugMode());
+				else
+					SlackBot.postMessage(channelId,
+							"fx_event_action_del takes 2 arguments : name of event, name of action.",
+							flagDebug.isOnDebugMode());
+				break;
+			
 			
 			case "fx_manager_list":
 				if (command.length == 2)
@@ -259,7 +271,7 @@ public class MessageListener implements EventListener {
 							flagDebug.isOnDebugMode());
 				break;
 
-		
+			
 			case "fx_action_add":
 				if (command.length == 4)
 					SlackBot.postMessage(channelId, addAction(command), flagDebug.isOnDebugMode());
