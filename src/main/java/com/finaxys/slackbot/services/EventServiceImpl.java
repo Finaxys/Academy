@@ -157,8 +157,8 @@ public class EventServiceImpl implements EventService {
 
 			Action action = new Action(actionCode, actionDesc, actionPoints);
 			action.setEvent(event);
-			if (actionService.getActionByCode(actionCode) != null)// check actionCode isUnique in an event
-				return "/fx_event_action_add " + actionCode + "\n " + " :  This action already exists ! ";
+			if (event.getEventScores().stream().filter(a -> a.getCode().equals(actionCode)).count() != 0)// check actionCode isUnique in an event
+				return "/fx_event_action_add " + actionCode + "\n " + " :  This action already exists in this event! ";
 			else
 				actionService.save(action);
 			
