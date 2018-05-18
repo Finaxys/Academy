@@ -97,8 +97,10 @@ public class SlackUserServiceImpl implements SlackUserService {
 	public String setUserAsAdmin(String id) {
 		SlackUser user = users.findById(id);
 
-		if (user == null)
-			return "User not found";
+		if (user == null) {
+			user = new SlackUser(slackApiAccessService.getUser(id));
+			this.save(user);
+		}
 		
 		user.setIsAdmin(1);
 		this.save(user);
