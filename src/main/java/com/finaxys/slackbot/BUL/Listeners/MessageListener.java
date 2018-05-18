@@ -155,6 +155,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_event_action_del":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, eventService.removeEventAction(command[1], command[2]),
@@ -165,6 +166,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_manager_list":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventManagers(command[1]), flagDebug.isOnDebugMode());
@@ -201,6 +203,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_manager_remove":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, remove(command[1], command[2], jsonNode.get("user").asText()),
@@ -211,6 +214,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_event_list":
 			if (command.length == 1) {
 				SlackBotTimer timer = new SlackBotTimer();
@@ -239,6 +243,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_event_named":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventByName(command[1]), flagDebug.isOnDebugMode());
@@ -247,6 +252,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_event_del":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, removeEventByName(command[1]), flagDebug.isOnDebugMode());
@@ -255,6 +261,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_event_join":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, eventService.joinEvent(userId, command[1]), flagDebug.isOnDebugMode());
@@ -263,6 +270,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		
 		case "fx_action_add":
 			if (command.length == 4)
 				SlackBot.postMessage(channelId, addAction(command), flagDebug.isOnDebugMode());
@@ -688,8 +696,6 @@ public class MessageListener implements EventListener {
 
 		if (event == null)
 			fxevent = "fx_event_named " + arguments + "\n" + "Nonexistent event.";// + timer;
-		else
-			fxevent = "fx_events_named " + arguments + "\n " + event.toString();// + timer;
 		return fxevent;
 
 	}

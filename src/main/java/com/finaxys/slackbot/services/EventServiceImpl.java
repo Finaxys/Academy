@@ -10,17 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
+import com.finaxys.slackbot.BUL.Matchers.QuotesMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
+
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -157,8 +158,15 @@ public class EventServiceImpl implements EventService {
 			return "Event does not exist ";
 
 		try {
+			
+			QuotesMatcher qm = new QuotesMatcher();
+			String description = "";
+			if (qm.isCorrect(actionDesc))
+				description = qm.getQuotesArgument(actionDesc);
+			else
+				return "Description must be between quotes.";
 
-			Action action = new Action(actionCode, actionDesc, actionPoints);
+			Action action = new Action(actionCode, description.substring(0, description.length()-1), actionPoints);
 			action.setEvent(event);
 			if (event.getEventScores().stream().filter(a -> a.getCode().equals(actionCode)).count() != 0)// check actionCode isUnique in an event
 				return "/fx_event_action_add " + actionCode + "\n " + " :  This action already exists in this event! ";

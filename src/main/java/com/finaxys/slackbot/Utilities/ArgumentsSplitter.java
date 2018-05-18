@@ -64,33 +64,27 @@ public class ArgumentsSplitter
 		}
 	}
 	
-	public String getUserName()
-	{
+	public String getUserName() {
 		return userName;
 	}
 	
-	public String getUserId()
-	{
+	public String getUserId() {
 		return userId;
 	}
 	
-	public String getIntegers(int position)
-	{
+	public String getIntegers(int position) {
 		return integers.get(position);
 	}
 	
-	public String getEventType()
-	{
+	public String getEventType() {
 		return eventType;
 	}
 	
-	public String getEventDate()
-	{
+	public String getEventDate() {
 		return eventDate;
 	}
 
-	public String getString(int position)
-	{
+	public String getString(int position) {
 		return otherStrings.get(position);
 	}
 }
