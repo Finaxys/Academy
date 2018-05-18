@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
+import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
+import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
+import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
@@ -74,15 +78,68 @@ public class SlackUserServiceImpl implements SlackUserService {
 		if (user == null)
 			return false;
 
+		return user.getIsAdmin() == 1;
+		/*
 		Iterator<Role> it = user.getRoles().iterator();
 		while (it.hasNext()) {
 			Role r = it.next();
 			if (r.getRole().equals("admin"))
 				return true;
 		}
+		
 		return false;
+		*/
+	}
+	
+	
+
+	@Override
+	public String setUserAsAdmin(String id) {
+		SlackUser user = users.findById(id);
+
+		if (user == null)
+			return "User not found";
+		
+		user.setIsAdmin(1);
+		this.save(user);
+		return "User is admin now !";
+	}
+	
+	
+
+	@Override
+	public String setCurrentUserAsAdmin(String id, String password) {
+		if (password.equals(Settings.adminPass)) {
+			if(!this.isAdmin(id)) {
+				setUserAsAdmin(id);
+				return "You are adminstrator now !";
+			}
+			else {
+				return "You are already an administrator!";
+			}
+		}
+		else 
+			return "Wrong password";
 	}
 
+	public String addUserAsAdmin(String currentUserId, String userId) {
+		if (!this.isAdmin(currentUserId) )
+			return "You are not an admin! You need to be an administrator to use fxadmin_add";
+		
+		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
+		String slackUserId = "";
+		if (um.isCorrect(userId))
+			slackUserId = um.getUserIdArgument(userId);
+		else
+			return "Username incorrect";
+		
+		if (!this.isAdmin(slackUserId) ) {
+			return this.setUserAsAdmin(slackUserId);			
+		}
+		else
+			return "The user you want to add is already an administrator!";
+			
+	}
 	@Override
 	public boolean isEventManager(String id, String eventName) {
 		SlackUser user = users.findById(id);

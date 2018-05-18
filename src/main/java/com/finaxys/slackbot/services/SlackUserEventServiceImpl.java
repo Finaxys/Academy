@@ -43,7 +43,7 @@ public class SlackUserEventServiceImpl implements SlackUserEventService {
 
 	@Override
 	public SlackUserEvent getSlackUserEvent(Event event, SlackUser slackUser) {
-		Iterator<SlackUserEvent> slackUserEventIterator = event.getAttendees().iterator();
+		Iterator<SlackUserEvent> slackUserEventIterator = null;//event.getAttendees().iterator();
 		
 		while (slackUserEventIterator.hasNext()) {
 			SlackUserEvent slackUserEvent = slackUserEventIterator.next();
@@ -55,8 +55,9 @@ public class SlackUserEventServiceImpl implements SlackUserEventService {
 	}
 	@Override
 	public List<SlackUserEvent> getAllByEvent(Event event) {
-		Set<SlackUserEvent> set = event.getAttendees();
-		return set.isEmpty() ? null : new ArrayList<SlackUserEvent>(event.getAttendees());
+//		Set<SlackUserEvent> set = event.getAttendees();
+//		return set.isEmpty() ? null : new ArrayList<SlackUserEvent>(event.getAttendees());
+		return null;
 	}
 
 	@Override

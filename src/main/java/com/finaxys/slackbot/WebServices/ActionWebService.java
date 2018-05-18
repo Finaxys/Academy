@@ -71,7 +71,7 @@ public class ActionWebService extends BaseWebService {
 
         return newResponseEntity("Action successfully added to the event " + timer,true);
     }
-    
+    /*
     @RequestMapping(value = "/fx_action_score_add", method = RequestMethod.POST)
     public ResponseEntity<JsonNode> addActionScore(@RequestParam("user_id") String userId,
     										  	   @RequestParam("text")    String arguments) {
@@ -102,5 +102,5 @@ public class ActionWebService extends BaseWebService {
 
         return newResponseEntity("Score successfully added for the action " + timer,true);
     }
-    
+    */
 }

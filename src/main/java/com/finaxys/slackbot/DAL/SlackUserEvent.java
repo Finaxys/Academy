@@ -14,7 +14,6 @@ public class SlackUserEvent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private int score;
     private Event event;
     private SlackUser slackUser;
 
@@ -26,20 +25,7 @@ public class SlackUserEvent implements Serializable {
         this.slackUser=slackUser;
     }
 
-    public SlackUserEvent(int score, Event event, SlackUser slackUser) {
-        this.score = score;
-        this.event = event;
-        this.slackUser=slackUser;
-    }
-    
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
 
     @ManyToOne
     @Id
@@ -63,7 +49,4 @@ public class SlackUserEvent implements Serializable {
         this.slackUser = slackUser;
     }
 
-	public void addScore(int score) {
-		this.score+=score;
-	}
 }

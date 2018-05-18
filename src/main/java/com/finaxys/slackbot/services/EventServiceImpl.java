@@ -1,19 +1,19 @@
 package com.finaxys.slackbot.services;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
+import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
@@ -87,6 +87,7 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 
+	/*
 	@Override
 	public int getGlobalScore(SlackUser user) {
 		if (getFinaxysEvent().getAttendees().isEmpty()) {
@@ -102,6 +103,8 @@ public class EventServiceImpl implements EventService {
 		}
 		return 0;
 	}
+	
+	*/
 
 	@Override
 	public List<Event> getEventByType(String type) {
@@ -124,7 +127,7 @@ public class EventServiceImpl implements EventService {
 	public List<Event> getEventByDate(Date wantedDate) {
 		return eventRepository.getByCriterion("creationDate", wantedDate);
 	}
-
+/*
 	@Override
 	public void addScore(Event event, String userId, Action action) {
 
@@ -145,7 +148,7 @@ public class EventServiceImpl implements EventService {
 		}).start();
 
 	}
-
+*/
 	@Override
 	public String addEventAction(String eventCode, String actionCode, String actionDesc, int actionPoints) {
 			Event event = this.getEventByName(eventCode);
@@ -234,6 +237,7 @@ public class EventServiceImpl implements EventService {
 		return "The action named " + actionCode + " has been successfully performed by " + slackuserName + " ! ";
 	}
 
+	//@Transactional
 	public String removeEventAction(String eventCode, String actionCode) {
 		Event event = this.getEventByName(eventCode);
 		Action action = actionService.getActionByCode(actionCode);
@@ -243,17 +247,43 @@ public class EventServiceImpl implements EventService {
 		try {
 			if (action == null)
 				return "/fx_event_action_del " + actionCode + "\n " + " :  This action doesn't exist for this event ! ";
-			else 
-				actionService.remove(action);
+			else {
+
+				event.getEventScores().remove(action);
+				event.setEventScores(new HashSet<>());
+				this.save(event);
+				//actionService.remove(action);
+			}
+				
 								
 		} catch (NumberFormatException e) {
 			return "fx_event_action_del failed. Please, check the arguments types. ";// + timer;
 		}
 		
-		event.getEventScores().remove(action);
 		
 		return "The action named " + actionCode + " has been successfully removed ! ";
 
 	}
+	
+	public String addEvent(String[] command, JsonNode jsonNode) {
+		SlackBotTimer timer = new SlackBotTimer();
+		timer.capture();
+
+		if (this.getEventByName(command[1]) != null)
+			return "fx_event_add " + command[1] + " " + command[2] + " " + command[3]
+					+ " :  This event already exists ! ";
+		else {
+			new Thread(() -> {
+				SlackUser user = slackUserService.get(jsonNode.get("user").asText().trim());
+				Event event = new Event(command[1], command[2], command[3]);
+				event.getEventManagers().add(user);
+				this.save(event);
+			}).start();
+			timer.capture();
+			return command[1] + " has been successfully added ! ";
+		}
+	}
+	
+	
 
 }

@@ -32,21 +32,26 @@ public class Event implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date 	creationDate;
     private String 	type;
-    private Set<SlackUserEvent> attendees;
+    //private Set<SlackUserEvent> attendees;
     public Set<Action> eventScores;
+    
+    
+    private Set<SlackUser> eventManagers;
 
     public Event() {
         creationDate = new Date();
-        attendees = new HashSet<>();
+        //attendees = new HashSet<>();
+        eventManagers = new HashSet<>();
     }    
 
     public Event(String name, String description, String type) {
 		super();
-		attendees = new HashSet<>();
+		//attendees = new HashSet<>();
 		this.name = name;
 		this.description = description;
 		this.creationDate = new Date();
 		this.type = type;
+		eventManagers = new HashSet<>();
 	}
 
 	@Id
@@ -89,6 +94,7 @@ public class Event implements Serializable {
         this.type = type;
     }
 
+    /*
     @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
     public Set<SlackUserEvent> getAttendees() {
@@ -98,6 +104,7 @@ public class Event implements Serializable {
     public void setAttendees(Set<SlackUserEvent> attendees) {
         this.attendees = attendees;
     }
+    */
     
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     public Set<Action> getEventScores() {
@@ -119,11 +126,25 @@ public class Event implements Serializable {
 				+ "Description: " + this.getDescription() + "\n"
 				+ "Type: " + this.getType() + "\n"
 			    + "Creation date : " + this.getCreationDate() + "\n"
-				+ "Number of participants: " + this.getAttendees().size() + " \n "
+				//+ "Number of participants: " + this.getAttendees().size() + " \n "
     			+ "Actions of the event : \n" + this.displayActions();
     } 
     
     public boolean equals (Event event) {
     	return event.getEventId()==this.getEventId();
     }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(name = "SLACK_USER_EVENT",
+            inverseJoinColumns = @JoinColumn(name = "SLACK_USER_ID", nullable = false, updatable = false),
+            joinColumns = @JoinColumn(name = "EVENT_ID", nullable = false, updatable = false))
+	public Set<SlackUser> getEventManagers() {
+		return eventManagers;
+	}
+
+	public void setEventManagers(Set<SlackUser> eventManagers) {
+		this.eventManagers = eventManagers;
+	}
+    
+    
 }

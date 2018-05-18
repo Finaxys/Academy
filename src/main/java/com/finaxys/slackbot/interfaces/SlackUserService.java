@@ -15,7 +15,9 @@ public interface SlackUserService {
 	List<SlackUser> getAll();
 
 	boolean isAdmin(String id);
-
+	String setUserAsAdmin(String id);
+	String addUserAsAdmin(String currentUserId, String userId);
+	String setCurrentUserAsAdmin(String id, String password);
 	List<SlackUser> getAllOrderedByScore(int size);
 
 	boolean isEventManager(String id, String eventName);

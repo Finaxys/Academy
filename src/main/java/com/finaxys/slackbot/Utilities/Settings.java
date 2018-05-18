@@ -34,6 +34,7 @@ public class Settings {
 	public static String slackTeam;
 	public static String slackTeamId;
 	public static String debugChannelId;
+	public static String adminPass;
 
 	private static void load() {
 		appVerificationToken = environment.getRequiredProperty("appVerificationToken");
@@ -41,6 +42,7 @@ public class Settings {
 		slackTeam = environment.getRequiredProperty("slackTeam");
 		slackTeamId = environment.getRequiredProperty("slackTeamId");
 		debugChannelId = environment.getRequiredProperty("debugChannelId");
+		adminPass = environment.getRequiredProperty("adminPass");
 	}
 
 }

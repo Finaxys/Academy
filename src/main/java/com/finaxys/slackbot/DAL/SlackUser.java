@@ -2,6 +2,9 @@ package com.finaxys.slackbot.DAL;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import allbegray.slack.type.User;
 
 import java.io.Serializable;
@@ -19,20 +22,25 @@ public class SlackUser implements Serializable {
 	private String 	slackUserId;
     private String 	name;
     private int 	score;
+    private int 	isAdmin;
 
     private Set<Role> roles = new HashSet<>();
     
-    private Set<SlackUserEvent> slackUserEvents;
+    //private Set<SlackUserEvent> slackUserEvents;
     private Set<Action> actions ;
-
+    private Set<Event> eventsManaging;
     public SlackUser() {
         this.score = 0;
+        this.isAdmin = 0;
     }
 
     public SlackUser(String userId, String userName) {
         this.score 	= 0;
         this.slackUserId 	= userId;
         this.name 	= userName;
+        actions = new HashSet<>();
+        eventsManaging = new HashSet<>();
+        this.isAdmin = 0;
         
     }
 
@@ -40,11 +48,15 @@ public class SlackUser implements Serializable {
         this.slackUserId 	= userId;
         this.name 	= userName;
         this.score 	= score;
+        actions = new HashSet<>();
+        this.isAdmin = 0;
     }
 
     public SlackUser(User user) {
     	slackUserId=user.getId();
     	name=user.getName();
+    	actions = new HashSet<>();
+    	this.isAdmin = 0;
 	}
 
 	@Id
@@ -72,7 +84,18 @@ public class SlackUser implements Serializable {
     public void setScore(int score) {
         this.score = score;
     }
+    
 
+    @Column(name = "IS_ADMIN")
+    public int getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	/*
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "slackUser", cascade = CascadeType.ALL)
     public Set<SlackUserEvent> getSlackUserEvents() {
         return slackUserEvents;
@@ -81,13 +104,13 @@ public class SlackUser implements Serializable {
     public void setSlackUserEvents(Set<SlackUserEvent> slackUserEvents) {
         this.slackUserEvents = slackUserEvents;
     }
-    
+    */
     @OneToMany(mappedBy = "slackUser", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     public Set<Role> getRoles() {
         return roles;
     }
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL )
     @JoinTable(
     	      name="SLACK_USER_ACTION",
     	      joinColumns=@JoinColumn(name="SLACK_USER_ID", referencedColumnName="SLACK_USER_ID"),
@@ -124,6 +147,17 @@ public class SlackUser implements Serializable {
     public int calculateScore() {
     	return actions.stream().mapToInt(x->x.getPoints()).sum();   	
     }
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "eventManagers")
+	public Set<Event> getEventsManaging() {
+		return eventsManaging;
+	}
+
+	public void setEventsManaging(Set<Event> eventsManaging) {
+		this.eventsManaging = eventsManaging;
+	}
+    
+    
     
     
 }

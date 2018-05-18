@@ -86,7 +86,7 @@ public class ScoreWebService extends BaseWebService {
 		SlackUser user = slackUserService.get(userIdArgs);
 		
 		SlackUserEvent slackUserEvent = slackUserEventService.getSlackUserEvent(event, user);
-		
+		/*
 		if (slackUserEvent!=null) {
 			slackUserEvent.addScore(score);
 		}
@@ -94,6 +94,7 @@ public class ScoreWebService extends BaseWebService {
 			slackUserEvent = new SlackUserEvent(score, event, user);
 			
 		}
+		*/
 		slackUserService.updateScore(userIdArgs, score);
 
 		SlackUserEvent slackUserEvent2 = slackUserEvent;
@@ -148,8 +149,7 @@ public class ScoreWebService extends BaseWebService {
 			SlackUser slackUser = slackUserEvent.getSlackUser();
 
 
-			textMessage += "<@" + slackUser.getSlackUserId() + "|" + slackUser.getName() + "> "
-					+ slackUserEvent.getScore() + " \n";
+			textMessage += "<@" + slackUser.getSlackUserId() + "|" + slackUser.getName() + ">  \n";
 		}
 
 		return newResponseEntity("/fx_event_score_list " + arguments + " \n" + textMessage + timer, true);

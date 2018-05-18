@@ -3,6 +3,7 @@ package com.finaxys.slackbot.interfaces;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -23,13 +24,13 @@ public interface EventService {
 
 	Event getFinaxysEvent();
 
-	int getGlobalScore(SlackUser user);
+	//int getGlobalScore(SlackUser user);
 
 	String getStringFromList(List<Event> events);
 
 	List<Event> getEventByDate(Date wantedDate);
 
-	void addScore(Event event, String userId, Action action);
+	//void addScore(Event event, String userId, Action action);
 
 	String addEventAction(String eventCode, String actionCode, String actionDesc, int actionPoints);
 	
@@ -38,4 +39,6 @@ public interface EventService {
 	String joinEvent(String userId, String eventName);
 
 	String removeEventAction(String eventCode, String actionCode);
+	
+	String addEvent(String[] command, JsonNode jsonNode);
 }

@@ -1,13 +1,16 @@
 package com.finaxys.slackbot.DAL;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
@@ -28,10 +31,11 @@ public class Action implements Serializable {
 	private int points;
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Event event;
-	/*
+	
 	private Set<SlackUser> slackUsers;
 
-	@ManyToMany(mappedBy = "actions")
+	@JsonIgnore
+	@ManyToMany(mappedBy = "actions", cascade=CascadeType.ALL)
 	public Set<SlackUser> getSlackUsers() {
 		return slackUsers;
 	}
@@ -39,7 +43,7 @@ public class Action implements Serializable {
 	public void setSlackUsers(Set<SlackUser> slackUsers) {
 		this.slackUsers = slackUsers;
 	}
-*/
+
 	public Action() {
 	}
 
