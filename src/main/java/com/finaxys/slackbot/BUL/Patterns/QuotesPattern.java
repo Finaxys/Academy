@@ -9,7 +9,7 @@ public class QuotesPattern {
 
 	private QuotesPattern() {
 
-		quotesPattern = "\".*\"";
+		quotesPattern = "([^\"]\\S*|\".+?\")\\s*";
 		pattern = Pattern.compile(quotesPattern);
 	}
 

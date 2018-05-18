@@ -38,6 +38,7 @@ public class ArgumentsVerifier
 		commandPatternMap.put("/fxadmin_param",       "String Integer");
 		commandPatternMap.put("/fxadmin_list_params", "");
 		commandPatternMap.put("/start", "");
+		//commandPatternMap.put("/fx_event_action_add", "String String Quote Integer");
 
 		
 	}

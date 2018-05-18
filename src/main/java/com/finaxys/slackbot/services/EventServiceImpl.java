@@ -1,11 +1,9 @@
 package com.finaxys.slackbot.services;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +15,11 @@ import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
+
 
 @Service
 public class EventServiceImpl implements EventService {
