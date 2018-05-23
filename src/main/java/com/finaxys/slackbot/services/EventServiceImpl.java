@@ -156,7 +156,7 @@ public class EventServiceImpl implements EventService {
 			Event event = this.getEventByName(eventCode);
 
 		if (event == null)
-			return "Event does not exist ";
+			return "Event does not exist.";
 
 		try {
 			
@@ -170,15 +170,15 @@ public class EventServiceImpl implements EventService {
 			Action action = new Action(actionCode, description.substring(0, description.length()-1), actionPoints);
 			action.setEvent(event);
 			if (event.getEventScores().stream().filter(a -> a.getCode().equals(actionCode)).count() != 0)// check actionCode isUnique in an event
-				return "/fx_event_action_add " + actionCode + "\n " + " :  This action already exists in this event! ";
+				return "The action " + actionCode + " already exists in this event! ";
 			else
 				actionService.save(action);
 			
 		} catch (NumberFormatException e) {
-			return "fx_event_action_add failed. Please, check the arguments types. ";// + timer;
+			return "fx_event_action_add failed. Please, check the arguments types.";// + timer;
 		}
 
-		return "The action named " + actionCode + " has been successfully added ! ";
+		return "The action named " + actionCode + " has been successfully added to the event " + eventCode + ".";
 
 	}
 
@@ -224,18 +224,18 @@ public class EventServiceImpl implements EventService {
 		if (um.isCorrect(slackuserName))
 			userId = um.getUserIdArgument(slackuserName);
 		else
-			return "User name incorrect";
+			return "Username incorrect.";
 
 		SlackUser slackuser = slackUserService.get(userId);
 
 		if (event == null)
-			return "Event does not exist ";
+			return "The event "+eventCode+ " does not exist.";
 		if (action == null)
-			return "Action does not exist ";
+			return "The action "+actionCode+ " does not exist.";
 		if (slackuser == null)
-			return "User does not exist ";
+			return "The user "+slackuserName+ " does not exist.";
 		if (event.getEventScores().stream().filter(a -> a.getCode().equals(action.getCode())).count() == 0)
-			return "Action does not exist in this event!";
+			return "The action "+actionCode+ " does not exist in the event "+eventCode+".";
 
 		if (slackuser.getActions() == null)
 			slackuser.setActions(new HashSet<>());
@@ -279,8 +279,7 @@ public class EventServiceImpl implements EventService {
 		timer.capture();
 
 		if (this.getEventByName(command[1]) != null)
-			return "fx_event_add " + command[1] + " " + command[2] + " " + command[3]
-					+ " :  This event already exists ! ";
+			return "The event " + command[2] + " already exists ! ";
 		else {
 			new Thread(() -> {
 				SlackUser user = slackUserService.get(jsonNode.get("user").asText().trim());
@@ -289,7 +288,7 @@ public class EventServiceImpl implements EventService {
 				this.save(event);
 			}).start();
 			timer.capture();
-			return command[1] + " has been successfully added ! ";
+			return " The event named " + command[1] + " has been successfully added ! You can now manage it.";
 		}
 	}
 	
