@@ -95,6 +95,7 @@ public class MessageListener implements EventListener {
 			else
 				SlackBot.postMessage(channelId, "fx_help doesn't take arguments.", flagDebug.isOnDebugMode());
 			break;
+		/* work but have to do changes 
 		case "fx_set_me_as_admin":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, slackUserService.setCurrentUserAsAdmin(userId, command[1]), flagDebug.isOnDebugMode());
@@ -102,7 +103,7 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_set_me_as_admin takes 1 argument : the superAdmin's password.",
 						flagDebug.isOnDebugMode());
 			break;
-			
+		
 		case "fxadmin_add":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), flagDebug.isOnDebugMode());
@@ -110,7 +111,7 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef",
 						flagDebug.isOnDebugMode());
 			break;
-
+		*/
 		case "fx_events_by_date":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventsByDate(command[1]), flagDebug.isOnDebugMode());
@@ -128,6 +129,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
+		/* work but have to do changes 
 		case "fx_event_score_list":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, listScoreForEvent(command[1]), flagDebug.isOnDebugMode());
@@ -135,7 +137,7 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_event_score_list takes 1 argument : name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
+		*/
 		/*
 		 * case "fx_event_score_add": if (command.length == 4)
 		 * SlackBot.postMessage(channelId, addEventScore(command[1], command[2],
@@ -144,7 +146,8 @@ public class MessageListener implements EventListener {
 		 * , flagDebug.isOnDebugMode()); break;
 		 */
 
-		case "fx_event_action_add":
+		
+		case "fx_action_add":
 			if (command.length == 5)
 				SlackBot.postMessage(channelId,
 						eventService.addEventAction(command[1], command[2], command[3], Integer.parseInt(command[4])),
@@ -155,7 +158,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
-		
+		/* to do fix cascade problems and do changes 
 		case "fx_event_action_del":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, eventService.removeEventAction(command[1], command[2]),
@@ -165,8 +168,8 @@ public class MessageListener implements EventListener {
 						"fx_event_action_del takes 2 arguments : name of event, name of action.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		
+		*/
+		/*
 		case "fx_manager_list":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventManagers(command[1]), flagDebug.isOnDebugMode());
@@ -174,7 +177,7 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_event_score_add takes 1 argument : name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
+		*/
 		/*
 		 * case "fx_action_score_add": if (command.length == 4)
 		 * SlackBot.postMessage(channelId, addActionScore(command[1], command[2],
@@ -183,6 +186,7 @@ public class MessageListener implements EventListener {
 		 * , flagDebug.isOnDebugMode()); break;
 		 */
 
+		/*
 		case "fx_manager_add":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, create(command[1], command[2], jsonNode.get("user").asText()),
@@ -191,8 +195,8 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_manager_add takes 2 arguments : name of user, name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		/* to do */
+		*/
+		/* to do changes, add parameter event to specify scores of an event only */
 		case "fx_leaderboard":
 			if (command.length == 2 && isInteger(command[1]))
 				SlackBot.postMessage(channelId, listScores(command[1]), flagDebug.isOnDebugMode());
@@ -203,7 +207,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
-		
+		/*
 		case "fx_manager_remove":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, remove(command[1], command[2], jsonNode.get("user").asText()),
@@ -213,8 +217,7 @@ public class MessageListener implements EventListener {
 						"fx_manager_remove takes 2 arguments : name of manager to remove, name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		
+		*/
 		case "fx_event_list":
 			if (command.length == 1) {
 				SlackBotTimer timer = new SlackBotTimer();
@@ -224,8 +227,7 @@ public class MessageListener implements EventListener {
 
 				if (events.isEmpty())
 					SlackBot.postMessage(
-							channelId, "/fx_event SlackBot_list" + " \n "
-									+ "There is no previous events! Come on create one!" + timer,
+							channelId, "There is no previous events! Come on create one !" + timer,
 							flagDebug.isOnDebugMode());
 				else
 					SlackBot.postMessage(channelId, eventService.getStringFromList(events) + timer,
@@ -252,7 +254,7 @@ public class MessageListener implements EventListener {
 						flagDebug.isOnDebugMode());
 			break;
 
-		
+		/* fix cascades problems 
 		case "fx_event_del":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, removeEventByName(command[1]), flagDebug.isOnDebugMode());
@@ -260,8 +262,8 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_event_del takes 1 argument: name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		
+		*/
+		/* will be deleted 
 		case "fx_event_join":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, eventService.joinEvent(userId, command[1]), flagDebug.isOnDebugMode());
@@ -269,8 +271,9 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_event_join takes 1 argument: name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
+		*/
 		
+		/* will be deleted 
 		case "fx_action_add":
 			if (command.length == 4)
 				SlackBot.postMessage(channelId, addAction(command), flagDebug.isOnDebugMode());
@@ -279,8 +282,9 @@ public class MessageListener implements EventListener {
 						"fx_action_add takes 3 arguments : code of action, name of action, number of points.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		case "fx_action_get":
+		*/
+		
+		/*case "fx_action_get":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId,
 						actionService.getActionByCode(command[1]) != null
@@ -291,7 +295,9 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_action_add takes 1 argument: name of action",
 						flagDebug.isOnDebugMode());
 			break;
-
+		*/
+			
+		/*
 		case "fx_event_get":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId,
@@ -303,10 +309,10 @@ public class MessageListener implements EventListener {
 				SlackBot.postMessage(channelId, "fx_action_add takes 1 argument: name of event.",
 						flagDebug.isOnDebugMode());
 			break;
-
-		case "fx_event_action_add_to_user":
+		*/
+			
+		case "fx_action_performed":
 			if (command.length == 4) {
-				System.out.println("-------------------\n" + command[3]);
 				SlackBot.postMessage(channelId, eventService.addActionToSlackuser(command[1], command[2], command[3]),
 						flagDebug.isOnDebugMode());
 			} else
@@ -316,7 +322,6 @@ public class MessageListener implements EventListener {
 			break;
 
 		default:
-			System.out.println("-------------------" + message);
 			SlackBot.postMessageToDebugChannelAsync("hi " + message);
 			break;
 		}
@@ -432,7 +437,7 @@ public class MessageListener implements EventListener {
 		int size = text.isEmpty() ? -1 : Integer.parseInt(text);
 
 		if (size == 0)
-			return messageText + "You must enter a positive integer" + timer;
+			return messageText + "You must enter a positive integer." + timer;
 
 		List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
 
@@ -442,7 +447,8 @@ public class MessageListener implements EventListener {
 
 		return messageText;// + timer;
 	}
-/*
+
+	/*
 	public String addActionScore(String eventName, String userName, String actionCode) {
 
 		SlackBotTimer timer = new SlackBotTimer();
@@ -651,7 +657,7 @@ public class MessageListener implements EventListener {
 		DateMatcher dateMatcher = new DateMatcher();
 
 		if (!dateMatcher.match(text.trim()))
-			return "fx_events_by_date " + text + " \n " + "Date format: yyyy-MM-dd";// + timer;
+			return "Date format : yyyy-MM-dd";// + timer;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -666,9 +672,9 @@ public class MessageListener implements EventListener {
 		timer.capture();
 
 		if (events.isEmpty())
-			return " fx_events_by_date " + text + " \n " + "There are no events on this date: " + text; // + timer;
+			return "There are no events on this date: " + text; // + timer;
 		else
-			return eventService.getStringFromList(events);// + timer;
+			return "List of events on date : " + wantedDate + "\n" + eventService.getStringFromList(events);// + timer;
 	}
 
 	public String getEventsByType(String eventType) {
@@ -678,9 +684,9 @@ public class MessageListener implements EventListener {
 		List<Event> events = eventService.getEventByType(eventType);
 
 		if (events.isEmpty())
-			return "fx_events_by_type " + eventType + " \n " + "No events with type: " + eventType; // + timer;
+			return "No events with type: " + eventType; // + timer;
 
-		return "fx_events_by_type " + eventType + " \n " + eventService.getStringFromList(events);// + timer;
+		return "List of events with type : " + eventType + " \n" + eventService.getStringFromList(events);// + timer;
 
 	}
 

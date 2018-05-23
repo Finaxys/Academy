@@ -11,7 +11,7 @@ public class DebugMode {
 	
 	private DebugMode() {
 		id = 1;
-		flag = true;	
+		flag = false;	
 	}
 	
 	public static DebugMode beginDebugMode() {
