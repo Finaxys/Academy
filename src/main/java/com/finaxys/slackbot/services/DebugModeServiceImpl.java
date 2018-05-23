@@ -22,5 +22,25 @@ public class DebugModeServiceImpl implements DebugModeService{
 		debugmodeRepository.saveOrUpdate(debugMode);
 		return debugMode;
 	}
+	
+	@Override
+	public String enableDebugMode() {
+		DebugMode dm = this.get(1);
+		this.save(dm.enableDebugMode());
+		return "Debug mode has been successfully set !";
+	}
+	
+	@Override
+	public String disableDebugMode() {
+		DebugMode dm = this.get(1);
+		this.save(dm.disableDebugMode());
+		return "Debug mode has been successfully removed !";
+	}
+
+	@Override
+	public boolean isOnDebugMode() {
+		return this.get(1).isOnDebugMode();
+	}
+	
 
 }

@@ -11,14 +11,14 @@ public class DebugMode {
 	
 	private DebugMode() {
 		id = 1;
-		flag = true;	
+		flag = false;	
 	}
 	
 	public static DebugMode beginDebugMode() {
 		return new DebugMode();
 	}
 	
-	public DebugMode activateDebugMode() {
+	public DebugMode enableDebugMode() {
 		this.flag = true;
 		return this;
 	}
