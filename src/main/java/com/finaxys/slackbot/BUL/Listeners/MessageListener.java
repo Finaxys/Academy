@@ -98,20 +98,21 @@ public class MessageListener implements EventListener {
 		/* work but have to do changes 
 		case "fx_set_me_as_admin":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, slackUserService.setCurrentUserAsAdmin(userId, command[1]), flagDebug.isOnDebugMode());
+				
 			else
 				SlackBot.postMessage(channelId, "fx_set_me_as_admin takes 1 argument : the superAdmin's password.",
 						flagDebug.isOnDebugMode());
 			break;
-		
+		*/
 		case "fxadmin_add":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), flagDebug.isOnDebugMode());
 			else
-				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef",
+				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef.bouhlel or"
+						+ " the password to promote you into a administrator.",
 						flagDebug.isOnDebugMode());
 			break;
-		*/
+		
 		case "fx_events_by_date":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventsByDate(command[1]), flagDebug.isOnDebugMode());
@@ -327,8 +328,7 @@ public class MessageListener implements EventListener {
 		}
 	}
 
-
-
+	
 	public String removeEventByName(String arguments) {
 		SlackBotTimer timer = new SlackBotTimer();
 		String fxevent = "";
