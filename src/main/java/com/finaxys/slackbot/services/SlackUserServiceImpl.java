@@ -22,13 +22,14 @@ import com.finaxys.slackbot.interfaces.SlackUserService;
 public class SlackUserServiceImpl implements SlackUserService {
 
 	Repository<SlackUser, String> users;
+	
 
 	@Autowired
 	public void setUsers(Repository<SlackUser, String> users) {
 		users.getAll();
 		this.users = users;
 	}
-	
+
 	Repository<Event, Integer> events;
 
 	@Autowired
@@ -45,7 +46,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public SlackUser get(String id) {
 		SlackUser user = users.findById(id);
-		
+
 		if (user == null) {
 
 			user = new SlackUser(slackApiAccessService.getUser(id));
@@ -80,18 +81,12 @@ public class SlackUserServiceImpl implements SlackUserService {
 
 		return user.getIsAdmin() == 1;
 		/*
-		Iterator<Role> it = user.getRoles().iterator();
-		while (it.hasNext()) {
-			Role r = it.next();
-			if (r.getRole().equals("admin"))
-				return true;
-		}
-		
-		return false;
-		*/
+		 * Iterator<Role> it = user.getRoles().iterator(); while (it.hasNext()) { Role r
+		 * = it.next(); if (r.getRole().equals("admin")) return true; }
+		 * 
+		 * return false;
+		 */
 	}
-	
-	
 
 	@Override
 	public String setUserAsAdmin(String id) {
@@ -101,47 +96,43 @@ public class SlackUserServiceImpl implements SlackUserService {
 			user = new SlackUser(slackApiAccessService.getUser(id));
 			this.save(user);
 		}
-		
+
 		user.setIsAdmin(1);
 		this.save(user);
-		return "User is admin now !";
-	}
-	
-	
-
-	@Override
-	public String setCurrentUserAsAdmin(String id, String password) {
-		if (password.equals(Settings.adminPass)) {
-			if(!this.isAdmin(id)) {
-				setUserAsAdmin(id);
-				return "You are adminstrator now !";
-			}
-			else {
-				return "You are already an administrator!";
-			}
-		}
-		else 
-			return "Wrong password";
-	}
-
-	public String addUserAsAdmin(String currentUserId, String userId) {
-		if (!this.isAdmin(currentUserId) )
-			return "You are not an admin! You need to be an administrator to use fxadmin_add";
 		
+		return this.get(id).getName() + " is an administrator now !";
+	}
+
+	public String addUserAsAdmin(String currentUserId, String parameter) {
+				
 		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
 		String slackUserId = "";
-		if (um.isCorrect(userId))
-			slackUserId = um.getUserIdArgument(userId);
-		else
-			return "Username incorrect";
 		
-		if (!this.isAdmin(slackUserId) ) {
-			return this.setUserAsAdmin(slackUserId);			
+		if (um.isCorrect(parameter)) {
+			if (!this.isAdmin(currentUserId) )
+				return "You are not an admin! You need to be an administrator to add an administrator !";
+			slackUserId = um.getUserIdArgument(parameter);
+			if (!this.isAdmin(slackUserId) ) {
+				return this.setUserAsAdmin(slackUserId);			
+			}
+			else
+				return "The user "+parameter+ " is already an administrator !";
 		}
+		
 		else
-			return "The user you want to add is already an administrator!";
-			
+			if (parameter.equals(Settings.adminPass)) {
+				if(!this.isAdmin(currentUserId)) {
+					setUserAsAdmin(currentUserId);
+					return "You are adminstrator now !";
+				}
+				else {
+					return "You are already an administrator !";
+				}
+			}
+			else 
+				return "You entered a wrong password !";				
 	}
+
 	@Override
 	public boolean isEventManager(String id, String eventName) {
 		SlackUser user = users.findById(id);
@@ -149,12 +140,12 @@ public class SlackUserServiceImpl implements SlackUserService {
 		if (user == null)
 			return false;
 		List<Event> list = events.getByCriterion("name", eventName);
-		
-		if(list.size() <= 0)
+
+		if (list.size() <= 0)
 			return false;
-		
+
 		Integer eventId = list.get(0).getEventId();
-		
+
 		Iterator<Role> it = user.getRoles().iterator();
 		while (it.hasNext()) {
 			Role r = it.next();
@@ -164,6 +155,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 		return false;
 	}
 
+	
 	@Override
 	public List<SlackUser> getAllOrderedByScore(int size) {
 		return users.getAllOrderedByAsList("score", false, size);
@@ -175,6 +167,5 @@ public class SlackUserServiceImpl implements SlackUserService {
 		user.incrementScore(score);
 		users.saveOrUpdate(user);
 	}
-		
-	
+
 }
