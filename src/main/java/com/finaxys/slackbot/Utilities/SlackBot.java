@@ -41,8 +41,12 @@ public class SlackBot {
 	}
 	
 	public static void postMessage(String channelId, String message, boolean flag) {
-		if(flag) 	
+		System.out.println(flag);
+		if(flag) {
+			if (!channelId.equals(Settings.debugChannelId))				
+				postMessageAsync(channelId, message);
 			postMessageToDebugChannelAsync(message);
+		}
 		else
 			postMessageAsync(channelId, message);
 	

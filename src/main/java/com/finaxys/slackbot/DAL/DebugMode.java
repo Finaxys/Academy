@@ -18,7 +18,7 @@ public class DebugMode {
 		return new DebugMode();
 	}
 	
-	public DebugMode activateDebugMode() {
+	public DebugMode enableDebugMode() {
 		this.flag = true;
 		return this;
 	}

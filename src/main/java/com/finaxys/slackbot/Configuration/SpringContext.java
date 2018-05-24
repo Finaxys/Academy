@@ -92,7 +92,7 @@ public class SpringContext {
 
     @Bean
     public MessageListener messageListener() {
-        return new MessageListener(debugModeService.save(DebugMode.beginDebugMode()));
+        return new MessageListener();
     }
 
     @Bean

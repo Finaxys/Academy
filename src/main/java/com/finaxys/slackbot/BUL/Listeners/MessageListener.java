@@ -27,6 +27,7 @@ import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
+import com.finaxys.slackbot.interfaces.DebugModeService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
 import com.finaxys.slackbot.interfaces.RoleService;
@@ -68,158 +69,164 @@ public class MessageListener implements EventListener {
 
 	@Autowired
 	private ActionService actionService;
-
-	private DebugMode flagDebug;
+	
+	@Autowired
+	private DebugModeService debugModeService;
 
 	public MessageListener() {
 	}
 
-	public MessageListener(DebugMode flag) {
-		flagDebug = flag;
-	}
 
 	private void analyseMessage(JsonNode jsonNode) {
 		String message = jsonNode.get("text").asText().trim();
 		String[] command = message.split(" ");
 		String channelId = jsonNode.get("channel").asText().trim();
 		String userId = jsonNode.get("user").asText().trim();
-
-		System.out.println("**********");
-		System.out.println(flagDebug.isOnDebugMode());
+		
 
 		switch (command[0]) {
 
 		case "fx_help":
 			if (command.length == 1)
-				SlackBot.postMessage(channelId, helpService.fx_help(), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, helpService.fx_help(), debugModeService.isOnDebugMode());
 			else
-				SlackBot.postMessage(channelId, "fx_help doesn't take arguments.", flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, "fx_help doesn't take arguments.", debugModeService.isOnDebugMode());
 			break;
 		/* work but have to do changes 
 		case "fx_set_me_as_admin":
 			if (command.length == 2)
-				
+				SlackBot.postMessage(channelId, slackUserService.setCurrentUserAsAdmin(userId, command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_set_me_as_admin takes 1 argument : the superAdmin's password.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		case "fxadmin_add":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), debugModeService.isOnDebugMode());
 			else
-				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef.bouhlel or"
-						+ " the password to promote you into a administrator.",
-						flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef",
+						debugModeService.isOnDebugMode());
 			break;
+			
 		
+		*/
+		case "fxadmin_enable_debug":
+			if (command.length == 1) {
+				if (slackUserService.isAdmin(userId))
+					SlackBot.postMessage(channelId, debugModeService.enableDebugMode(), debugModeService.isOnDebugMode());
+				else
+					SlackBot.postMessage(channelId, "You need to be administrator to run the command " + command[0],
+							debugModeService.isOnDebugMode()); 
+				
+			}
+			else
+				SlackBot.postMessage(channelId, "fxadmin_enable_debug does not take arguments",
+						debugModeService.isOnDebugMode());
+			break;
+			
+		case "fxadmin_disable_debug":
+			if (command.length == 1)
+				SlackBot.postMessage(channelId, debugModeService.disableDebugMode(), debugModeService.isOnDebugMode());
+			else
+				SlackBot.postMessage(channelId, "fxadmin_disable_debug does not take arguments",
+						debugModeService.isOnDebugMode());
+			break;
 		case "fx_events_by_date":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, getEventsByDate(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, getEventsByDate(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_events_by_date takes 1 argument : date of the events.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		case "fx_events_by_type":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, getEventsByType(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, getEventsByType(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_events_by_type takes 1 argument : type of event (group or individual).",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		/* work but have to do changes 
 		case "fx_event_score_list":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, listScoreForEvent(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, listScoreForEvent(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_event_score_list takes 1 argument : name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
+
 		*/
-		/*
-		 * case "fx_event_score_add": if (command.length == 4)
-		 * SlackBot.postMessage(channelId, addEventScore(command[1], command[2],
-		 * command[3]), flagDebug.isOnDebugMode()); else SlackBot.postMessage(channelId,
-		 * "fx_event_score_add takes 3 arguments : name of event , user name and score to add"
-		 * , flagDebug.isOnDebugMode()); break;
-		 */
 
 		
 		case "fx_action_add":
 			if (command.length == 5)
 				SlackBot.postMessage(channelId,
 						eventService.addEventAction(command[1], command[2], command[3], Integer.parseInt(command[4])),
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_event_action_add takes 4 arguments : name of event, name of action, description of action, number of points.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		/* to do fix cascade problems and do changes 
 		case "fx_event_action_del":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, eventService.removeEventAction(command[1], command[2]),
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_event_action_del takes 2 arguments : name of event, name of action.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		/*
 		case "fx_manager_list":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, getEventManagers(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, getEventManagers(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_event_score_add takes 1 argument : name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
-		/*
-		 * case "fx_action_score_add": if (command.length == 4)
-		 * SlackBot.postMessage(channelId, addActionScore(command[1], command[2],
-		 * command[3]), flagDebug.isOnDebugMode()); else SlackBot.postMessage(channelId,
-		 * "fx_action_score_add takes 3 arguments : name of event, name of user and action code"
-		 * , flagDebug.isOnDebugMode()); break;
-		 */
+	
 
 		/*
 		case "fx_manager_add":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, create(command[1], command[2], jsonNode.get("user").asText()),
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_manager_add takes 2 arguments : name of user, name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		/* to do changes, add parameter event to specify scores of an event only */
 		case "fx_leaderboard":
 			if (command.length == 2 && isInteger(command[1]))
-				SlackBot.postMessage(channelId, listScores(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, listScores(command[1]), debugModeService.isOnDebugMode());
 			else if (command.length == 1)
-				SlackBot.postMessage(channelId, listScores(""), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, listScores(""), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_leaderboard take the number of the manager to display their score",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		/*
 		case "fx_manager_remove":
 			if (command.length == 3)
 				SlackBot.postMessage(channelId, remove(command[1], command[2], jsonNode.get("user").asText()),
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_manager_remove takes 2 arguments : name of manager to remove, name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
-		case "fx_event_list":
+		case "fx_events_list":
 			if (command.length == 1) {
 				SlackBotTimer timer = new SlackBotTimer();
 				timer.capture();
@@ -229,59 +236,59 @@ public class MessageListener implements EventListener {
 				if (events.isEmpty())
 					SlackBot.postMessage(
 							channelId, "There is no previous events! Come on create one !" + timer,
-							flagDebug.isOnDebugMode());
+							debugModeService.isOnDebugMode());
 				else
 					SlackBot.postMessage(channelId, eventService.getStringFromList(events) + timer,
-							flagDebug.isOnDebugMode());
+							debugModeService.isOnDebugMode());
 			} else
-				SlackBot.postMessage(channelId, "fx_event_list doesn't take arguments", flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, "fx_event_list doesn't take arguments", debugModeService.isOnDebugMode());
 			break;
 
 		case "fx_event_add":
 			if (command.length == 4 && (command[3].equals("group") || command[3].equals("individual")))
-				SlackBot.postMessage(channelId, eventService.addEvent(command, jsonNode), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, eventService.addEvent(command, jsonNode), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_event_add takes 3 arguments : name of event, description of event, type of event (group|individual).",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		
 		case "fx_event_named":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, getEventByName(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, getEventByName(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_event_named takes only one argument: event_name",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		/* fix cascades problems 
 		case "fx_event_del":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, removeEventByName(command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, removeEventByName(command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_event_del takes 1 argument: name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		/* will be deleted 
 		case "fx_event_join":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, eventService.joinEvent(userId, command[1]), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, eventService.joinEvent(userId, command[1]), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_event_join takes 1 argument: name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		
 		/* will be deleted 
 		case "fx_action_add":
 			if (command.length == 4)
-				SlackBot.postMessage(channelId, addAction(command), flagDebug.isOnDebugMode());
+				SlackBot.postMessage(channelId, addAction(command), debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId,
 						"fx_action_add takes 3 arguments : code of action, name of action, number of points.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 		
@@ -291,10 +298,10 @@ public class MessageListener implements EventListener {
 						actionService.getActionByCode(command[1]) != null
 								? actionService.getActionByCode(command[1]).getCode()
 								: "0",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_action_add takes 1 argument: name of action",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 			
@@ -305,25 +312,25 @@ public class MessageListener implements EventListener {
 						eventService.getEventByName(command[1]) != null
 								? eventService.getEventByName(command[1]).getEventScores().toArray().toString()
 								: "0",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			else
 				SlackBot.postMessage(channelId, "fx_action_add takes 1 argument: name of event.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 		*/
 			
 		case "fx_action_performed":
 			if (command.length == 4) {
 				SlackBot.postMessage(channelId, eventService.addActionToSlackuser(command[1], command[2], command[3]),
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			} else
 				SlackBot.postMessage(channelId,
 						"fx_event_action_add_to_user takes 3 arguments: name of event, code of action, name of user.",
-						flagDebug.isOnDebugMode());
+						debugModeService.isOnDebugMode());
 			break;
 
 		default:
-			SlackBot.postMessageToDebugChannelAsync("hi " + message);
+			//SlackBot.postMessage(channelId, "hi " + message, debugModeService.isOnDebugMode());
 			break;
 		}
 	}
