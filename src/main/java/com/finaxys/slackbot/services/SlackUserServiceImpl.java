@@ -130,8 +130,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 				}
 			}
 			else 
-				return "You entered a wrong password !";	
-			
+				return "You entered a wrong password !";				
 	}
 
 	@Override
@@ -156,6 +155,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 		return false;
 	}
 
+	
 	@Override
 	public List<SlackUser> getAllOrderedByScore(int size) {
 		return users.getAllOrderedByAsList("score", false, size);

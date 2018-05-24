@@ -92,15 +92,8 @@ public class MessageListener implements EventListener {
 			else
 				SlackBot.postMessage(channelId, "fx_help doesn't take arguments.", debugModeService.isOnDebugMode());
 			break;
-		/* work but have to do changes 
-		case "fx_set_me_as_admin":
-			if (command.length == 2)
-				SlackBot.postMessage(channelId, slackUserService.setCurrentUserAsAdmin(userId, command[1]), debugModeService.isOnDebugMode());
-			else
-				SlackBot.postMessage(channelId, "fx_set_me_as_admin takes 1 argument : the superAdmin's password.",
-						debugModeService.isOnDebugMode());
-			break;
-		*/
+	
+		
 		case "fxadmin_add":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), debugModeService.isOnDebugMode());
@@ -109,8 +102,7 @@ public class MessageListener implements EventListener {
 						debugModeService.isOnDebugMode());
 			break;
 			
-		
-		*/
+			
 		case "fxadmin_enable_debug":
 			if (command.length == 1) {
 				if (slackUserService.isAdmin(userId))
