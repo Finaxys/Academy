@@ -9,11 +9,6 @@ import com.finaxys.slackbot.interfaces.HelpService;
 public class HelpServiceImpl implements HelpService {
 	
 	public String fx_help() {
-		
-
-    	SlackBotTimer timer = new SlackBotTimer();
-    	
-    	
     	
         String fxCommands =
                 		 "*fx_events_list* \n List all the events. \n \n" +
@@ -34,9 +29,7 @@ public class HelpServiceImpl implements HelpService {
         
         
         String message = "List of the FX bot commands:\n" + fxCommands ;
-
-        timer.capture();
-        return message + timer;
+        return message;
 	}
 
 }

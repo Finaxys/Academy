@@ -31,7 +31,7 @@ public class Timer {
 		capture();
 		StringBuilder sb = new StringBuilder();
 		int numberOfCapture = 1;
-
+		sb.append("\n");
 		for (Long time : captures) {
 			sb.append("(" + numberOfCapture++ + " : " + time + " ms ), ");
 		}

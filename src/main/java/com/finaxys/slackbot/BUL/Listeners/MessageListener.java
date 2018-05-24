@@ -98,10 +98,9 @@ public class MessageListener implements EventListener {
 		
 		case "fxadmin_add":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, slackUserService.addUserAsAdmin(userId, command[1]), debugModeService.isOnDebugMode());
+				response = slackUserService.addUserAsAdmin(userId, command[1]);
 			else
-				SlackBot.postMessage(channelId, "fxadmin_add takes 1 argument : the user you want to add, ex: @atef",
-						debugModeService.isOnDebugMode());
+				response = "fxadmin_add takes 1 argument : the user you want to add, ex: @atef";
 			break;
 			
 			
@@ -131,11 +130,9 @@ public class MessageListener implements EventListener {
 
 		case "fx_events_by_type":
 			if (command.length == 2)
-				response =  
-						getEventsByType(command[1]);
+				response =  getEventsByType(command[1]);
 			else
-				response = 
-						"fx_events_by_type takes 1 argument : type of event (group or individual).";
+				response = "fx_events_by_type takes 1 argument : type of event (group or individual).";
 			break;
 
 		/* work but have to do changes 
@@ -233,11 +230,13 @@ public class MessageListener implements EventListener {
 			break;
 
 		
-		case "fx_event_named":
-			if (command.length == 2)
-				response = getEventByName(command[1]);
+		case "fx_event_details":
+			if (command.length == 2) {
+				Event event = eventService.getEventByName(command[1]);
+				response = event == null ? "The event " + command[1]  + " does not exist !" : event.toString();				
+			}
 			else
-				response = "fx_event_named takes only one argument: event_name";
+				response = "fx_event_details takes 1 argument: name of event";
 			break;
 
 		/* fix cascades problems 
@@ -310,7 +309,9 @@ public class MessageListener implements EventListener {
 		}
 		if (debugModeService.isOnDebugMode())
 			timer.capture();
-		SlackBot.postMessage(channelId, response + (debugModeService.isOnDebugMode() ? timer : ""),debugModeService.isOnDebugMode());
+		
+		if (!response.equals(""))
+			SlackBot.postMessage(channelId, response + (debugModeService.isOnDebugMode() ? timer : ""),debugModeService.isOnDebugMode());
 	}
 
 	
@@ -674,23 +675,6 @@ public class MessageListener implements EventListener {
 		return "List of events with type : " + eventType + " \n" + eventService.getStringFromList(events);// + timer;
 
 	}
-
-	public String getEventByName(String arguments) {
-		SlackBotTimer timer = new SlackBotTimer();
-		String fxevent = "";
-
-		Log.info("fx_event_named " + arguments);
-
-		Event event = eventService.getEventByName(arguments);
-
-		timer.capture();
-
-		if (event == null)
-			fxevent = "fx_event_named " + arguments + "\n" + "Nonexistent event.";// + timer;
-		return fxevent;
-
-	}
-
 	public String listScoreForEvent(String arguments) {
 
 		SlackBotTimer timer = new SlackBotTimer();

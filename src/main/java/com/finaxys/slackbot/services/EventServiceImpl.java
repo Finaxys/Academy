@@ -17,6 +17,7 @@ import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.SlackUserEvent;
+import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
@@ -89,6 +90,7 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 
+	
 	/*
 	@Override
 	public int getGlobalScore(SlackUser user) {

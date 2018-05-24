@@ -27,14 +27,14 @@ public class DebugModeServiceImpl implements DebugModeService{
 	public String enableDebugMode() {
 		DebugMode dm = this.get(1);
 		this.save(dm.enableDebugMode());
-		return "Debug mode has been successfully set !";
+		return "Debug mode has been successfully enabled !";
 	}
 	
 	@Override
 	public String disableDebugMode() {
 		DebugMode dm = this.get(1);
 		this.save(dm.disableDebugMode());
-		return "Debug mode has been successfully removed !";
+		return "Debug mode has been successfully disabled !";
 	}
 
 	@Override
