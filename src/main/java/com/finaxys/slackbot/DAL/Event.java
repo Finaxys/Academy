@@ -115,9 +115,15 @@ public class Event implements Serializable {
 		this.eventScores = eventScores;
 	}
 	
-	public String displayActions() {
+	private String displayActions() {
 		StringBuilder sb = new StringBuilder();
 		this.eventScores.forEach(x->sb.append("\t* "+ x.getCode() + " : " + x.getDescription() +"\n"));
+		return sb.toString();
+	}
+	
+	private String displayEventManagers() {
+		StringBuilder sb = new StringBuilder();
+		this.eventManagers.forEach(m->sb.append("\t* "+ m.getName() +"\n"));
 		return sb.toString();
 	}
 
@@ -127,6 +133,7 @@ public class Event implements Serializable {
 				+ "Type: " + this.getType() + "\n"
 			    + "Creation date : " + this.getCreationDate() + "\n"
 				//+ "Number of participants: " + this.getAttendees().size() + " \n "
+			    + "Event managers : \n" + this.displayEventManagers() + "\n" 
     			+ "Actions of the event : \n" + this.displayActions();
     } 
     
@@ -134,7 +141,7 @@ public class Event implements Serializable {
     	return event.getEventId()==this.getEventId();
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinTable(name = "SLACK_USER_EVENT",
             inverseJoinColumns = @JoinColumn(name = "SLACK_USER_ID", nullable = false, updatable = false),
             joinColumns = @JoinColumn(name = "EVENT_ID", nullable = false, updatable = false))

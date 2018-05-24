@@ -2,13 +2,11 @@ package com.finaxys.slackbot.services;
 
 import org.springframework.stereotype.Service;
 
-import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.HelpService;
 
 @Service
 public class HelpServiceImpl implements HelpService {
-	
-	public String fx_help() {
+	public String fx_help(boolean isAdmin) {
     	
         String fxCommands =
                 		 "*fx_events_list* \n List all the events. \n \n" +
@@ -28,7 +26,7 @@ public class HelpServiceImpl implements HelpService {
         				 "*fxadmin_disable_debug* \n Desactivate the debug mode. \n \n";
         
         
-        String message = "List of the FX bot commands:\n" + fxCommands ;
+        String message = "List of the FX bot commands:\n" + fxCommands + (isAdmin ? " \n " + fxAdminCommands : "");;
         return message;
 	}
 

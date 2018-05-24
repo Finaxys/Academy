@@ -1,8 +1,5 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
-import allbegray.slack.rtm.EventListener;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -11,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
@@ -21,7 +19,6 @@ import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
@@ -30,8 +27,9 @@ import com.finaxys.slackbot.interfaces.DebugModeService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
 import com.finaxys.slackbot.interfaces.RoleService;
-import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
+
+import allbegray.slack.rtm.EventListener;
 
 @Component
 public class MessageListener implements EventListener {
@@ -64,9 +62,6 @@ public class MessageListener implements EventListener {
 	private SlackUserService slackUserService;
 
 	@Autowired
-	private SlackUserEventService slackUserEventService;
-
-	@Autowired
 	private ActionService actionService;
 	
 	@Autowired
@@ -85,12 +80,15 @@ public class MessageListener implements EventListener {
 		SlackBotTimer timer = new SlackBotTimer();
 		if (debugModeService.isOnDebugMode())
 			timer.capture();
-
+		
+		System.out.println("************************");
+		System.out.println(jsonNode);
+		System.out.println(SlackBot.getSlackWebApiClient().getUserInfo(userId));
 		switch (command[0]) {
 
 		case "fx_help":
 			if (command.length == 1)
-				response =  helpService.fx_help();
+				response =  helpService.fx_help(slackUserService.isAdmin(userId));
 			else
 				response =  "fx_help doesn't take arguments.";
 			break;
@@ -135,16 +133,6 @@ public class MessageListener implements EventListener {
 				response = "fx_events_by_type takes 1 argument : type of event (group or individual).";
 			break;
 
-		/* work but have to do changes 
-		case "fx_event_score_list":
-			if (command.length == 2)
-				SlackBot.postMessage(channelId, listScoreForEvent(command[1]), debugModeService.isOnDebugMode());
-			else
-				SlackBot.postMessage(channelId, "fx_event_score_list takes 1 argument : name of event.",
-						debugModeService.isOnDebugMode());
-			break;
-
-		*/
 
 		
 		case "fx_action_add":
@@ -414,24 +402,34 @@ public class MessageListener implements EventListener {
 		return true;
 	}
 
-	public String listScores(String text) {
+	public String listScores(String parameter) {
+		String messageText = "";
+		if(isInteger(parameter) || parameter.equals("")) {
+			int size = parameter.isEmpty() ? -1 : Integer.parseInt(parameter);
+			if (size == 0)
+				return messageText + "You must enter a positive integer.";	
 
-		SlackBotTimer timer = new SlackBotTimer();
-
-		String messageText = "fx_leaderboard " + text + "\n";
-
-		int size = text.isEmpty() ? -1 : Integer.parseInt(text);
-
-		if (size == 0)
-			return messageText + "You must enter a positive integer." + timer;
-
-		List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
-
-		for (SlackUser profile : users) {
-			messageText += profile.getName() + " " + profile.calculateScore() + "\n";
+			List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
+			for (SlackUser profile : users)
+				messageText += profile.getName() + " " + profile.calculateScore() + "\n";
 		}
+		else {
+			Event event = eventService.getEventByName(parameter.trim());
 
-		return messageText;// + timer;
+			if (event == null)
+				return "No such event ! Check the event name";
+			String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
+			for (SlackUser slackUser : slackUserService.getAll()) {
+				if (slackUser.getActions() == null) {
+					slackUser.setActions(new HashSet<>());
+				}
+				if (slackUser.getActions().size() != 0)
+					textMessage += slackUser.getName() + " : "
+							+ slackUser.calculateScore(eventService.getEventByName(parameter.trim()))
+							+ "\n";
+			}
+		}
+		return messageText;
 	}
 
 	/*
@@ -689,7 +687,6 @@ public class MessageListener implements EventListener {
 
 		timer.capture();
 
-		List<SlackUserEvent> listEvents = slackUserEventService.getAllByEvent(event);
 		/*
 		 * if (listEvents == null) return "fx_event_score_list " + arguments + " \n" +
 		 * "No score has been saved till the moment !";// + timer;

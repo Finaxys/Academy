@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
@@ -14,14 +13,10 @@ import com.finaxys.slackbot.BUL.Matchers.QuotesMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.EventService;
-import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 
@@ -36,9 +31,6 @@ public class EventServiceImpl implements EventService {
 
 	@Autowired
 	SlackUserService slackUserService;
-
-	@Autowired
-	SlackUserEventService slackUserEventService;
 
 	@Autowired
 	public void SetEventRepository(Repository<Event, Integer> eventRepository) {
@@ -184,6 +176,7 @@ public class EventServiceImpl implements EventService {
 
 	}
 
+	/*
 	@Override
 	public String joinEvent(String userId, String eventName) {
 
@@ -216,7 +209,7 @@ public class EventServiceImpl implements EventService {
 
 		return "You are now a member of this event " + eventName;
 	}
-
+	*/
 	@Override
 	public String addActionToSlackuser(String eventCode, String actionCode, String slackuserName) {
 		Event event = this.getEventByName(eventCode);

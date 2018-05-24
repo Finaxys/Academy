@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import com.finaxys.slackbot.BUL.Classes.ChannelLeftServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.InnovateServiceImpl;
 import com.finaxys.slackbot.BUL.Classes.NewTribeJoinedServiceImpl;
@@ -28,14 +29,13 @@ import com.finaxys.slackbot.BUL.Interfaces.ReactionAddedService;
 import com.finaxys.slackbot.BUL.Interfaces.ReactionRemovedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
 import com.finaxys.slackbot.BUL.Listeners.MessageListener;
-import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.DebugMode;
+import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUserEvent;
 import com.finaxys.slackbot.interfaces.DebugModeService;
 
 @Configuration
@@ -139,10 +139,6 @@ public class SpringContext {
         return new Repository<>(Parameter.class);
     }
     
-    @Bean
-    public Repository<SlackUserEvent, String> slackUserEventRepository() {
-        return new Repository<>(SlackUserEvent.class);
-    }
     
     @Bean
     public Repository<Action, Long> actionRepository() {

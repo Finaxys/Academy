@@ -37,7 +37,7 @@ public interface EventService {
 	
 	String addActionToSlackuser(String eventCode, String actionCode, String slackuserName);
 
-	String joinEvent(String userId, String eventName);
+	//String joinEvent(String userId, String eventName);
 
 	String removeEventAction(String eventCode, String actionCode);
 	

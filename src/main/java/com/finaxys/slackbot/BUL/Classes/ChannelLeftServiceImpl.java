@@ -1,19 +1,17 @@
 package com.finaxys.slackbot.BUL.Classes;
 
-import allbegray.slack.type.Channel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.SlackUserEvent;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.interfaces.SlackUserEventService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import allbegray.slack.type.Channel;
 
 @Service
 public class ChannelLeftServiceImpl implements ChannelLeftService {
@@ -24,9 +22,6 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 	@Autowired
 	private SlackUserService slackUserService;
 	
-	@Autowired
-	private SlackUserEventService slackUserEventService;
-
 	@Transactional
 	@Override
 	public void onChannelLeaveMessage(JsonNode jsonNode) 
