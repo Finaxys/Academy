@@ -39,7 +39,7 @@ public class EventsWebService extends BaseWebService {
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
-
+/*
 	@RequestMapping(value = "/fx_events_by_type", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByType(@RequestParam("text") String arguments) {
@@ -60,7 +60,7 @@ public class EventsWebService extends BaseWebService {
 				" /fx_events_by_type " + arguments + " \n " + eventService.getStringFromList(events) + timer, true);
 
 	}
-
+*/
 	@RequestMapping(value = "/fx_event_named", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getEventsByName(@RequestParam("text") String arguments) {
@@ -78,6 +78,7 @@ public class EventsWebService extends BaseWebService {
 			return newResponseEntity("/fx_events_named " + arguments + "\n " + event + timer, true);
 
 	}
+	/*
 
 	@RequestMapping(value = "/fx_events_by_date", method = RequestMethod.POST)
 	@ResponseBody
@@ -108,7 +109,7 @@ public class EventsWebService extends BaseWebService {
 		else
 			return newResponseEntity(eventService.getStringFromList(events) + timer, true);
 	}
-
+*/
 	@RequestMapping(value = "/fx_event_list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JsonNode> getAllEvents(@RequestParam("token") String appVerificationToken,

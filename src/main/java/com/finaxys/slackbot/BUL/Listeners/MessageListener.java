@@ -82,7 +82,7 @@ public class MessageListener implements EventListener {
 			timer.capture();
 		
 		System.out.println("************************");
-		System.out.println(jsonNode);
+		//System.out.println(jsonNode);
 		System.out.println(SlackBot.getSlackWebApiClient().getUserInfo(userId));
 		switch (command[0]) {
 
@@ -121,14 +121,14 @@ public class MessageListener implements EventListener {
 			break;
 		case "fx_events_by_date":
 			if (command.length == 2)
-				response =  getEventsByDate(command[1]);
+				response =  eventService.getEventsByDate(command[1]);
 			else
 				response =  "fx_events_by_date takes 1 argument : date of the events.";
 			break;
 
 		case "fx_events_by_type":
 			if (command.length == 2)
-				response =  getEventsByType(command[1]);
+				response =  eventService.getEventsByType(command[1]);
 			else
 				response = "fx_events_by_type takes 1 argument : type of event (group or individual).";
 			break;
@@ -176,12 +176,12 @@ public class MessageListener implements EventListener {
 		*/
 		/* to do changes, add parameter event to specify scores of an event only */
 		case "fx_leaderboard":
-			if (command.length == 2 && isInteger(command[1]))
-				response =  listScores(command[1]);
-			else if (command.length == 1)
-				response =  listScores("");
+			if (command.length == 2)
+				response = listScores(command[1]);
+			else if(command.length == 1)
+				response = listScores("");
 			else
-				response = "fx_leaderboard take the number of the manager to display their score";
+				response = "fx_leaderboard take 0 or 1 argument : the number of rows you want to display or an event name.";
 			break;
 
 		/*
@@ -418,13 +418,13 @@ public class MessageListener implements EventListener {
 
 			if (event == null)
 				return "No such event ! Check the event name";
-			String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
+			messageText = "Leaderboard of " + event.getName() + " :" + " \n ";
 			for (SlackUser slackUser : slackUserService.getAll()) {
 				if (slackUser.getActions() == null) {
 					slackUser.setActions(new HashSet<>());
 				}
 				if (slackUser.getActions().size() != 0)
-					textMessage += slackUser.getName() + " : "
+					messageText += slackUser.getName() + " : "
 							+ slackUser.calculateScore(eventService.getEventByName(parameter.trim()))
 							+ "\n";
 			}
@@ -634,45 +634,7 @@ public class MessageListener implements EventListener {
 	}
 */
 	
-	public String getEventsByDate(String text) {
-
-		SlackBotTimer timer = new SlackBotTimer();
-
-		DateMatcher dateMatcher = new DateMatcher();
-
-		if (!dateMatcher.match(text.trim()))
-			return "Date format : yyyy-MM-dd";// + timer;
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-		Date wantedDate = new Date();
-		try {
-			wantedDate = dateFormat.parse(text);
-		} catch (Exception e) {
-		}
-
-		List<Event> events = eventService.getEventByDate(wantedDate);
-
-		timer.capture();
-
-		if (events.isEmpty())
-			return "There are no events on this date: " + text; // + timer;
-		else
-			return "List of events on date : " + wantedDate + "\n" + eventService.getStringFromList(events);// + timer;
-	}
-
-	public String getEventsByType(String eventType) {
-
-		SlackBotTimer timer = new SlackBotTimer();
-
-		List<Event> events = eventService.getEventByType(eventType);
-
-		if (events.isEmpty())
-			return "No events with type: " + eventType; // + timer;
-
-		return "List of events with type : " + eventType + " \n" + eventService.getStringFromList(events);// + timer;
-
-	}
+	
 	public String listScoreForEvent(String arguments) {
 
 		SlackBotTimer timer = new SlackBotTimer();
@@ -704,36 +666,6 @@ public class MessageListener implements EventListener {
 						+ "\n";
 		}
 		return "/fx_event_score_list " + arguments + " \n" + textMessage;// + timer;
-	}
-
-	private String getHelpCommands(JsonNode jsonNode) {
-		String fxCommands = "Helloooooooooooooooooooooo Audric !\n*/fx_event_list* \n List all the events. \n \n"
-				+ "*/fx_event_add* [event name] [description] [group|individual] \n Adds a new event. \n \n"
-				+ "*/fx_event_named* [event name] \n Gives an event details. \n \n"
-				+ "*/fx_events_by_date* [yyyy-mm-dd] \n List of events by date \n \n"
-				+ "*/fx_events_by_type* [group|individual] \n List of events by type \n \n"
-				+ "*/fx_event_score_list*  [event name] event \n Gives the score list of a given event. \n \n"
-				+ "*/fx_event_del* [event name] \n Removes an event! \n \n"
-				+ "*/fx_event_score_add* @username [points] [name] \n Adds a score to an event attendee. \n \n"
-				+ "*/fx_action_add* \n [code] [action name] [points] \n \n"
-				+ "*/fx_action_score_add* \n [event name] [user name] [action code] \n \n"
-				+ "*/fx_manager_add* [event name] [username] \n Adds an event manager. \n \n"
-				+ "*/fx_manager_list* [event name] \n List of event managers . \n \n"
-				+ "*/fx_manager_del* [event name] [username] \n Removes an event manager. \n \n"
-				+ "*/fx_leaderboard* [optional: count] \n Gives the top scores. \n \n"
-				+ "*/fx_contest_add* [contest] [points earned] \n Adds a w<contest. \n \n"
-				+ "*/fx_score* [user name] \n Show a user's scores \n"
-				+ "*/fxadmin_list* \n List of all administrators. \n \n";
-
-		String fxAdminCommands = "*/fxadmin_add* @username \n Adds an administrator. \n \n"
-				+ "*/fxadmin_del* @username \n Removes an administrator. \n \n"
-				+ "*/fxadmin_param* [parameter_name] [parameter_value] \n Set the value of a parameter \n \n"
-				+ "*/fxadmin_list_params* \n List all parameters \n \n";
-
-		String id = jsonNode.get("user").asText();
-		return "/fx_help\nList of the FX bot commands:\n" + fxCommands
-				+ (slackUserService.isAdmin(id) ? " \n " + fxAdminCommands : "");
-
 	}
 
 	public void handleMessage(JsonNode jsonNode) {

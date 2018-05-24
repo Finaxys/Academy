@@ -1,5 +1,6 @@
 package com.finaxys.slackbot.services;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.BUL.Matchers.QuotesMatcher;
 import com.finaxys.slackbot.DAL.Action;
@@ -68,6 +70,38 @@ public class EventServiceImpl implements EventService {
 		}
 		return null;
 	}
+	
+	@Override
+	public String getEventsByDate(String text) {
+
+
+		DateMatcher dateMatcher = new DateMatcher();
+
+		if (!dateMatcher.match(text.trim()))
+			return "Date format : yyyy-MM-dd";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date wantedDate = new Date();
+		try {
+			wantedDate = dateFormat.parse(text);
+		} catch (Exception e) {
+		}
+
+		List<Event> events =  eventRepository.getByCriterion("creationDate", wantedDate);
+		if (events.isEmpty())
+			return "There are no events on this date: " + text; // + timer;
+		else
+			return "List of events on date : " + wantedDate + "\n" + this.getStringFromList(events);// + timer;
+	}
+
+	@Override
+	public String getEventsByType(String eventType) {
+		List<Event> events = eventRepository.getByCriterion("type", eventType);
+		if (events.isEmpty())
+			return "No events with type: " + eventType; 
+
+		return "List of events with type : " + eventType + " \n" + this.getStringFromList(events);
+	}
+	
 
 	@Override
 	public Event getFinaxysEvent() {
@@ -102,11 +136,7 @@ public class EventServiceImpl implements EventService {
 	
 	*/
 
-	@Override
-	public List<Event> getEventByType(String type) {
-		return eventRepository.getByCriterion("type", type);
-	}
-
+	
 	@Override
 	public String getStringFromList(List<Event> events) {
 		String result = "";
@@ -119,10 +149,6 @@ public class EventServiceImpl implements EventService {
 		return result;
 	}
 
-	@Override
-	public List<Event> getEventByDate(Date wantedDate) {
-		return eventRepository.getByCriterion("creationDate", wantedDate);
-	}
 /*
 	@Override
 	public void addScore(Event event, String userId, Action action) {

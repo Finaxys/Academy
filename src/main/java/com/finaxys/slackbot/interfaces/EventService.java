@@ -21,7 +21,7 @@ public interface EventService {
 
 	Event getEventByName(String eventName);
 	
-	List<Event> getEventByType(String type);
+	
 
 	Event getFinaxysEvent();
 
@@ -29,7 +29,8 @@ public interface EventService {
 
 	String getStringFromList(List<Event> events);
 
-	List<Event> getEventByDate(Date wantedDate);
+	String getEventsByDate(String wantedDate);
+	String getEventsByType(String type);
 
 	//void addScore(Event event, String userId, Action action);
 

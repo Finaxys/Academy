@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.finaxys.slackbot.Utilities.SlackBot;
 
 @Entity
 @Table(name = "EVENT")
@@ -117,13 +118,13 @@ public class Event implements Serializable {
 	
 	private String displayActions() {
 		StringBuilder sb = new StringBuilder();
-		this.eventScores.forEach(x->sb.append("\t* "+ x.getCode() + " : " + x.getDescription() +"\n"));
+		this.eventScores.forEach(x->sb.append("\n\t* "+ x.getCode() + " : " + x.getDescription() +"\n"));
 		return sb.toString();
 	}
 	
 	private String displayEventManagers() {
 		StringBuilder sb = new StringBuilder();
-		this.eventManagers.forEach(m->sb.append("\t* "+ m.getName() +"\n"));
+		this.eventManagers.forEach(m->sb.append("\t* "+ SlackBot.getSlackWebApiClient().getUserInfo(m.getSlackUserId()).getProfile().getReal_name() +"\n"));
 		return sb.toString();
 	}
 
@@ -134,7 +135,7 @@ public class Event implements Serializable {
 			    + "Creation date : " + this.getCreationDate() + "\n"
 				//+ "Number of participants: " + this.getAttendees().size() + " \n "
 			    + "Event managers : \n" + this.displayEventManagers() + "\n" 
-    			+ "Actions of the event : \n" + this.displayActions();
+    			+ "Actions of the event "+ (this.eventScores.isEmpty() ? "(0)" : ":") + this.displayActions();
     } 
     
     public boolean equals (Event event) {
