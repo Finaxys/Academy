@@ -29,13 +29,14 @@ public class Action implements Serializable {
 	private String code;
 	private String description;
 	private int points;
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	//@OnDelete(action = OnDeleteAction.CASCADE)
 	private Event event;
 	
 	private Set<SlackUser> slackUsers;
 
+	//, cascade=CascadeType.ALL
 	@JsonIgnore
-	@ManyToMany(mappedBy = "actions", cascade=CascadeType.ALL)
+	@ManyToMany(mappedBy = "actions", fetch = FetchType.EAGER)
 	public Set<SlackUser> getSlackUsers() {
 		return slackUsers;
 	}

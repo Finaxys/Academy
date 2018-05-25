@@ -22,5 +22,7 @@ public interface SlackUserService {
 	boolean isEventManager(String id, String eventName);
 	
 	void updateScore(String id, int score);
+	
+	public String removeAdmin(String id, String password);
 
 }

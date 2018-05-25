@@ -49,7 +49,7 @@ public class ReactionAddedServiceImpl implements ReactionAddedService {
 				&& itemUserId 	!= myUserId 
 				&& userProfile 	!= null) {
 			
-			userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
+			//userProfile.incrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			slackUserService.save(userProfile);
 			Log.logReactionAdded(userProfile.getName(), slackApiAccessService.getUser(itemUserId).getName());
 		}

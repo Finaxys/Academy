@@ -34,7 +34,7 @@ public class NewTribeJoinedServiceImpl implements NewTribeJoinedService {
 								String name = slackApiAccessService.getUser(userId).getName();
 								userProfile = (userProfile == null) ? new SlackUser(userId, name) : userProfile;
 
-								userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
+								//userProfile.incrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 								slackUserService.save(userProfile);
 								Log.logChannelTribeJoined(name, slackApiAccessService.getChannel(channelId).getName());
 								

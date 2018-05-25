@@ -34,7 +34,6 @@ import com.finaxys.slackbot.DAL.DebugMode;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.interfaces.DebugModeService;
 
@@ -99,11 +98,6 @@ public class SpringContext {
     public Repository<SlackUser, String> finaxysProfileRepository() {
         return new Repository<>(SlackUser.class);
     }
-    @Bean
-    public Repository<Role, Integer> roleRepository() {
-        return new Repository<>(Role.class);
-    }
-
     @Bean
     public ReactionAddedService reactionAddedService() {
         return new ReactionAddedServiceImpl();

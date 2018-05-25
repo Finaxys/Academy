@@ -40,9 +40,12 @@ public interface EventService {
 
 	//String joinEvent(String userId, String eventName);
 
-	String removeEventAction(String eventCode, String actionCode);
+	String removeEventAction(String currentUserId, String eventCode, String actionCode);
 	
 	String addEvent(String[] command, JsonNode jsonNode);
+	
+	String addManager(String currentUserId, String userId, String event);
+	String removeManager(String currentUserId, String userId, String event);
 	
 	
 }

@@ -107,7 +107,7 @@ public class Event implements Serializable {
     }
     */
     
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     public Set<Action> getEventScores() {
 		return eventScores;
 	}
@@ -124,7 +124,8 @@ public class Event implements Serializable {
 	
 	private String displayEventManagers() {
 		StringBuilder sb = new StringBuilder();
-		this.eventManagers.forEach(m->sb.append("\t* "+ SlackBot.getSlackWebApiClient().getUserInfo(m.getSlackUserId()).getProfile().getReal_name() +"\n"));
+		//this.eventManagers.forEach(m->sb.append("\t* "+ SlackBot.getSlackWebApiClient().getUserInfo(m.getSlackUserId()).getProfile().getReal_name() +"\n"));
+		this.eventManagers.forEach(m->sb.append("\t* <@"+ m.getSlackUserId() +">\n"));
 		return sb.toString();
 	}
 
@@ -141,8 +142,8 @@ public class Event implements Serializable {
     public boolean equals (Event event) {
     	return event.getEventId()==this.getEventId();
     }
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+//, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "SLACK_USER_EVENT",
             inverseJoinColumns = @JoinColumn(name = "SLACK_USER_ID", nullable = false, updatable = false),
             joinColumns = @JoinColumn(name = "EVENT_ID", nullable = false, updatable = false))

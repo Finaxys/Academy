@@ -1,7 +1,5 @@
 package com.finaxys.slackbot.WebServices;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
-import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Role;
-import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.EventService;
-import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @RestController
@@ -33,9 +27,6 @@ public class EventsWebService extends BaseWebService {
 
 	@Autowired
 	private EventService eventService;
-
-	@Autowired
-	private RoleService roleService;
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
@@ -150,12 +141,6 @@ public class EventsWebService extends BaseWebService {
 		if (eventService.getEventByName(eventName) != null)
 			return newResponseEntity("/fx_event_add " + arguments + " \n " + "event already exists !" + timer, true);
 
-		new Thread(() -> {
-			eventService.save(event);
-			SlackUser user = slackUserService.get(userId);
-			Role role = new Role("event_manager", user, event);
-			roleService.save(role);
-		}).start();
 
 		timer.capture();
 
@@ -183,15 +168,6 @@ public class EventsWebService extends BaseWebService {
 
 		timer.capture();
 
-		new Thread(() -> {
-			List<Role> roles = roleService.getAllByEvent(event);
-
-			for (Role role : roles) {
-				roleService.remove(role);
-			}
-			eventService.remove(event);
-
-		}).start();
 
 		timer.capture();
 

@@ -1,7 +1,5 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -14,19 +12,15 @@ import com.finaxys.slackbot.BUL.Interfaces.ChannelLeftService;
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Interfaces.RealMessageReward;
-import com.finaxys.slackbot.BUL.Matchers.DateMatcher;
 import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
 import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.DebugModeService;
 import com.finaxys.slackbot.interfaces.EventService;
 import com.finaxys.slackbot.interfaces.HelpService;
-import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import allbegray.slack.rtm.EventListener;
@@ -49,8 +43,6 @@ public class MessageListener implements EventListener {
 	@Autowired
 	private HelpService helpService;
 
-	@Autowired
-	private RoleService roleService;
 
 	@Autowired
 	private SlackApiAccessService slackApiAccessService;
@@ -101,6 +93,17 @@ public class MessageListener implements EventListener {
 				response = "fxadmin_add takes 1 argument : the user you want to add, ex: @atef";
 			break;
 			
+		case "fxadmin_remove":
+			if (command.length == 3) {
+				if (slackUserService.isAdmin(userId))
+					response = slackUserService.removeAdmin(command[1], command[2]);
+				else
+					response =  "You need to be administrator to run the command " + command[0];				
+			}				
+			else
+				response = "fxadmin_remove takes 2 argument : username, the superAdmin's pass";
+			break;
+			
 			
 		case "fxadmin_enable_debug":
 			if (command.length == 1) {
@@ -142,18 +145,15 @@ public class MessageListener implements EventListener {
 				response = "fx_event_action_add takes 4 arguments : name of event, name of action, description of action, number of points.";
 			break;
 
-		/* to do fix cascade problems and do changes 
-		case "fx_event_action_del":
+		
+		case "fx_event_action_remove":
 			if (command.length == 3)
-				SlackBot.postMessage(channelId, eventService.removeEventAction(command[1], command[2]),
-						debugModeService.isOnDebugMode());
+				response = eventService.removeEventAction(userId, command[1], command[2]);
 			else
-				SlackBot.postMessage(channelId,
-						"fx_event_action_del takes 2 arguments : name of event, name of action.",
-						debugModeService.isOnDebugMode());
+				response = "fx_event_action_del takes 2 arguments : name of event, name of action.";
 			break;
-		*/
-		/*SlackBotTimer timer = new SlackBotTimer();
+		
+		/*
 		case "fx_manager_list":
 			if (command.length == 2)
 				SlackBot.postMessage(channelId, getEventManagers(command[1]), debugModeService.isOnDebugMode());
@@ -290,6 +290,21 @@ public class MessageListener implements EventListener {
 			} else
 				response = "fx_event_action_add_to_user takes 3 arguments: name of event, code of action, name of user.";
 			break;
+			
+		case "fx_manager_add":
+			if (command.length == 3) {
+				response = eventService.addManager(userId, command[1], command[2]);
+			} else
+				response = "fx_manager_add takes 2 arguments: username, name of event";
+			break;
+			
+		case "fx_manager_remove":
+			if (command.length == 3) {
+				response = eventService.removeManager(userId, command[1], command[2]);
+			} else
+				response = "fx_manager_remove takes 2 arguments: username, name of event";
+			break;
+			
 
 		default:
 			//response =  "hi " + message;
@@ -343,54 +358,6 @@ public class MessageListener implements EventListener {
 		} catch (NumberFormatException e) {
 			return "fx_action_add failed. Please, check the arguments types. ";// + timer;
 		}
-	}
-
-	public String remove(String managerName, String eventName, String adminId) {
-
-		SlackBotTimer timer = new SlackBotTimer();
-
-		String userIdArgs = "";
-		List<SlackUser> users = slackUserService.getAll();
-		for (SlackUser user : users) {
-			if (user.getName().equals(managerName)) {
-				userIdArgs = user.getSlackUserId();
-			}
-		}
-
-		Event event = eventService.getEventByName(eventName);
-
-		timer.capture();
-
-		if (event == null) {
-
-			return "event doesn't exist";
-		}
-
-		if (slackUserService.isEventManager(adminId, eventName) || slackUserService.isAdmin(adminId)) {
-			Object[] roles = roleService.getAll().stream()
-					.filter(e -> e.getEvent() != null && e.getEvent().equals(event)).toArray();
-			timer.capture();
-
-			for (Object r : roles) {
-				Role role = (Role) r;
-				if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
-
-					Role role2 = role;
-
-					new Thread(() -> {
-						roleService.remove(role2);
-					}).start();
-
-					return managerName + " is no more a event manager!";
-				}
-			}
-
-			timer.capture();
-
-			return managerName + " is already not a event manager!";
-		}
-
-		return "You are neither an admin nor an event manager";
 	}
 
 	public static boolean isInteger(String s) {
@@ -464,7 +431,7 @@ public class MessageListener implements EventListener {
 
 		return "Score successfully added for the action ";// + timer;
 	}
-*/
+
 	public String create(String profileName, String eventName, String adminUserId) {
 
 		SlackBotTimer timer = new SlackBotTimer();
@@ -540,7 +507,8 @@ public class MessageListener implements EventListener {
 
 		return "fx_manager_add  :   you are not a event manager!";// + timer;
 	}
-
+*/
+	/*
 	public String getEventManagers(String arguments) {
 
 		Log.info("fx_manager_list ");
@@ -565,7 +533,9 @@ public class MessageListener implements EventListener {
 
 		return "fx_manager_list :" + "\n " + messageText + " No event managers are found\n";
 	}
-/*
+
+	*/
+	/*
 	public String addEventScore(String eventName, String userId, String scoreValue) {
 
 		SlackBotTimer timer = new SlackBotTimer();
@@ -633,41 +603,6 @@ public class MessageListener implements EventListener {
 		return "/fx_event_score_add " + eventName + " \n" + "Score has been added !";// + timer;
 	}
 */
-	
-	
-	public String listScoreForEvent(String arguments) {
-
-		SlackBotTimer timer = new SlackBotTimer();
-
-		timer.capture();
-
-		String eventName = arguments.trim();
-		Event event = eventService.getEventByName(eventName);
-
-		if (event == null)
-			return "fx_event_score_list " + arguments + " \n" + "No such event ! Check the event name";// + timer;
-
-		timer.capture();
-
-		/*
-		 * if (listEvents == null) return "fx_event_score_list " + arguments + " \n" +
-		 * "No score has been saved till the moment !";// + timer;
-		 */
-		String textMessage = "Leaderboard of " + event.getName() + " :" + " \n ";
-		for (SlackUser slackUser : slackUserService.getAll()) {
-			if (slackUser.getActions() == null) {
-				System.out.println("delete **********");
-				slackUser.setActions(new HashSet<>());
-			}
-
-			if (slackUser.getActions().size() != 0)
-				textMessage += slackUser.getName() + " : "
-						+ slackUser.calculateScore(eventService.getEventByName(eventName))
-						+ "\n";
-		}
-		return "/fx_event_score_list " + arguments + " \n" + textMessage;// + timer;
-	}
-
 	public void handleMessage(JsonNode jsonNode) {
 		if (!jsonNode.has("subtype")) {
 			//realMessageReward.rewardReadMessage(jsonNode);

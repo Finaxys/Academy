@@ -52,7 +52,7 @@ public class ReactionRemovedServiceImpl implements ReactionRemovedService {
 				&& itemUserId != myUserId 
 				&& userProfile != null) 
 		{
-			userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
+			//userProfile.decrementScore(SCORE_GRID.APPRECIATED_MESSAGE.value());
 			
 			new Thread(()->{	slackUserService.save(userProfile);	}).start();
 			

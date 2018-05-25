@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Message;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
@@ -99,9 +98,9 @@ public class EventManagerWebService extends BaseWebService {
 						+ "> is already a manager!" + timer, true);
 
 			
-			Role role = new Role("event_manager",slackUser,event);
+			//Role role = new Role("event_manager",slackUser,event);
 
-			slackUser.getRoles().add(role);
+			//slackUser.getRoles().add(role);
 
 			SlackUser slackUser2 = slackUser;
 
@@ -154,42 +153,6 @@ public class EventManagerWebService extends BaseWebService {
 		}
 
 
-		if (isEventManager(userId, eventName) || isAdmin(userId)) {
-			
-				Object[] roles = roleService.getAll().stream()
-						.filter(e -> e.getEvent() != null && e.getEvent().equals(event))
-						.toArray();
-				timer.capture();
-
-				for (Object r : roles) {
-					Role role = (Role)r;
-					if (role.getSlackUser().getSlackUserId().equals(userIdArgs)) {
-
-						Role role2 = role;
-						
-						new Thread(() -> {	roleService.remove(role2);	}).start();	
-
-						Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId
-								+ "|" + slackApiAccessService.getUser(userIdArgs).getName() + timer
-								+ "> is no more a event manager!");
-
-						Log.info(message.getText());
-
-						return newResponseEntity(message);
-					}
-				}
-				
-
-				timer.capture();
-
-				Message message = new Message("/fx_manager_del : " + arguments + "\n " + "<@" + slackUserId + "|"
-						+ slackApiAccessService.getUser(userIdArgs).getName()
-						+ "> is already not a event manager!");
-
-				Log.info(message.getText());
-
-				return newResponseEntity(message);
-		}
 
 		Message message = new Message(
 				"/fx_manager_del : " + arguments + "\n " + "You are neither an admin nor a event manager");
@@ -214,31 +177,13 @@ public class EventManagerWebService extends BaseWebService {
 
 			return newResponseEntity(message);
 		}
-		Object[] roles = roleService.getAll().stream()
-				.filter(e -> e.getEvent() != null && e.getEvent().equals(event))
-				.toArray();
-		System.out.println(roles.length);
-		String messageText = "List of Event managers list:\n";
-		if (roles.length > 0) {
-			for (Object r : roles) {
-				Role role = (Role) r;
-				messageText += "<@" +  role.getSlackUser().getSlackUserId() + "|"
-						+ slackApiAccessService.getUser(role.getSlackUser().getSlackUserId()).getName() + "> \n";
-			}
-			Message message = new Message("/fx_manager_list " + "\n " + messageText + timer);
 
-			Log.info(message.getText());
-
-			return newResponseEntity(message);
-		}
-
-		Message message = new Message("/fx_manager_list :" + "\n " + messageText + " No event managers are found\n" );
+		Message message = new Message("/fx_manager_list :" + "\n " + " No event managers are found\n" );
 
 		Log.info(message.getText());
 
-		return
 
-		newResponseEntity(message);
+		return newResponseEntity(message);
 	}
 
 }

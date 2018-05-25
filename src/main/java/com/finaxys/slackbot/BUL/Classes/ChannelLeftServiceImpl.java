@@ -42,7 +42,7 @@ public class ChannelLeftServiceImpl implements ChannelLeftService {
 			if (profile.getScore() == 0)
 				return;
 		
-			profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
+			//profile.decrementScore(SCORE_GRID.JOINED_TRIBUTE.value());
 			
 			new Thread(()->{	slackUserService.save(profile);	}).start();
 			

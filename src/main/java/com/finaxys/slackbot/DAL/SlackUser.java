@@ -24,7 +24,6 @@ public class SlackUser implements Serializable {
     private int 	score;
     private int 	isAdmin;
 
-    private Set<Role> roles = new HashSet<>();
     
     //private Set<SlackUserEvent> slackUserEvents;
     private Set<Action> actions ;
@@ -105,10 +104,6 @@ public class SlackUser implements Serializable {
         this.slackUserEvents = slackUserEvents;
     }
     */
-    @OneToMany(mappedBy = "slackUser", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-    public Set<Role> getRoles() {
-        return roles;
-    }
     
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL )
     @JoinTable(
@@ -121,18 +116,6 @@ public class SlackUser implements Serializable {
     
     public void setActions(Set<Action> actions) {
     	this.actions = actions;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void incrementScore(int score) {
-        this.score += score;
-    }
-
-    public void decrementScore(int score) {
-        this.score -= score;
     }
     
     public boolean equals (SlackUser slackUser) {

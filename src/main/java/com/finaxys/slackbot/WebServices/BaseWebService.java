@@ -1,27 +1,20 @@
 package com.finaxys.slackbot.WebServices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finaxys.slackbot.DAL.Event;
-import com.finaxys.slackbot.DAL.Message;
-import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.DAL.Role;
-import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.interfaces.EventService;
-import com.finaxys.slackbot.interfaces.RoleService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finaxys.slackbot.DAL.Message;
+import com.finaxys.slackbot.Utilities.Log;
+import com.finaxys.slackbot.Utilities.Settings;
+import com.finaxys.slackbot.interfaces.EventService;
 
 @Component
 public class BaseWebService {
 	
-    @Autowired
-    RoleService roleService;
     
     @Autowired
     EventService eventService;
@@ -30,25 +23,12 @@ public class BaseWebService {
     
     public boolean isAdmin(String userId)
     {	
-        List<Role> roles = roleService.getAllAdmins();
-        
-        for (Role role : roles)
-            if (role.getSlackUser().getSlackUserId().equals(userId))
-                return true;
         
         return false;
     }
     
     public boolean isEventManager(String userId, String eventName) 
     {	
-        List<Role> roles 	   = roleService.getAllManagers();
-        //TODO
-        System.out.println("eventRepository : " +  roles.size());
-        int 	   eventId = eventService.getEventByName(eventName).getEventId();
-        
-        for (Role role : roles)
-            if (role.getSlackUser().getSlackUserId().equals(userId) && role.getEvent().getEventId() == eventId)
-                return true;
         
         return false;
     }

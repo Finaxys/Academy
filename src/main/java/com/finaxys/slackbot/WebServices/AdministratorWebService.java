@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.DAL.Parameter;
-import com.finaxys.slackbot.DAL.Role;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.AppParameters;
 import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.Utilities.SlackBotTimer;
-import com.finaxys.slackbot.interfaces.RoleService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import allbegray.slack.type.User;
@@ -31,8 +29,6 @@ import allbegray.slack.type.User;
 
 public class AdministratorWebService extends BaseWebService {
 
-	@Autowired
-	private RoleService roleService;
 
 	@Autowired
 	public SlackApiAccessService slackApiAccessService;
@@ -51,7 +47,7 @@ public class AdministratorWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 		timer.capture();
 	
-		if (!slackUserService.isAdmin(profileId) && roleService.getAllAdmins().size() != 0)
+		if (!slackUserService.isAdmin(profileId) )//&& roleService.getAllAdmins().size() != 0)
 			return newResponseEntity("/fxadmin_add " + arguments + " \n " + "You are not an admin!" + timer, true);
 
 		timer.capture();
@@ -73,12 +69,12 @@ public class AdministratorWebService extends BaseWebService {
 			
 		if (!slackUserService.isAdmin(userId)) {
 			SlackUser slackUser = slackUserService.get(userId);
-
+/*
 			Role role = new Role("admin", slackUser, null);
 			new Thread(() -> {
 				roleService.save(role);
 			}).start();
-
+*/
 			timer.capture();
 
 			return newResponseEntity("/fxadmin_add  : " + arguments + " \n " + "<@" + userId + "|"
@@ -123,6 +119,7 @@ public class AdministratorWebService extends BaseWebService {
 					+ timer, true);
 
 		timer.capture();
+		/*
 		List<Role> roles = roleService.getAllAdmins();
 
 		for (Role role : roles) {
@@ -135,6 +132,7 @@ public class AdministratorWebService extends BaseWebService {
 						+ timer, true);
 			}
 		}
+		*/
 		timer.capture();
 		return newResponseEntity("/fxadmin_del : " + arguments + " \n " + "<@" + id + "|"
 				+ SlackBot.getSlackWebApiClient().getUserInfo(userIdArgs).getName() + "> is not an administrator!" + timer,
@@ -148,9 +146,11 @@ public class AdministratorWebService extends BaseWebService {
 		SlackBotTimer timer = new SlackBotTimer();
 
 		Log.info("/fxadmin_list");
-		timer.capture();
-		List<Role> roles = roleService.getAllAdmins();
 		String messageText = "";
+		timer.capture();
+		/*
+		List<Role> roles = roleService.getAllAdmins();
+		
 		if (roles.isEmpty())
 			messageText = "There are no admins!";
 		else {
@@ -161,6 +161,7 @@ public class AdministratorWebService extends BaseWebService {
 			messageText = (roles.size() > 0) ? messageText : "";
 			timer.capture();
 		}
+		*/
 		
 		return newResponseEntity("/fxadmin_list :" + " \n" + messageText + timer, true);
 	}
