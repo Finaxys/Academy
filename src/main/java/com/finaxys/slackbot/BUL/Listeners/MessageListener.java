@@ -227,15 +227,14 @@ public class MessageListener implements EventListener {
 				response = "fx_event_details takes 1 argument: name of event";
 			break;
 
-		/* fix cascades problems 
-		case "fx_event_del":
+		
+		case "fx_event_remove":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, removeEventByName(command[1]), debugModeService.isOnDebugMode());
+				response = eventService.removeEvent(userId, command[1]);
 			else
-				SlackBot.postMessage(channelId, "fx_event_del takes 1 argument: name of event.",
-						debugModeService.isOnDebugMode());
+				response = "fx_event_remove takes 1 argument: name of event.";
 			break;
-		*/
+			
 		/* will be deleted 
 		case "fx_event_join":
 			if (command.length == 2)
@@ -303,21 +302,6 @@ public class MessageListener implements EventListener {
 	}
 
 	
-	public String removeEventByName(String arguments) {
-		SlackBotTimer timer = new SlackBotTimer();
-		String fxevent = "";
-
-		Event event = eventService.getEventByName(arguments);
-
-		timer.capture();
-
-		if (event == null)
-			return "Error, can't find the event: " + arguments + ".\n";
-		else {
-			eventService.remove(event);
-			return arguments + " has been removed ! ";
-		}
-	}
 
 	public String addAction(String[] commands) {
 		SlackBotTimer timer = new SlackBotTimer();

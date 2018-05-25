@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -280,8 +281,8 @@ public class EventServiceImpl implements EventService {
 			else {
 
 				event.getEventScores().remove(action);
-				event.setEventScores(new HashSet<>());
-				this.save(event);
+				//event.setEventScores(new HashSet<>());
+				//this.save(event);
 				//actionService.remove(action);
 			}
 				
@@ -293,6 +294,38 @@ public class EventServiceImpl implements EventService {
 		
 		return "The action named " + actionCode + " has been successfully removed ! ";
 
+	}
+	
+	public String removeEvent(String currentUserId, String eventCode) {
+		SlackUser slackuser = slackUserService.get(currentUserId);
+		Event event = this.getEventByName(eventCode);
+		
+		if(event == null)
+			return "Event does not exist.";
+		
+		try {
+			if(event.getEventManagers().stream().
+				filter(m->m.getSlackUserId().equals(currentUserId)).count()==0) 
+				return "You are not a manager of the event "+event.getName()+ ". You can't remove it !";
+			else {
+				for(Action action:event.getEventScores()) {
+					for(SlackUser user: action.getSlackUsers()) {
+						user.setActions(user.getActions().stream().
+								filter(a->a.getId() != action.getId() ).collect(Collectors.toSet()));
+						slackUserService.save(user);
+					}
+					actionService.remove(action);
+				}
+				
+				for(SlackUser user:event.getEventManagers()) {
+					//TO DO
+				}
+			}
+		} catch (NumberFormatException e) {
+			return "fx_event_remove failed. Please, check the arguments types. ";// + timer;
+		}
+		return "";
+		
 	}
 	
 	public String addEvent(String[] command, JsonNode jsonNode) {
