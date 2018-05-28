@@ -164,17 +164,6 @@ public class MessageListener implements EventListener {
 		*/
 	
 
-		/*
-		case "fx_manager_add":
-			if (command.length == 3)
-				SlackBot.postMessage(channelId, create(command[1], command[2], jsonNode.get("user").asText()),
-						debugModeService.isOnDebugMode());
-			else
-				SlackBot.postMessage(channelId, "fx_manager_add takes 2 arguments : name of user, name of event.",
-						debugModeService.isOnDebugMode());
-			break;
-		*/
-		/* to do changes, add parameter event to specify scores of an event only */
 		case "fx_leaderboard":
 			if (command.length == 2)
 				response = listScores(command[1]);
@@ -184,17 +173,6 @@ public class MessageListener implements EventListener {
 				response = "fx_leaderboard take 0 or 1 argument : the number of rows you want to display or an event name.";
 			break;
 
-		/*
-		case "fx_manager_remove":
-			if (command.length == 3)
-				SlackBot.postMessage(channelId, remove(command[1], command[2], jsonNode.get("user").asText()),
-						debugModeService.isOnDebugMode());
-			else
-				SlackBot.postMessage(channelId,
-						"fx_manager_remove takes 2 arguments : name of manager to remove, name of event.",
-						debugModeService.isOnDebugMode());
-			break;
-		*/
 		case "fx_events_list":
 			if (command.length == 1) {
 				List<Event> events = eventService.getAll();
@@ -227,15 +205,14 @@ public class MessageListener implements EventListener {
 				response = "fx_event_details takes 1 argument: name of event";
 			break;
 
-		/* fix cascades problems 
-		case "fx_event_del":
+		
+		case "fx_event_remove":
 			if (command.length == 2)
-				SlackBot.postMessage(channelId, removeEventByName(command[1]), debugModeService.isOnDebugMode());
+				response = eventService.removeEvent(userId, command[1]);
 			else
-				SlackBot.postMessage(channelId, "fx_event_del takes 1 argument: name of event.",
-						debugModeService.isOnDebugMode());
+				response = "fx_event_remove takes 1 argument: name of event.";
 			break;
-		*/
+			
 		/* will be deleted 
 		case "fx_event_join":
 			if (command.length == 2)
@@ -318,47 +295,6 @@ public class MessageListener implements EventListener {
 	}
 
 	
-	public String removeEventByName(String arguments) {
-		SlackBotTimer timer = new SlackBotTimer();
-		String fxevent = "";
-
-		Event event = eventService.getEventByName(arguments);
-
-		timer.capture();
-
-		if (event == null)
-			return "Error, can't find the event: " + arguments + ".\n";
-		else {
-			eventService.remove(event);
-			return arguments + " has been removed ! ";
-		}
-	}
-
-	public String addAction(String[] commands) {
-		SlackBotTimer timer = new SlackBotTimer();
-		timer.capture();
-
-		try {
-			String code = commands[1];
-			int points = Integer.parseInt(commands[3]);
-
-			Action action = new Action(code, commands[2], points);
-
-			if (actionService.getActionByCode(code) != null)
-				return "/fx_action_add " + code + " " + commands[2] + " " + points + " \n "
-						+ " :  This action already exists ! ";
-			else {
-				new Thread(() -> {
-					actionService.save(action);
-				}).start();
-				timer.capture();
-
-				return "The action named " + commands[2] + " has been successfully added ! ";
-			}
-		} catch (NumberFormatException e) {
-			return "fx_action_add failed. Please, check the arguments types. ";// + timer;
-		}
-	}
 
 	public static boolean isInteger(String s) {
 		try {

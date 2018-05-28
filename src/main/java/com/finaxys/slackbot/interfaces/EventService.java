@@ -44,8 +44,11 @@ public interface EventService {
 	
 	String addEvent(String[] command, JsonNode jsonNode);
 	
+
 	String addManager(String currentUserId, String userId, String event);
 	String removeManager(String currentUserId, String userId, String event);
+
+	String removeEvent(String currentUserId, String eventCode);
 	
 	
 }
