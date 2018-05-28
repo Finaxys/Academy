@@ -2,16 +2,13 @@ package com.finaxys.slackbot.DAL;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+
 
 import allbegray.slack.type.User;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "SLACK_USER")

@@ -1,12 +1,11 @@
 package com.finaxys.slackbot.BUL.Classes;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.finaxys.slackbot.BUL.Interfaces.InnovateService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.Utilities.Log;
-import com.finaxys.slackbot.interfaces.ActionService;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;

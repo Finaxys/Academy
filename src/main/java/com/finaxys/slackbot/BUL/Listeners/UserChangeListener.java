@@ -1,7 +1,7 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
 import allbegray.slack.rtm.EventListener;
-import allbegray.slack.webapi.SlackWebApiClient;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.DAL.SlackUser;
 import com.finaxys.slackbot.DAL.Repository;
-import com.finaxys.slackbot.Utilities.SlackBot;
 
 @Component
 public class UserChangeListener implements EventListener 

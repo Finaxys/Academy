@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,14 +19,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.finaxys.slackbot.Utilities.SlackBot;
 
 @Entity
 @Table(name = "EVENT")
 public class Event implements Serializable {
 
-    private Integer eventId;
+    
+	private static final long serialVersionUID = 1L;
+	private Integer eventId;
     private String 	name;
     private String 	description;
     @Temporal(TemporalType.DATE)

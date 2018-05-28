@@ -1,17 +1,13 @@
 package com.finaxys.slackbot.BUL.Classes;
 
 import java.util.List;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimerTask;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
-import com.finaxys.slackbot.interfaces.SlackUserService;
 
 import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
@@ -80,6 +76,7 @@ public class SlackApiAccessService
 		allChannels.put(channelId, SlackBot.getSlackWebApiClient().getChannelInfo(channelId));
 	}
 	
+	@SuppressWarnings("static-access")
 	public Map<String, User> getAllUsers(){
 		return this.allUsers;
 	}

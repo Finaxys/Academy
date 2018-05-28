@@ -2,6 +2,7 @@ package com.finaxys.slackbot.Configuration;
 
 import java.util.Properties;
 
+
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
@@ -35,7 +36,6 @@ import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Parameter;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.interfaces.DebugModeService;
 
 @Configuration
 @EnableTransactionManagement
@@ -46,9 +46,6 @@ public class SpringContext {
     @Autowired
     private Environment environment;
     
-    @Autowired
-	private DebugModeService debugModeService;
-
     private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect"		,environment.getRequiredProperty("hibernate.dialect"));

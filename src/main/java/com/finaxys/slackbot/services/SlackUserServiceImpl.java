@@ -1,6 +1,6 @@
 package com.finaxys.slackbot.services;
 
-import java.util.Iterator;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,7 @@ import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.Utilities.ArgumentsSplitter;
 import com.finaxys.slackbot.Utilities.Settings;
-import com.finaxys.slackbot.Utilities.SlackBot;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
 @Service
@@ -162,8 +160,6 @@ public class SlackUserServiceImpl implements SlackUserService {
 
 		if (list.size() <= 0)
 			return false;
-
-		Integer eventId = list.get(0).getEventId();
 
 		return false;
 	}

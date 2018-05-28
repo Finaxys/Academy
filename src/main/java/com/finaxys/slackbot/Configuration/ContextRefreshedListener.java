@@ -1,7 +1,5 @@
 package com.finaxys.slackbot.Configuration;
 
-import java.util.Timer;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -16,7 +14,6 @@ import com.finaxys.slackbot.BUL.Listeners.ReactionAddedListener;
 import com.finaxys.slackbot.BUL.Listeners.ReactionRemovedListener;
 import com.finaxys.slackbot.BUL.Listeners.UserChangeListener;
 import com.finaxys.slackbot.Utilities.AppParameters;
-import com.finaxys.slackbot.Utilities.Settings;
 import com.finaxys.slackbot.Utilities.SlackBot;
 
 import allbegray.slack.rtm.Event;
