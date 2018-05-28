@@ -275,7 +275,7 @@ public class EventServiceImpl implements EventService {
 				return "You are not a manager of the event " + eventCode;
 
 		} catch (NumberFormatException e) {
-			return "fx_event_action_remove failed. Please, check the arguments types. ";
+			return "fx_action_remove failed. Please, check the arguments types. ";
 		}
 
 		return "The action named " + actionCode + " has been successfully removed ! ";
@@ -294,7 +294,7 @@ public class EventServiceImpl implements EventService {
 				filter(m->m.getSlackUserId().equals(currentUserId)).count()==0) 
 				return "You are not a manager of the event "+event.getName()+ ". You can't remove it !";
 			else {
-				for(Action action:event.getEventScores()) {
+				for(Action action : event.getEventScores()) {
 					for(SlackUser user: action.getSlackUsers()) {
 						user.setActions(user.getActions().stream().
 								filter(a->a.getId() != action.getId() ).collect(Collectors.toSet()));
@@ -303,14 +303,16 @@ public class EventServiceImpl implements EventService {
 					actionService.remove(action);
 				}
 				
-				for(SlackUser user:event.getEventManagers()) {
-					//TO DO
+				for(SlackUser user : event.getEventManagers()) {
+					event.getEventManagers().remove(user);
+					this.save(event);
 				}
+				this.remove(event);
 			}
 		} catch (NumberFormatException e) {
 			return "fx_event_remove failed. Please, check the arguments types. ";// + timer;
 		}
-		return "";
+		return "The event " + eventCode + " has been succesfully removed.";
 		
 	}
 	

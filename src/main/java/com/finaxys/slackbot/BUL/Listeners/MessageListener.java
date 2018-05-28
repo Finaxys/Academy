@@ -146,11 +146,11 @@ public class MessageListener implements EventListener {
 			break;
 
 		
-		case "fx_event_action_remove":
+		case "fx_action_remove":
 			if (command.length == 3)
 				response = eventService.removeEventAction(userId, command[1], command[2]);
 			else
-				response = "fx_event_action_del takes 2 arguments : name of event, name of action.";
+				response = "fx_action_remove takes 2 arguments : name of event, name of action.";
 			break;
 		
 		/*
