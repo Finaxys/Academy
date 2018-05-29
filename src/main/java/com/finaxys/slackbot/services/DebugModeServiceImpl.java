@@ -39,6 +39,11 @@ public class DebugModeServiceImpl implements DebugModeService{
 
 	@Override
 	public boolean isOnDebugMode() {
+		if (debugmodeRepository.getAll().size() == 0)
+		{
+			DebugMode dm = new DebugMode();
+			this.save(dm);
+		}
 		return this.get(1).isOnDebugMode();
 	}
 	
