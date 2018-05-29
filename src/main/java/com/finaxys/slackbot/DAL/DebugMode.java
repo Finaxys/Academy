@@ -9,7 +9,7 @@ public class DebugMode {
 	private int id;
 	private boolean flag;
 	
-	private DebugMode() {
+	public DebugMode() {
 		id = 1;
 		flag = false;	
 	}
