@@ -41,7 +41,8 @@ public class ContestScoreAddMatcher {
         return result;
     }
     
-    public boolean isCorrect(String message) {
+    @SuppressWarnings("static-access")
+	public boolean isCorrect(String message) {
 
     	if (!contestAddPattern.getPattern().matcher(message).matches()) return false;
             

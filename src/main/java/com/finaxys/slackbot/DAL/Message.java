@@ -3,7 +3,9 @@ package com.finaxys.slackbot.DAL;
 import java.io.Serializable;
 
 public class Message implements Serializable{
-    private String text;
+    
+	private static final long serialVersionUID = 1L;
+	private String text;
     private String response_type;
 
     public Message(String text) {

@@ -1,11 +1,11 @@
 package com.finaxys.slackbot.BUL.Classes;
 
 import allbegray.slack.type.Channel;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.finaxys.slackbot.BUL.Interfaces.NewTribeJoinedService;
 import com.finaxys.slackbot.BUL.Matchers.TribeChannelMatcher;
 import com.finaxys.slackbot.DAL.SlackUser;
-import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.Utilities.Log;
 import com.finaxys.slackbot.interfaces.SlackUserService;
 
