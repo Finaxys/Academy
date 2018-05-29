@@ -134,8 +134,8 @@ public class Event implements Serializable {
 				+ "Type: " + this.getType() + "\n"
 			    + "Creation date : " + this.getCreationDate() + "\n"
 				//+ "Number of participants: " + this.getAttendees().size() + " \n "
-			    + "Event managers : \n" + this.displayEventManagers() + "\n" 
-    			+ "Actions of the event "+ (this.eventScores.isEmpty() ? "(0)" : ":") + this.displayActions();
+			    + "Event's managers : \n" + this.displayEventManagers() + "\n" 
+    			+ "Event's actions "+ (this.eventScores.isEmpty() ? "(0)" : ":") + this.displayActions();
     } 
     
     public boolean equals (Event event) {

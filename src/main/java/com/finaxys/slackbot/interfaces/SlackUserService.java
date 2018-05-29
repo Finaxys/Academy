@@ -24,5 +24,7 @@ public interface SlackUserService {
 	void updateScore(String id, int score);
 	
 	public String removeAdmin(String id, String password);
+	
+	String displayScoreUser(String id);
 
 }

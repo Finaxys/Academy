@@ -175,5 +175,16 @@ public class SlackUserServiceImpl implements SlackUserService {
 		//user.incrementScore(score);
 		users.saveOrUpdate(user);
 	}
+	
+	@Override
+	public String displayScoreUser(String id) {
+		SlackUser user = this.get(id);
+		if(user == null) 
+			return "The user " + id + " does not exist.";
+		else
+			return id+"'s score : " + user.calculateScore();
+		
+	
+	}
 
 }

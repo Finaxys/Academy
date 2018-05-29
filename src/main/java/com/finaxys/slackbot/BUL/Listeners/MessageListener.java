@@ -187,14 +187,21 @@ public class MessageListener implements EventListener {
 			if (command.length == 3) {
 				response = eventService.addManager(userId, command[1], command[2]);
 			} else
-				response = "fx_manager_add takes 2 arguments: username, name of event";
+				response = "fx_manager_add takes 2 arguments: name of user, name of event";
 			break;
 			
 		case "fx_manager_remove":
 			if (command.length == 3) {
 				response = eventService.removeManager(userId, command[1], command[2]);
 			} else
-				response = "fx_manager_remove takes 2 arguments: username, name of event";
+				response = "fx_manager_remove takes 2 arguments: name of user, name of event";
+			break;
+			
+		case "fx_score":
+			if (command.length == 2) {
+				response = slackUserService.displayScoreUser(command[1]);
+			} else
+				response = "fx_score takes 1 argument: name of user.";
 			break;
 			
 		default:
@@ -234,7 +241,7 @@ public class MessageListener implements EventListener {
 			Event event = eventService.getEventByName(parameter.trim());
 
 			if (event == null)
-				return "No such event ! Check the event name";
+				return "No such event named "+ parameter +" ! Check the event name";
 			messageText = "Leaderboard of " + event.getName() + " :" + " \n ";
 			for (SlackUser slackUser : slackUserService.getAll()) {
 				if (slackUser.getActions() == null) {
