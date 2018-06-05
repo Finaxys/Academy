@@ -23,8 +23,10 @@ public interface SlackUserService {
 	
 	void updateScore(String id, int score);
 	
-	public String removeAdmin(String id, String password);
+	public String removeAdmin(String id);
 	
 	String displayScoreUser(String id);
+
+	String listAllAdmins();
 
 }

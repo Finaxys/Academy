@@ -54,8 +54,6 @@ public class MessageListener implements EventListener {
 		if (debugModeService.isOnDebugMode())
 			timer.capture();
 		
-		System.out.println("************************");
-		System.out.println(SlackBot.getSlackWebApiClient().getUserInfo(userId));
 		switch (command[0]) {
 
 		case "fx_help":
@@ -73,14 +71,25 @@ public class MessageListener implements EventListener {
 			break;
 			
 		case "fxadmin_remove":
-			if (command.length == 3) {
+			if (command.length == 2) {
 				if (slackUserService.isAdmin(userId))
-					response = slackUserService.removeAdmin(command[1], command[2]);
+					response = slackUserService.removeAdmin(command[1]);
 				else
 					response =  "You need to be administrator to run the command " + command[0];				
 			}				
 			else
-				response = "fxadmin_remove takes 2 argument : name of the user, the superAdmin's pass";
+				response = "fxadmin_remove takes 1 argument : admin's name";
+			break;
+			
+		case "fxadmin_list":
+			if (command.length == 1) {
+				if (slackUserService.isAdmin(userId))
+					response = slackUserService.listAllAdmins();
+				else
+					response =  "You need to be administrator to run the command " + command[0];				
+			}				
+			else
+				response = "fxadmin_list takes 0 arguments !";
 			break;
 						
 		case "fxadmin_enable_debug":
@@ -218,7 +227,7 @@ public class MessageListener implements EventListener {
 	
 
 	public static boolean isInteger(String s) {
-		try {
+		try {	
 			Integer.parseInt(s);
 		} catch (Exception e) {
 			return false;
@@ -235,7 +244,7 @@ public class MessageListener implements EventListener {
 
 			List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
 			for (SlackUser profile : users)
-				messageText += profile.getName() + " " + profile.calculateScore() + "\n";
+				messageText += "<@" + profile.getSlackUserId() + "> : " + profile.calculateScore() + "\n";
 		}
 		else {
 			Event event = eventService.getEventByName(parameter.trim());
@@ -248,7 +257,7 @@ public class MessageListener implements EventListener {
 					slackUser.setActions(new HashSet<>());
 				}
 				if (slackUser.getActions().size() != 0)
-					messageText += slackUser.getName() + " : "
+					messageText += "<@" + slackUser.getSlackUserId() + "> : "
 							+ slackUser.calculateScore(eventService.getEventByName(parameter.trim()))
 							+ "\n";
 			}

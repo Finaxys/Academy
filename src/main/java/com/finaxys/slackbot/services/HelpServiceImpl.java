@@ -25,6 +25,7 @@ public class HelpServiceImpl implements HelpService {
         
 
         String fxAdminCommands =
+        				 "*fxadmin_list* \n List all the administrator. \n \n" +
         				 "*fxadmin_add* userName|password \n Adds an administrator if you have the permission or giving the right password promote you to an administrator. \n \n" +
         				 "*fxadmin_remove* userName password \n Removes an administrator if you have the permission to remove an administrator. \n \n" +
         				 "*fxadmin_enable_debug* \n Activates the debug mode for testing. \n \n" +

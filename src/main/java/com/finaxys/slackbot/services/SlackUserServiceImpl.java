@@ -1,6 +1,5 @@
 package com.finaxys.slackbot.services;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class SlackUserServiceImpl implements SlackUserService {
 	public void setEvents(Repository<Event, Integer> events) {
 		this.events = events;
 	}
-
 
 	@Autowired
 	SlackApiAccessService slackApiAccessService;
@@ -123,30 +121,27 @@ public class SlackUserServiceImpl implements SlackUserService {
 	}
 
 	@Override
-	public String removeAdmin(String userId, String pass) {
-		if (pass.equals(Settings.adminPass)) {
-			OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
-			String slackUserId = "";
+	public String removeAdmin(String userId) {
+		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
+		String slackUserId = "";
 
-			if (um.isCorrect(userId)) {
-				slackUserId = um.getUserIdArgument(userId);
-				if (!this.isAdmin(slackUserId)) {
-					return "The user " + userId + " is not an administrator !";
-				} else {
-					SlackUser user = users.findById(slackUserId);
-					if (user == null) {
-						user = new SlackUser(slackApiAccessService.getUser(slackUserId));
-						this.save(user);
-					}
-					user.setIsAdmin(0);
+		if (um.isCorrect(userId)) {
+			slackUserId = um.getUserIdArgument(userId);
+			if (!this.isAdmin(slackUserId)) {
+				return "The user " + userId + " is not an administrator !";
+			} else {
+				SlackUser user = users.findById(slackUserId);
+				if (user == null) {
+					user = new SlackUser(slackApiAccessService.getUser(slackUserId));
 					this.save(user);
-
-					return userId + " is no longer an administrator now !";
 				}
-			} else
-				return "Error : the username " + userId + " is incorrect !";
+				user.setIsAdmin(0);
+				this.save(user);
+
+				return userId + " is no longer an administrator now !";
+			}
 		} else
-			return "You entered a wrong password !";
+			return "Error : the username " + userId + " is incorrect !";
 
 	}
 
@@ -172,19 +167,34 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public void updateScore(String id, int score) {
 		SlackUser user = users.findById(id);
-		//user.incrementScore(score);
+		// user.incrementScore(score);
 		users.saveOrUpdate(user);
 	}
-	
+
 	@Override
-	public String displayScoreUser(String id) {
-		SlackUser user = this.get(id);
-		if(user == null) 
-			return "The user " + id + " does not exist.";
-		else
-			return id+"'s score : " + user.calculateScore();
-		
-	
+	public String displayScoreUser(String userId) {
+		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
+		String slackUserId = "";
+
+		if (um.isCorrect(userId)) {
+			slackUserId = um.getUserIdArgument(userId);
+
+			SlackUser user = this.get(slackUserId);
+			if (user == null)
+				return "The user " + userId + " does not exist.";
+			else
+				return userId + "'s score : " + user.calculateScore();
+		} else
+			return "Error : the username " + userId + " is incorrect !";
+
+	}
+
+	@Override
+	public String listAllAdmins() {
+			StringBuilder sb = new StringBuilder("Admins List:\n");
+			this.getAll().stream().filter(u -> u.getIsAdmin() == 1)
+					.forEach(u -> sb.append("<@" + u.getSlackUserId() + ">\n"));
+			return sb.toString();		
 	}
 
 }

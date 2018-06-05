@@ -117,7 +117,7 @@ public class Event implements Serializable {
 	
 	private String displayActions() {
 		StringBuilder sb = new StringBuilder();
-		this.eventScores.forEach(x->sb.append("\n\t* "+ x.getCode() + " : " + x.getDescription() +"\n"));
+		this.eventScores.forEach(x->sb.append("\n\t* "+ x.getCode() + " : " + x.getDescription() +"\t("+ x.getPoints() +" points)\n"));
 		return sb.toString();
 	}
 	

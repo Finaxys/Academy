@@ -361,6 +361,7 @@ public class EventServiceImpl implements EventService {
 			return "The event " + eventName + " does not exists ! ";
 		else {
 			if (event.getEventManagers().stream().filter(m -> m.getSlackUserId().equals(currentUserId)).count() != 0) {
+				if (event.getEventManagers().stream().count() > 1) {
 				OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
 				if (um.isCorrect(userId)) {
 					String slackUserId = um.getUserIdArgument(userId);
@@ -375,6 +376,9 @@ public class EventServiceImpl implements EventService {
 
 				}
 				return "Username " + userId + " incorrect !";
+				}
+				else
+					return "You cannot remove the last event's manager !";
 			}
 			return "You are not a manager of the event " + eventName;
 		}
