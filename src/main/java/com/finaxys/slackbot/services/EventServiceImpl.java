@@ -221,24 +221,24 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public String addActionToSlackuser(String eventCode, String actionCode, String slackuserName) {
 		Event event = this.getEventByName(eventCode);
-		Action action = actionService.getActionByCode(actionCode);
+		if (event == null)
+			return "The event " + eventCode + " does not exist.";
+		Action action = event.getEventScores().stream().filter(a -> a.getCode().equals(actionCode)).findFirst().orElse(null);
+		if (action == null)
+			return "The action " + actionCode + " does not exist for the event " + eventCode + " ! ";
 		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
 		String userId = "";
 		if (um.isCorrect(slackuserName))
 			userId = um.getUserIdArgument(slackuserName);
 		else
-			return "Username incorrect.";
+			return "Username " + slackuserName + "is incorrect.";
 
-		SlackUser slackuser = slackUserService.get(userId);
-
-		if (event == null)
-			return "The event " + eventCode + " does not exist.";
-		if (action == null)
-			return "The action " + actionCode + " does not exist.";
+		SlackUser slackuser = slackUserService.get(userId);		
+		
 		if (slackuser == null)
 			return "The user " + slackuserName + " does not exist.";
-		if (event.getEventScores().stream().filter(a -> a.getCode().equals(action.getCode())).count() == 0)
-			return "The action " + actionCode + " does not exist in the event " + eventCode + ".";
+		//if (event.getEventScores().stream().filter(a -> a.getCode().equals(action.getCode())).count() == 0)
+			//return "The action " + actionCode + " does not exist in the event " + eventCode + ".";
 
 		if (slackuser.getActions() == null)
 			slackuser.setActions(new HashSet<>());
