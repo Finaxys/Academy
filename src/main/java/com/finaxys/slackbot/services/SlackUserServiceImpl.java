@@ -1,12 +1,14 @@
 package com.finaxys.slackbot.services;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finaxys.slackbot.BUL.Classes.SlackApiAccessService;
 import com.finaxys.slackbot.BUL.Matchers.OneUsernameArgumentMatcher;
+import com.finaxys.slackbot.DAL.Action;
 import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.Repository;
 import com.finaxys.slackbot.DAL.SlackUser;
@@ -174,16 +176,49 @@ public class SlackUserServiceImpl implements SlackUserService {
 	@Override
 	public String displayScoreUser(String userId) {
 		OneUsernameArgumentMatcher um = new OneUsernameArgumentMatcher();
-		String slackUserId = "";
-
+		 
 		if (um.isCorrect(userId)) {
-			slackUserId = um.getUserIdArgument(userId);
-
+			String slackUserId = um.getUserIdArgument(userId);
 			SlackUser user = this.get(slackUserId);
 			if (user == null)
 				return "The user " + userId + " does not exist.";
-			else
-				return userId + "'s score : " + user.calculateScore();
+			else {
+				StringBuilder sb = new StringBuilder(userId + "*'s score in details* \n\n");
+				Map<String, Integer> usersScores = new HashMap<String, Integer>();
+				for (SlackUser slackUser : this.getAll()) {
+					if (slackUser.getActions() == null) {
+						slackUser.setActions(new HashSet<>());
+					}
+					if (slackUser.getActions().size() != 0)
+						usersScores.put(slackUser.getSlackUserId(), slackUser.calculateScore());
+				}
+				Map<String, Integer> streamMap =
+						usersScores.entrySet().stream()
+					       .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+					       .collect(Collectors.toMap(
+					          Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+				
+				sb.append("*Position is:* " + (new ArrayList<String>(streamMap.keySet()).indexOf(slackUserId) + 1) + "\n");				
+				sb.append("*Score is:* " + user.calculateScore() + "\n\n");
+				sb.append("*Events :*\n");
+				
+				events.getAll().stream()
+				.forEach(event -> {
+					int score = user.calculateScore(event);
+					if (score != 0) {
+						sb.append("*" + event.getName() + ":*\n");
+						sb.append("Score : " + score);
+						sb.append("\nActions List: \n");
+						user.getActions().stream().filter(x->x.getEvent().equals(event))
+						.forEach(action -> {
+							sb.append("\t *" + action.getCode() + " : " + action.getDescription() + "\n");
+						});
+						sb.append("****************\n");
+					}							
+				});
+				
+				return sb.toString();
+			}
 		} else
 			return "Error : the username " + userId + " is incorrect !";
 
