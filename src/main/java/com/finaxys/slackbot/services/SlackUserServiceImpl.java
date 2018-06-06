@@ -183,7 +183,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 			if (user == null)
 				return "The user " + userId + " does not exist.";
 			else {
-				StringBuilder sb = new StringBuilder(userId + "*'s score in details* \n\n");
+				StringBuilder sb = new StringBuilder(userId + "*'s rank in details* \n\n");
 				Map<String, Integer> usersScores = new HashMap<String, Integer>();
 				for (SlackUser slackUser : this.getAll()) {
 					if (slackUser.getActions() == null) {
@@ -198,22 +198,24 @@ public class SlackUserServiceImpl implements SlackUserService {
 					       .collect(Collectors.toMap(
 					          Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 				
-				sb.append("*Position is:* " + (new ArrayList<String>(streamMap.keySet()).indexOf(slackUserId) + 1) + "\n");				
-				sb.append("*Score is:* " + user.calculateScore() + "\n\n");
+				sb.append("*Global rank is:* " + (new ArrayList<String>(streamMap.keySet()).indexOf(slackUserId) + 1) + " ("+ user.calculateScore() + " points)\n");				
+				
 				sb.append("*Events :*\n");
 				
 				events.getAll().stream()
 				.forEach(event -> {
 					int score = user.calculateScore(event);
 					if (score != 0) {
-						sb.append("*" + event.getName() + ":*\n");
-						sb.append("Score : " + score);
+						sb.append("\t *" + event.getName() + ":*\t");
+						sb.append("Rank: " + this.getRanking(event, slackUserId) + " (" + score + " points)\n");
+						/*
 						sb.append("\nActions List: \n");
 						user.getActions().stream().filter(x->x.getEvent().equals(event))
 						.forEach(action -> {
 							sb.append("\t *" + action.getCode() + " : " + action.getDescription() + "\n");
 						});
 						sb.append("****************\n");
+						*/
 					}							
 				});
 				
@@ -222,6 +224,25 @@ public class SlackUserServiceImpl implements SlackUserService {
 		} else
 			return "Error : the username " + userId + " is incorrect !";
 
+	}
+	
+	@Override
+	public int getRanking(Event event, String userId) {
+		Map<String, Integer> usersScores = new HashMap<String, Integer>();
+		for (SlackUser slackUser : users.getAll()) {
+			if (slackUser.getActions() == null) {
+				slackUser.setActions(new HashSet<>());
+			}
+			if (slackUser.getActions().stream().filter(a -> a.getEvent().getEventId() == event.getEventId()).count() != 0)
+				usersScores.put(slackUser.getSlackUserId(), slackUser.calculateScore(event));
+		}
+		Map<String, Integer> streamMap =
+				usersScores.entrySet().stream()
+			       .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+			       .collect(Collectors.toMap(
+			          Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		
+		return new ArrayList<String>(streamMap.keySet()).indexOf(userId) + 1;
 	}
 
 	@Override

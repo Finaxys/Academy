@@ -2,6 +2,7 @@ package com.finaxys.slackbot.interfaces;
 
 import java.util.List;
 
+import com.finaxys.slackbot.DAL.Event;
 import com.finaxys.slackbot.DAL.SlackUser;
 
 public interface SlackUserService {
@@ -26,6 +27,7 @@ public interface SlackUserService {
 	public String removeAdmin(String id);
 	
 	String displayScoreUser(String id);
+	int getRanking(Event event, String userId);
 
 	String listAllAdmins();
 
