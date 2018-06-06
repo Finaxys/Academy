@@ -91,7 +91,7 @@ public class SlackUserServiceImpl implements SlackUserService {
 		user.setIsAdmin(1);
 		this.save(user);
 
-		return this.get(id).getName() + " is an administrator now !";
+		return "<@" + this.get(id).getSlackUserId() + "> is an administrator now !";
 	}
 
 	public String addUserAsAdmin(String currentUserId, String parameter) {

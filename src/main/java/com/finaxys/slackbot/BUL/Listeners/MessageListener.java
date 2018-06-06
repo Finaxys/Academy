@@ -1,7 +1,11 @@
 package com.finaxys.slackbot.BUL.Listeners;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -236,33 +240,40 @@ public class MessageListener implements EventListener {
 	}
 
 	public String listScores(String parameter) {
-		String messageText = "";
+		StringBuilder sb = new StringBuilder();
+		Map<String, Integer> usersScores = new HashMap<String, Integer>();
 		if(isInteger(parameter) || parameter.equals("")) {
 			int size = parameter.isEmpty() ? -1 : Integer.parseInt(parameter);
 			if (size == 0)
-				return messageText + "You must enter a positive integer.";	
+				return "You must enter a positive integer.";	
 
 			List<SlackUser> users = slackUserService.getAllOrderedByScore(size);
-			for (SlackUser profile : users)
-				messageText += "<@" + profile.getSlackUserId() + "> : " + profile.calculateScore() + "\n";
+			for (SlackUser slackUser : users)
+				usersScores.put(slackUser.getSlackUserId(), slackUser.calculateScore());
 		}
 		else {
 			Event event = eventService.getEventByName(parameter.trim());
 
 			if (event == null)
 				return "No such event named "+ parameter +" ! Check the event name";
-			messageText = "Leaderboard of " + event.getName() + " :" + " \n ";
+			sb.append("Leaderboard of " + event.getName() + " :" + " \n ");
+			//messageText = "Leaderboard of " + event.getName() + " :" + " \n ";
 			for (SlackUser slackUser : slackUserService.getAll()) {
 				if (slackUser.getActions() == null) {
 					slackUser.setActions(new HashSet<>());
 				}
 				if (slackUser.getActions().size() != 0)
-					messageText += "<@" + slackUser.getSlackUserId() + "> : "
-							+ slackUser.calculateScore(eventService.getEventByName(parameter.trim()))
-							+ "\n";
+					usersScores.put(slackUser.getSlackUserId(), slackUser.calculateScore(eventService.getEventByName(parameter.trim())));
 			}
 		}
-		return messageText;
+		AtomicInteger counter = new AtomicInteger(1);
+		
+		usersScores.entrySet().stream()
+	       .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+	       .forEach(s -> {       	    	   
+	       sb.append(counter.getAndIncrement() + "- <@" + s.getKey() + "> : " + s.getValue() + "\n");
+			});
+		return sb.toString();
 	}
 
 	
